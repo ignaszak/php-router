@@ -39,9 +39,6 @@ class RouteController extends Router implements Interfaces\IRouteController
         $this->sortAddedRouteArray();
         $this->_routeParser->matchRouteWithToken();
         $this->_routeParser->matchPatternWithQueryString();
-        echo "<pre>";
-        print_r(parent::$currentQueryArray);
-        echo "</pre>";
     }
 
     private function sortAddedRouteArray()
