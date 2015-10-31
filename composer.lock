@@ -1,0 +1,62 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "6c8e09f28ce9203572e53d9745c31885",
+    "content-hash": "c7711e0db159a684fb1b27864b4f1227",
+    "packages": [
+        {
+            "name": "ignaszak/exception",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ignaszak/exception.git",
+                "reference": "1374012b5edfbab279950adfaf6ab191c6571887"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ignaszak/exception/zipball/1374012b5edfbab279950adfaf6ab191c6571887",
+                "reference": "1374012b5edfbab279950adfaf6ab191c6571887",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ignaszak\\Exception\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tomasz Ignaszak",
+                    "email": "tomek.ignaszak@gmail.com"
+                }
+            ],
+            "description": "Exception Handler",
+            "keywords": [
+                "error",
+                "exception",
+                "handler"
+            ],
+            "time": "2015-10-28 16:00:28"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.5"
+    },
+    "platform-dev": []
+}

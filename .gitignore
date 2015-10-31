@@ -1,4 +1,6 @@
-$ cat .gitignore
+$ cat
+.htaccess
+.gitignore
 .git
 .project
 .settings
