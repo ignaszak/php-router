@@ -1,0 +1,5 @@
+$ cat .gitignore
+.git
+.project
+.settings
+.buildpath

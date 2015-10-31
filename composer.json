@@ -1,0 +1,22 @@
+{
+	"name" : "ignaszak/router",
+	"type" : "library",
+	"description" : "Router",
+	"keywords" : [
+		"router"
+	],
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Tomasz Ignaszak",
+			"email" : "tomek.ignaszak@gmail.com"
+		}
+	],
+	"require" : {
+		"php" : ">=5.5"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Ignaszak\\Router\\" : "src/"
+		}
+	}
+}
