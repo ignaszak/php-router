@@ -3,7 +3,8 @@
 spl_autoload_register(function ($class) {
 
     $psr4_dir = array(
-        'Ignaszak\\Router\\' => __DIR__ . '/src/'
+        'Ignaszak\\Router\\' => __DIR__ . '/src/',
+        'Test\\' => __DIR__ . '/tests/'
     );
 
     foreach ($psr4_dir as $key=>$dir) {
