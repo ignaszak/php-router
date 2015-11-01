@@ -16,7 +16,8 @@ class Client extends Router implements Interfaces\IClient
 
             } else {
 
-                return parent::$currentQueryArray[$route];
+                return (array_key_exists($route, parent::$currentQueryArray) ? 
+                    parent::$currentQueryArray[$route] : null);
 
             }
 
