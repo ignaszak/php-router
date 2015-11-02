@@ -9,17 +9,19 @@ class RouteParser extends Router
     {
         foreach (parent::$addedRouteArray as $addedRoute) {
 
+            $patternString = $this->addParenthesisToString($addedRoute['pattern']);
+
             $pattern = str_replace(
                 parent::$tokenNameArray,
                 parent::$tokenPatternArray,
-                $addedRoute['pattern']
+                $patternString
             );
 
             parent::addMatchedRoute(
                 $addedRoute['name'],
                 $pattern,
                 $addedRoute['controller'],
-                $this->getTokenKeyArray($addedRoute['pattern'])
+                $this->getTokenKeyArray($patternString)
             );
 
         }
@@ -32,8 +34,8 @@ class RouteParser extends Router
 
         foreach (parent::$matchedRouteArray as $matchedRoute) {
 
-            $pattern = $this->addParenthesisToString($matchedRoute['pattern']);
-            $pattern = $this->preparePatternToPregMatchFunction($pattern);
+            
+            $pattern = $this->preparePatternToPregMatchFunction($matchedRoute['pattern']);
 
             $matchesArray = array();
 

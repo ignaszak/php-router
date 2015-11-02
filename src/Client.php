@@ -11,8 +11,8 @@ class Client extends Router implements Interfaces\IClient
 
             if (empty($route)) {
 
-                return (empty(parent::$currentQueryArray['type']) ?
-                    Conf::get('defaultRoute') : parent::$currentQueryArray['type']);
+                return (empty(parent::$currentQueryArray['route1']) ?
+                    Conf::get('defaultRoute') : parent::$currentQueryArray['route1']);
 
             } else {
 
