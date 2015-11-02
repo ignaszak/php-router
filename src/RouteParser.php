@@ -32,7 +32,9 @@ class RouteParser extends Router
 
         foreach (parent::$matchedRouteArray as $matchedRoute) {
 
-            $pattern = "/^" . str_replace("/", "\\/", $matchedRoute['pattern']) . "$/";
+            $pattern = $this->addParenthesisToString($matchedRoute['pattern']);
+            $pattern = $this->preparePatternToPregMatchFunction($pattern);
+
             $matchesArray = array();
 
             if (@preg_match($pattern, Conf::getQueryString(), $matchesArray) && !$count) {
@@ -70,6 +72,27 @@ class RouteParser extends Router
         }
 
         return $tokenKeyArray;
+    }
+
+    private function addParenthesisToString($pattern)
+    {
+        $patternArray = explode('/', $pattern);
+        $returnArray = array();
+
+        foreach ($patternArray as $value) {
+            if (ctype_alpha($value)) {
+                $returnArray[] = "($value)";
+            } else {
+                $returnArray[] = $value;
+            }
+        }
+
+        return implode('/', $returnArray);
+    }
+
+    private function preparePatternToPregMatchFunction($pattern)
+    {
+        $pattern = "/^" . str_replace("/", "\\/", $pattern) . "$/";
     }
 
 }
