@@ -1,6 +1,6 @@
 # ignaszak/router
 
-Router based on mod rewrite module
+Router based on mod_rewrite module
 
 ## Installing
 
@@ -17,6 +17,17 @@ or:
 ```sh
 composer require ignaszak/router
 ```
+## Configuration
+
+.htaccess file example:
+
+```
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [L]
+```
+
 ## Example
 
 ### Getting started
