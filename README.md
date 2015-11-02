@@ -18,8 +18,7 @@ or:
 composer require ignaszak/router
 ```
 ## Configuration
-The easiest way is to configure mod_rewrite via .htaccess file in site base directory.
-.htaccess file example:
+The easiest way is to configure mod_rewrite via .htaccess file in site base directory. Example:
 
 ```
 RewriteEngine On
