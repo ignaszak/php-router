@@ -34,7 +34,6 @@ class RouteParser extends Router
 
         foreach (parent::$matchedRouteArray as $matchedRoute) {
 
-            
             $pattern = $this->preparePatternToPregMatchFunction($matchedRoute['pattern']);
 
             $matchesArray = array();
