@@ -9,7 +9,7 @@ class Host
 
     public function __construct($host = '')
     {
-        //if (!empty($host) && validUrl($host))
+        if (!empty($host) && validUrl($host))
             $this->host = $this->removeProtocol($host);
     }
 
