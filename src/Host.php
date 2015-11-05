@@ -9,7 +9,7 @@ class Host
 
     public function __construct($host = '')
     {
-        if (!empty($host) && validUrl($host))
+        if (!empty($host))
             $this->host = $this->removeProtocol($host);
     }
 
@@ -18,15 +18,6 @@ class Host
         return ($_SERVER['REQUEST_URI'] != $this->baseRequestURI() ?
             substr($_SERVER['REQUEST_URI'], strlen($this->baseRequestURI()) - strlen($_SERVER['REQUEST_URI'])) :
             "");
-    }
-
-    private function validUrl($url)
-    {
-        if (!filter_var($url, FILTER_VALIDATE_URL) === false) {
-            return true;
-        } else {
-            throw new Exception("$url is not a valid URL");
-        }
     }
 
     private function baseRequestURI()
@@ -47,11 +38,6 @@ class Host
             array('', '', '', 'localhost', 'localhost'),
             $url
         );
-    }
-
-    private function getProtocol()
-    {
-        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? 'https' : 'http';
     }
 
 }
