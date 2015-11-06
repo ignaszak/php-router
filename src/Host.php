@@ -34,7 +34,7 @@ class Host
     private function removeProtocol($url)
     {
         return preg_replace(
-            array('/^(http:\/\/)/', '/^(https:\/\/)/', '/^www\./', '/^192\.168\.1\.*/', '/^127\.0\.0\.1/'),
+            array('/^(http:\/\/)/', '/^(https:\/\/)/', '/^www\./', '/^192\.168\.1\../', '/^127\.0\.0\.1/'),
             array('', '', '', 'localhost', 'localhost'),
             $url
         );
