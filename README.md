@@ -24,7 +24,7 @@ The easiest way is to configure mod_rewrite via .htaccess file in site base dire
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule . index.php [L]
+RewriteRule . {directory}index.php [L]
 ```
 ## Running the Tests
 
