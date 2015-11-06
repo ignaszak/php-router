@@ -26,6 +26,13 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L]
 ```
+## Running the Tests
+
+Just run phpunit from the working directory
+
+```
+php phpunit.phar
+```
 
 ## Example
 
@@ -60,7 +67,7 @@ $router->run();
 
 ### Get variables
 
-#### Getting all matched variables in array:
+#### Get all matched variables in array:
 
 ```php
 $router->add('viewpost', 'post/firstpost', 'controller');

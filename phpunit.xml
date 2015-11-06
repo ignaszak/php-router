@@ -1,0 +1,21 @@
+<phpunit
+    bootstrap="autoload.php"
+    colors="true"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    stopOnRisky="false">
+
+    <testsuites>
+        <testsuite name="router">
+            <file>tests/ClientTest.php</file>
+            <file>tests/ConfTest.php</file>
+            <file>tests/HostTest.php</file>
+            <file>tests/RouteControllerTest.php</file>
+            <file>tests/RouteParserTest.php</file>
+            <file>tests/RouterTest.php</file>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
