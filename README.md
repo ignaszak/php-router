@@ -107,20 +107,20 @@ Array
 )
 ```
 
-#### Getting single matched route:
+#### Get single matched route:
 
 ```php
 // If $route is empty, method will return 'route1'
 Ignaszak\Router\Client::getRoute($route = null);
 ```
 
-#### Getting route name:
+#### Get route name:
 
 ```php
 Ignaszak\Router\Client::getRouteName();
 ```
 
-#### Getting controller file path:
+#### Get controller file path:
 
 ```php
 Ignaszak\Router\Client::getControllerFile();
