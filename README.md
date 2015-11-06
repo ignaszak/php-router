@@ -30,7 +30,7 @@ RewriteRule . {directory}index.php [L]
 
 Just run phpunit from the working directory
 
-```
+```sh
 php phpunit.phar
 ```
 
