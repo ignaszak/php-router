@@ -2,18 +2,21 @@
 
 namespace Test;
 
-use Ignaszak\Router\RouteController;
+use Ignaszak\Router\Controller\RouteController;
+use Ignaszak\Router\Parser\RouteParser;
+use Ignaszak\Router\Parser\ParserStrategy;
 
 class RouteControllerTest extends \PHPUnit_Framework_TestCase
 {
 
     private $_routeContrroler;
     private $_router;
+    private $_routeParser;
 
     public function __construct()
     {
-        $this->_routeContrroler = new RouteController;
-        $stub = $this->getMockForAbstractClass('Ignaszak\\Router\\Router');
+        $this->_routeContrroler = new RouteController(new RouteParser);
+        $stub = $this->getMockForAbstractClass('Ignaszak\\Router\\Controller\\Router');
         $this->_router = $stub;
     }
 
@@ -28,7 +31,7 @@ class RouteControllerTest extends \PHPUnit_Framework_TestCase
             'controller' => 'controller'
         );
 
-        $this->assertEquals(array($output), $addedRouteArray);
+        $this->assertEquals($output, $addedRouteArray[0]);
     }
 
     public function testAddToken()
@@ -43,10 +46,10 @@ class RouteControllerTest extends \PHPUnit_Framework_TestCase
 
     public function testAddController()
     {
-        $this->_routeContrroler->addController('name', array('file'=>'file.php'));
+        $this->_routeContrroler->addController('controller', array('file'=>'file.php'));
         $controllerArray = \PHPUnit_Framework_Assert::readAttribute($this->_router, 'controllerArray');
 
-        $output = array('name'=>array('file'=>'file.php'));
+        $output = array('controller'=>array('file'=>'file.php'));
         $this->assertEquals($output, $controllerArray);
     }
 
@@ -55,12 +58,12 @@ class RouteControllerTest extends \PHPUnit_Framework_TestCase
         new ConfTest;
 
         $this->_routeContrroler->run();
-        $currentQueryArray = \PHPUnit_Framework_Assert::readAttribute($this->_router, 'currentQueryArray');
+        $currentQueryArray = ParserStrategy::getCurrentQueryArray();
 
         $output = array(
             'name' => 'name',
             'token' => 'router',
-            'controller' => 'controller'
+            'controller' => array('file'=>'file.php')
         );
         $this->assertEquals($output, $currentQueryArray);
     }

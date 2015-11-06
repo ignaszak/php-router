@@ -10,7 +10,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        $stub = $this->getMockForAbstractClass('Ignaszak\\Router\\Router');
+        $stub = $this->getMockForAbstractClass('Ignaszak\\Router\\Controller\\Router');
         $this->_router = $stub;
 
         $this->output = array(
@@ -38,16 +38,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $args = array('', '');
 
         Mock\MockTest::callProtectedMethod($this->_router, 'createRouteArray', $args);
-    }
-
-    public function testAddMatchedRoute()
-    {
-        $args = array('name', 'pattern', 'controller', array('key'));
-
-        Mock\MockTest::callProtectedMethod($this->_router, 'addMatchedRoute', $args);
-        $matchedRouteArray = \PHPUnit_Framework_Assert::readAttribute($this->_router, 'matchedRouteArray');
-
-        $this->assertEquals(array($this->output), $matchedRouteArray);
     }
 
 }

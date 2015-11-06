@@ -2,56 +2,74 @@
 
 namespace Test;
 
-use Ignaszak\Router\RouteParser;
-use Ignaszak\Router\RouteController;
+use Ignaszak\Router\Parser\RouteParser;
+use Ignaszak\Router\Controller\RouteController;
+use Ignaszak\Router\Parser\ParserStrategy;
 
-class RouteControllerTest extends \PHPUnit_Framework_TestCase
+class RouteParserTest extends \PHPUnit_Framework_TestCase
 {
 
     private $_routeParser;
     private $_routeContrroler;
-    private $_router;
 
     public function setUp()
     {
         new ConfTest;
 
         $this->_routeParser = new RouteParser;
-        $this->_routeContrroler = new RouteController;
-        $stub = $this->getMockForAbstractClass('Ignaszak\\Router\\Router');
-        $this->_router = $stub;
+        $this->_routeContrroler = new RouteController($this->_routeParser);
 
         $this->_routeContrroler->add('name', '{token}', 'controller');
         $this->_routeContrroler->addToken('token', '([a-z]*)');
-        $this->_routeContrroler->addController('name', array('file'=>'file.php'));
+        $this->_routeContrroler->addController('controller', array('file'=>'file.php'));
     }
 
     public function testMatchRouteWithToken()
     {
-        $this->_routeParser->matchRouteWithToken();
-        $matchedRouteArray = \PHPUnit_Framework_Assert::readAttribute($this->_router, 'matchedRouteArray');
+        Mock\MockTest::callProtectedMethod($this->_routeParser, 'matchRouteWithToken');
+        $matchedRouteArray = \PHPUnit_Framework_Assert::readAttribute($this->_routeParser, 'matchedRouteArray');
+        $count = count($matchedRouteArray);
 
         $output = array(
             'name' => 'name',
             'pattern' => '([a-z]*)',
             'key' => array('token'),
-            'controller' => 'controller'
+            'controller' => array('file'=>'file.php')
         );
 
-        $this->assertEquals(array($output), $matchedRouteArray);
+        $this->assertEquals($output, $matchedRouteArray[$count - 1]);
     }
 
     public function testMatchPatternWithQueryString()
     {
-        $this->_routeParser->matchPatternWithQueryString();
-        $currentQueryArray = \PHPUnit_Framework_Assert::readAttribute($this->_router, 'currentQueryArray');
+        Mock\MockTest::callProtectedMethod($this->_routeParser, 'matchRouteWithToken');
+        Mock\MockTest::callProtectedMethod($this->_routeParser, 'matchPatternWithQueryString');
+        $currentQueryArray = ParserStrategy::getCurrentQueryArray();
 
         $output = array(
             'name' => 'name',
-            'controller' => 'controller',
+            'controller' => array('file'=>'file.php'),
             'token' => 'router'
         );
+
         $this->assertEquals($output, $currentQueryArray);
+    }
+
+    public function testAddMatchedRoute()
+    {
+        $args = array('name', 'pattern', 'controller', array('key'));
+
+        Mock\MockTest::callProtectedMethod($this->_routeParser, 'addMatchedRoute', $args);
+        $matchedRouteArray = \PHPUnit_Framework_Assert::readAttribute($this->_routeParser, 'matchedRouteArray');
+
+        $output = array(
+            'name' => 'name',
+            'pattern' => 'pattern',
+            'key' => array('key'),
+            'controller' => 'controller'
+        );
+
+        $this->assertEquals(array($output), $matchedRouteArray);
     }
 
 }

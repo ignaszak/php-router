@@ -1,24 +1,32 @@
 <?php
 
-namespace Ignaszak\Router;
+namespace Ignaszak\Router\Controller;
+
+use Ignaszak\Router\Exception;
 
 abstract class Router
 {
 
-    protected static $currentQueryArray = array();
     protected static $addedRouteArray = array();
     protected static $tokenNameArray = array();
     protected static $tokenPatternArray = array();
-    protected static $matchedRouteArray = array();
     protected static $controllerArray = array();
 
-    protected static function addMatchedRoute($name, $pattern, $controller = null, array $key = null)
+    abstract public function add($name, $pattern, $controller = null);
+    abstract public function addToken($name, $pattern);
+    abstract public function addController($name, array $options);
+    abstract public function run();
+
+    public function getProperty($property)
     {
-        $routeArray = self::createRouteArray($name, $pattern, $controller, $key);
-        self::$matchedRouteArray = array_merge(self::$matchedRouteArray, array($routeArray));
+        if (property_exists($this, $property)) {
+            return self::$$property;
+        } else {
+            throw new Exception("Property <b>$property</b> not found");
+        }
     }
 
-    protected static function createRouteArray($name, $pattern, $controller = null, array $key = null)
+    public function createRouteArray($name, $pattern, $controller = null, array $key = null)
     {
 
         if (!empty($name) || !empty($pattern)) {

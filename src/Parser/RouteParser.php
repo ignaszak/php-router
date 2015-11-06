@@ -1,38 +1,54 @@
 <?php
 
-namespace Ignaszak\Router;
+namespace Ignaszak\Router\Parser;
 
-class RouteParser extends Router
+use Ignaszak\Router\Conf;
+
+class RouteParser extends ParserStrategy
 {
 
-    public function matchRouteWithToken()
+    private $matchedRouteArray = array();
+
+    public function run()
     {
-        foreach (parent::$addedRouteArray as $addedRoute) {
+        $this->matchRouteWithToken();
+        $this->matchPatternWithQueryString();
+    }
+
+    private function addMatchedRoute($name, $pattern, $controller = null, array $key = null)
+    {
+        $routeArray = $this->_routeController->createRouteArray($name, $pattern, $controller, $key);
+        $this->matchedRouteArray = array_merge($this->matchedRouteArray, array($routeArray));
+    }
+
+    private function matchRouteWithToken()
+    {
+        foreach ($this->_routeController->getProperty('addedRouteArray') as $addedRoute) {
 
             $patternString = $this->addParenthesisToString($addedRoute['pattern']);
 
             $pattern = str_replace(
-                parent::$tokenNameArray,
-                parent::$tokenPatternArray,
+                $this->_routeController->getProperty('tokenNameArray'),
+                $this->_routeController->getProperty('tokenPatternArray'),
                 $patternString
             );
 
-            parent::addMatchedRoute(
+            $this->addMatchedRoute(
                 $addedRoute['name'],
                 $pattern,
-                $addedRoute['controller'],
+                $this->addControllerArray($addedRoute['controller']),
                 $this->getTokenKeyArray($patternString)
             );
 
         }
     }
 
-    public function matchPatternWithQueryString()
+    private function matchPatternWithQueryString()
     {
         $currentQueryArray = array();
         $count = 0;
 
-        foreach (parent::$matchedRouteArray as $matchedRoute) {
+        foreach ($this->matchedRouteArray as $matchedRoute) {
 
             $pattern = $this->preparePatternToPregMatchFunction($matchedRoute['pattern']);
 
@@ -48,7 +64,8 @@ class RouteParser extends Router
                     $currentQueryArray[$keyName] = @$matchesArray[$key + 1];
                 }
 
-                parent::$currentQueryArray = $currentQueryArray;
+                self::$currentQueryArray = $currentQueryArray;
+
             }
         }
     }
@@ -94,6 +111,14 @@ class RouteParser extends Router
     private function preparePatternToPregMatchFunction($pattern)
     {
         return "/^" . str_replace("/", "\\/", $pattern) . "$/";
+    }
+
+    private function addControllerArray($controllerName)
+    {
+        $controllerArray = $this->_routeController->getProperty('controllerArray');
+
+        if (array_key_exists($controllerName, $controllerArray))
+            return $controllerArray[$controllerName];
     }
 
 }

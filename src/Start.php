@@ -12,7 +12,7 @@ class Start implements Interfaces\IStart
     public function __construct()
     {
         $this->_conf = Conf::instance();
-        $this->_routeController = new RouteController;
+        $this->_routeController = new Controller\RouteController(new Parser\RouteParser);
     }
 
     public static function instance()

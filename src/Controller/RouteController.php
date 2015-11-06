@@ -1,15 +1,19 @@
 <?php
 
-namespace Ignaszak\Router;
+namespace Ignaszak\Router\Controller;
 
-class RouteController extends Router implements Interfaces\IRouteController
+use Ignaszak\Router\Parser\ParserStrategy;
+use Ignaszak\Router\Conf;
+
+class RouteController extends Router
 {
 
-    private $_routeParser;
+    private $_parser;
 
-    public function __construct()
+    public function __construct(ParserStrategy $_parser)
     {
-        $this->_routeParser = new RouteParser;
+        $this->_parser = $_parser;
+        $this->_parser->passReference($this);
     }
 
     public function add($name, $pattern, $controller = null)
@@ -37,8 +41,7 @@ class RouteController extends Router implements Interfaces\IRouteController
     {
         $this->add(Conf::get('defaultRoute'), '(.*)');
         $this->sortAddedRouteArray();
-        $this->_routeParser->matchRouteWithToken();
-        $this->_routeParser->matchPatternWithQueryString();
+        $this->_parser->run();
     }
 
     private function sortAddedRouteArray()

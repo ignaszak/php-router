@@ -23,13 +23,4 @@ class ConfTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('router', Conf::getQueryString());
     }
 
-    /**
-     * @expectedException \Ignaszak\Router\Exception
-     */
-    public function testException()
-    {
-         $this->_conf->setProperty('baseURL', '');
-         Conf::getQueryString();
-    }
-
 }

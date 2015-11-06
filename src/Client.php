@@ -2,22 +2,26 @@
 
 namespace Ignaszak\Router;
 
-class Client extends Router implements Interfaces\IClient
+use Ignaszak\Router\Parser\ParserStrategy;
+
+class Client implements Interfaces\IClient
 {
 
     public static function getRoute($route = '')
     {
         if (is_string($route)) {
 
+            $currentQueryArray = ParserStrategy::getCurrentQueryArray();
+
             if (empty($route)) {
 
-                return (empty(parent::$currentQueryArray['route1']) ?
-                    Conf::get('defaultRoute') : parent::$currentQueryArray['route1']);
+                return (empty($currentQueryArray['route1']) ?
+                    Conf::get('defaultRoute') : $currentQueryArray['route1']);
 
             } else {
 
-                return (array_key_exists($route, parent::$currentQueryArray) ? 
-                    parent::$currentQueryArray[$route] : null);
+                return (array_key_exists($route, $currentQueryArray) ? 
+                    $currentQueryArray[$route] : null);
 
             }
 
@@ -28,11 +32,12 @@ class Client extends Router implements Interfaces\IClient
     {
         if (is_array($route) && !empty($route)) {
 
+            $currentQueryArray = ParserStrategy::getCurrentQueryArray();
             $match = array();
 
             foreach ($route as $key) {
-                $match[$key] = (isset(parent::$currentQueryArray[$key]) ?
-                    parent::$currentQueryArray[$key] : null);
+                $match[$key] = (isset($currentQueryArray[$key]) ?
+                    $currentQueryArray[$key] : null);
             }
 
             return $match;
@@ -42,7 +47,7 @@ class Client extends Router implements Interfaces\IClient
 
     public static function getAllRoutes()
     {
-        return parent::$currentQueryArray;
+        return ParserStrategy::getCurrentQueryArray();
     }
 
     public static function getRouteName()
@@ -62,9 +67,9 @@ class Client extends Router implements Interfaces\IClient
 
     public static function getControllerFile()
     {
-        $name = self::getRoute('controller');
-        if (!empty(parent::$controllerArray[$name]['file']))
-            return parent::$controllerArray[$name]['file'];
+        $controller = self::getRoute('controller');
+        if (!empty($controller))
+            return $controller['file'];
     }
 
 }
