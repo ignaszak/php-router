@@ -23,7 +23,8 @@ class Start implements Interfaces\IStart
        return self::$_start;
     }
 
-    public function __set($property, $value) {
+    public function __set($property, $value)
+    {
         $this->_conf->setProperty($property, $value);
     }
 
