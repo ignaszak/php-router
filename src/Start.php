@@ -13,7 +13,7 @@ namespace Ignaszak\Router;
 
 use Ignaszak\Router\Controller\RouteController;
 /**
- * Initialies router
+ * Initializes router
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Start.php
