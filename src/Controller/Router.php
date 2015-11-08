@@ -1,4 +1,13 @@
 <?php
+/**
+ * phpDocumentor
+ *
+ * PHP Version 5.5
+ *
+ * @copyright 2015 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      http://phpdoc.org
+ */
 
 namespace Ignaszak\Router\Controller;
 
@@ -14,26 +23,36 @@ abstract class Router
 {
 
     /**
+     * Stores added routes
+     * 
      * @var array
      */
     protected static $addedRouteArray = array();
 
     /**
+     * Stores added tokens name
+     * 
      * @var array
      */
     protected static $tokenNameArray = array();
 
     /**
+     * Stores added tokens pattern
+     * 
      * @var array
      */
     protected static $tokenPatternArray = array();
 
     /**
+     * Stores added controllers
+     * 
      * @var array
      */
     protected static $controllerArray = array();
 
     /**
+     * Adds to $addedRouteArray route name, pattern and if defined controller name
+     * 
      * @param string $name
      * @param string $pattern
      * @param string $controller
@@ -41,20 +60,30 @@ abstract class Router
     abstract public function add($name, $pattern, $controller = null);
 
     /**
+     * Adds to $tokenNameArray and $tokenPatternArray token name and pattern
+     * 
      * @param string $name
      * @param string $pattern
      */
     abstract public function addToken($name, $pattern);
 
     /**
+     * Adds to $controllerArray controller name and options
+     * 
      * @param string $name
      * @param array $options
      */
     abstract public function addController($name, array $options);
 
+    /**
+     * Adds default route, witch is activated when no routes is matched.
+     * Sorts $addedRouteArray and runs route parser.
+     */
     abstract public function run();
 
     /**
+     * Returns properties
+     * 
      * @param string $property
      * @throws Exception
      */
@@ -68,6 +97,8 @@ abstract class Router
     }
 
     /**
+     * Returns route array
+     * 
      * @param string $name
      * @param string $pattern
      * @param string $controller

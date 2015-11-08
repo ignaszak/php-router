@@ -1,8 +1,18 @@
 <?php
+/**
+ * phpDocumentor
+ *
+ * PHP Version 5.5
+ *
+ * @copyright 2015 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      http://phpdoc.org
+ */
 
 namespace Ignaszak\Router;
 
 /**
+ * Class defines current query from $_SERVER['REQUEST_URI']
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Host.php
@@ -12,20 +22,26 @@ class Host
 {
 
     /**
-     * @var string
+     * Stores base URL defined in Conf class
+     * 
+     * @var string|null
      */
-    private $host;
+    private $baseURL;
 
     /**
-     * @param string $host
+     * Sets base URL
+     * 
+     * @param string $baseURL
      */
-    public function __construct($host = '')
+    public function __construct($baseURL = '')
     {
-        if (!empty($host))
-            $this->host = $this->removeProtocol($host);
+        if (!empty($baseURL))
+            $this->baseURL = $this->replaceURL($baseURL);
     }
 
     /**
+     * Returns current query string from $_SERVER['REQUEST_URI']
+     * 
      * @return string
      */
     public function getQueryString()
@@ -36,24 +52,28 @@ class Host
     }
 
     /**
-     * @return string
+     * If baseURL is defined, returns baseURL without server name
+     * 
+     * @return string|null
      */
     private function baseRequestURI()
     {
-        if (!empty($this->host)) {
+        if (!empty($this->baseURL)) {
             return str_replace(
-                $this->removeProtocol($_SERVER['SERVER_NAME']),
+                $this->replaceURL($_SERVER['SERVER_NAME']),
                 '',
-                $this->host
+                $this->baseURL
             );
         }
     }
 
     /**
+     * Removes protocols and replaces locals ip to 'localhost'
+     * 
      * @param string $url
      * @return string
      */
-    private function removeProtocol($url)
+    private function replaceURL($url)
     {
         return preg_replace(
             array('/^(http:\/\/)/', '/^(https:\/\/)/', '/^www\./', '/^192\.168\.1\../', '/^127\.0\.0\.1/'),

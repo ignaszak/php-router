@@ -1,9 +1,19 @@
 <?php
+/**
+ * phpDocumentor
+ *
+ * PHP Version 5.5
+ *
+ * @copyright 2015 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      http://phpdoc.org
+ */
 
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Controller\RouteController;
 /**
+ * Initialies router
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Start.php
@@ -13,20 +23,29 @@ class Start implements Interfaces\IStart
 {
 
     /**
+     * Stores instance of Start class
+     * 
      * @var Start
      */
     private static $_start;
 
     /**
+     * Stores instance of Conf class
+     * 
      * @var Conf
      */
     private $_conf;
 
     /**
+     * Stores instance of RouteController class
+     * 
      * @var RouteController
      */
     private $_routeController;
 
+    /**
+     * Sets instances of Conf and RouteController classes
+     */
     public function __construct()
     {
         $this->_conf = Conf::instance();
@@ -34,6 +53,8 @@ class Start implements Interfaces\IStart
     }
 
     /**
+     * Singelton design pattern
+     * 
      * @return Conf
      */
     public static function instance()
@@ -45,6 +66,8 @@ class Start implements Interfaces\IStart
     }
 
     /**
+     * Sets Conf property value
+     * 
      * @param string $property
      * @param string $value
      */
@@ -54,6 +77,8 @@ class Start implements Interfaces\IStart
     }
 
     /**
+     * Calls RouteController methods
+     * 
      * @param string $function
      * @param array $args
      * @throws Exception

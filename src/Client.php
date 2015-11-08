@@ -1,10 +1,20 @@
 <?php
+/**
+ * phpDocumentor
+ *
+ * PHP Version 5.5
+ *
+ * @copyright 2015 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      http://phpdoc.org
+ */
 
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Parser\ParserStrategy;
 
 /**
+ * Class provides methods for users to get matched routes
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Client.php
@@ -14,6 +24,8 @@ class Client implements Interfaces\IClient
 {
 
     /**
+     * Returns single matched route
+     * 
      * @param string $route
      * @return string|null
      */
@@ -39,6 +51,8 @@ class Client implements Interfaces\IClient
     }
 
     /**
+     * Returns route array with defined keys
+     * 
      * @param array $route
      * @return array|null
      */
@@ -60,6 +74,8 @@ class Client implements Interfaces\IClient
     }
 
     /**
+     * Returns all matched routes in array
+     * 
      * @return array
      */
     public static function getAllRoutes()
@@ -68,6 +84,8 @@ class Client implements Interfaces\IClient
     }
 
     /**
+     * Returns route name
+     * 
      * @return string
      */
     public static function getRouteName()
@@ -76,6 +94,8 @@ class Client implements Interfaces\IClient
     }
 
     /**
+     * Returns true if deined name is the same as current route name
+     * 
      * @param string $name
      * @return boolean
      */
@@ -85,6 +105,8 @@ class Client implements Interfaces\IClient
     }
 
     /**
+     * Returns default route
+     * 
      * @return string
      */
     public static function getDefaultRoute()
@@ -93,6 +115,8 @@ class Client implements Interfaces\IClient
     }
 
     /**
+     * Returns current route controller file
+     * 
      * @return string
      */
     public static function getControllerFile()

@@ -1,4 +1,13 @@
 <?php
+/**
+ * phpDocumentor
+ *
+ * PHP Version 5.5
+ *
+ * @copyright 2015 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      http://phpdoc.org
+ */
 
 namespace Ignaszak\Router\Controller;
 
@@ -6,6 +15,7 @@ use Ignaszak\Router\Parser\ParserStrategy;
 use Ignaszak\Router\Conf;
 
 /**
+ * Adds defined by user routes, tokens and controllers and runs route parser
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Controller/RouteController.php
@@ -15,11 +25,15 @@ class RouteController extends Router
 {
 
     /**
+     * Stores instance of parser class
+     * 
      * @var ParserStrategy
      */
     private $_parser;
 
     /**
+     * Sets parser instance and pass self reference to parser
+     * 
      * @param ParserStrategy $_parser
      */
     public function __construct(ParserStrategy $_parser)
@@ -72,6 +86,9 @@ class RouteController extends Router
         $this->_parser->run();
     }
 
+    /**
+     * Sorts route array
+     */
     private function sortAddedRouteArray()
     {
         usort(parent::$addedRouteArray,

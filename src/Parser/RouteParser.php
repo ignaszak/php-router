@@ -1,10 +1,20 @@
 <?php
+/**
+ * phpDocumentor
+ *
+ * PHP Version 5.5
+ *
+ * @copyright 2015 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @link      http://phpdoc.org
+ */
 
 namespace Ignaszak\Router\Parser;
 
 use Ignaszak\Router\Conf;
 
 /**
+ * Matchs defined routes with current query
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Parser/RouteParser.php
@@ -14,10 +24,16 @@ class RouteParser extends ParserStrategy
 {
 
     /**
+     * Stores $addedRouteArray matched with tokens and controllers
+     * 
      * @var array
      */
     private $matchedRouteArray = array();
 
+    /**
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Parser\ParserStrategy::run()
+     */
     public function run()
     {
         $this->matchRouteWithToken();
@@ -25,17 +41,9 @@ class RouteParser extends ParserStrategy
     }
 
     /**
-     * @param string $name
-     * @param string $pattern
-     * @param string $controller
-     * @param array $key
+     * Replaces tokens defined in route pattern with token pattern and adds
+     * replaced route array to $matchedRouteArray
      */
-    private function addMatchedRoute($name, $pattern, $controller = null, array $key = null)
-    {
-        $routeArray = $this->_routeController->createRouteArray($name, $pattern, $controller, $key);
-        $this->matchedRouteArray = array_merge($this->matchedRouteArray, array($routeArray));
-    }
-
     private function matchRouteWithToken()
     {
         foreach ($this->_routeController->getProperty('addedRouteArray') as $addedRoute) {
@@ -58,6 +66,9 @@ class RouteParser extends ParserStrategy
         }
     }
 
+    /**
+     * Matchs $matchedRouteArray with current query and adds result to $currentQueryArray
+     */
     private function matchPatternWithQueryString()
     {
         $currentQueryArray = array();
@@ -86,6 +97,22 @@ class RouteParser extends ParserStrategy
     }
 
     /**
+     * Adds matched rout array
+     * 
+     * @param string $name
+     * @param string $pattern
+     * @param string $controller
+     * @param array $key
+     */
+    private function addMatchedRoute($name, $pattern, $controller = null, array $key = null)
+    {
+        $routeArray = $this->_routeController->createRouteArray($name, $pattern, $controller, $key);
+        $this->matchedRouteArray = array_merge($this->matchedRouteArray, array($routeArray));
+    }
+
+    /**
+     * Creates and returns kays as subpatterns name
+     * 
      * @param string $pattern
      * @return array
      */
@@ -112,6 +139,8 @@ class RouteParser extends ParserStrategy
     }
 
     /**
+     * Adds parenthesis if pattern is alphabetic
+     * 
      * @param string $pattern
      * @return array
      */
@@ -132,6 +161,8 @@ class RouteParser extends ParserStrategy
     }
 
     /**
+     * Prepares patterns to preg_match function
+     * 
      * @param string $pattern
      * @return string
      */
@@ -141,6 +172,8 @@ class RouteParser extends ParserStrategy
     }
 
     /**
+     * If route has controller returns controller array
+     * 
      * @param string $controllerName
      * @return string
      */
