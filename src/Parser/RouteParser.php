@@ -4,9 +4,18 @@ namespace Ignaszak\Router\Parser;
 
 use Ignaszak\Router\Conf;
 
+/**
+ * 
+ * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
+ * @link https://github.com/ignaszak/router/blob/master/src/Parser/RouteParser.php
+ *
+ */
 class RouteParser extends ParserStrategy
 {
 
+    /**
+     * @var array
+     */
     private $matchedRouteArray = array();
 
     public function run()
@@ -15,6 +24,12 @@ class RouteParser extends ParserStrategy
         $this->matchPatternWithQueryString();
     }
 
+    /**
+     * @param string $name
+     * @param string $pattern
+     * @param string $controller
+     * @param array $key
+     */
     private function addMatchedRoute($name, $pattern, $controller = null, array $key = null)
     {
         $routeArray = $this->_routeController->createRouteArray($name, $pattern, $controller, $key);
@@ -70,6 +85,10 @@ class RouteParser extends ParserStrategy
         }
     }
 
+    /**
+     * @param string $pattern
+     * @return array
+     */
     private function getTokenKeyArray($pattern)
     {
         $unamtchedTokenArray = explode('/', $pattern);
@@ -92,6 +111,10 @@ class RouteParser extends ParserStrategy
         return $tokenKeyArray;
     }
 
+    /**
+     * @param string $pattern
+     * @return array
+     */
     private function addParenthesisToString($pattern)
     {
         $patternArray = explode('/', $pattern);
@@ -108,11 +131,19 @@ class RouteParser extends ParserStrategy
         return implode('/', $returnArray);
     }
 
+    /**
+     * @param string $pattern
+     * @return string
+     */
     private function preparePatternToPregMatchFunction($pattern)
     {
         return "/^" . str_replace("/", "\\/", $pattern) . "$/";
     }
 
+    /**
+     * @param string $controllerName
+     * @return string
+     */
     private function addControllerArray($controllerName)
     {
         $controllerArray = $this->_routeController->getProperty('controllerArray');

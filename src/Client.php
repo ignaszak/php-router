@@ -4,9 +4,19 @@ namespace Ignaszak\Router;
 
 use Ignaszak\Router\Parser\ParserStrategy;
 
+/**
+ * 
+ * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
+ * @link https://github.com/ignaszak/router/blob/master/src/Client.php
+ *
+ */
 class Client implements Interfaces\IClient
 {
 
+    /**
+     * @param string $route
+     * @return string|null
+     */
     public static function getRoute($route = '')
     {
         if (is_string($route)) {
@@ -28,6 +38,10 @@ class Client implements Interfaces\IClient
         }
     }
 
+    /**
+     * @param array $route
+     * @return array|null
+     */
     public static function getRouteArray(array $route)
     {
         if (is_array($route) && !empty($route)) {
@@ -45,26 +59,42 @@ class Client implements Interfaces\IClient
         }
     }
 
+    /**
+     * @return array
+     */
     public static function getAllRoutes()
     {
         return ParserStrategy::getCurrentQueryArray();
     }
 
+    /**
+     * @return string
+     */
     public static function getRouteName()
     {
         return self::getRoute('name');
     }
 
+    /**
+     * @param string $name
+     * @return boolean
+     */
     public static function isRouteName($name)
     {
         return (self::getRoute('name') == $name);
     }
 
+    /**
+     * @return string
+     */
     public static function getDefaultRoute()
     {
         return Conf::get('defaultRoute');
     }
 
+    /**
+     * @return string
+     */
     public static function getControllerFile()
     {
         $controller = self::getRoute('controller');

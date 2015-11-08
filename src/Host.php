@@ -2,17 +2,32 @@
 
 namespace Ignaszak\Router;
 
+/**
+ * 
+ * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
+ * @link https://github.com/ignaszak/router/blob/master/src/Host.php
+ *
+ */
 class Host
 {
 
+    /**
+     * @var string
+     */
     private $host;
 
+    /**
+     * @param string $host
+     */
     public function __construct($host = '')
     {
         if (!empty($host))
             $this->host = $this->removeProtocol($host);
     }
 
+    /**
+     * @return string
+     */
     public function getQueryString()
     {
         return ($_SERVER['REQUEST_URI'] != $this->baseRequestURI() ?
@@ -20,6 +35,9 @@ class Host
             "");
     }
 
+    /**
+     * @return string
+     */
     private function baseRequestURI()
     {
         if (!empty($this->host)) {
@@ -31,6 +49,10 @@ class Host
         }
     }
 
+    /**
+     * @param string $url
+     * @return string
+     */
     private function removeProtocol($url)
     {
         return preg_replace(
