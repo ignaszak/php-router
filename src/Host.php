@@ -76,8 +76,8 @@ class Host
     private function replaceURL($url)
     {
         return preg_replace(
-            array('/^(https?:\/\/)/', '/^www\./', '/^192\.168\.1\../', '/^127\.0\.0\.1/'),
-            array('', '', 'localhost', 'localhost'),
+            array('/^(https?:\/\/)|(www\.)/', '/^(192\.168\.1\..)|(127\.0\.0\.1)/'),
+            array('', 'localhost'),
             $url
         );
     }
