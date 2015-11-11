@@ -36,7 +36,7 @@ class Host
     public function __construct($baseURL = '')
     {
         if (!empty($baseURL))
-            $this->baseURL = $this->replaceURL($baseURL);
+            $this->baseURL = $this->addSlashToURL($this->replaceURL($baseURL));
     }
 
     /**
@@ -76,10 +76,21 @@ class Host
     private function replaceURL($url)
     {
         return preg_replace(
-            array('/^(http:\/\/)/', '/^(https:\/\/)/', '/^www\./', '/^192\.168\.1\../', '/^127\.0\.0\.1/'),
-            array('', '', '', 'localhost', 'localhost'),
+            array('/^(https?:\/\/)/', '/^www\./', '/^192\.168\.1\../', '/^127\.0\.0\.1/'),
+            array('', '', 'localhost', 'localhost'),
             $url
         );
+    }
+
+    /**
+     * Adds slash to the end of url
+     * 
+     * @param string $url
+     * @return string
+     */
+    private function addSlashToURL($url)
+    {
+        return (substr($url, -1) == '/' ? $url : $url . '/');
     }
 
 }
