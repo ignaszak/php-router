@@ -83,7 +83,7 @@ Array
     [name] => 'viewpost'
     [controller] => Array
         (
-            [file] => file.php
+            [file] => 'file.php'
         )
     [route1] => 'post'
     [route2] => 'firstpost'
@@ -106,7 +106,7 @@ Array
     [name] => 'viewpost'
     [controller] => Array
         (
-            [file] => file.php
+            [file] => 'file.php'
         )
     [route1] => 'post'
     [token] => 'firstpost'
