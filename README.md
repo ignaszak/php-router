@@ -80,19 +80,19 @@ Method will return:
 ```php
 Array
 (
-    [name] => 'viewpost'
+    [name] => viewpost
     [controller] => Array
         (
-            [file] => 'file.php'
+            [file] => file.php
         )
-    [route1] => 'post'
-    [route2] => 'firstpost'
+    [route1] => post
+    [route2] => firstpost
 )
 ```
 
 For routes with token:
 
-```php
+```
 // $router->add('viewpost', 'post/{token}', 'controller');
 
 print_r( Ignaszak\Router\Client::getAllRoutes() );
@@ -103,13 +103,13 @@ Method will return:
 ```php
 Array
 (
-    [name] => 'viewpost'
+    [name] => viewpost
     [controller] => Array
         (
-            [file] => 'file.php'
+            [file] => file.php
         )
-    [route1] => 'post'
-    [token] => 'firstpost'
+    [route1] => post
+    [token] => firstpost
 )
 ```
 
