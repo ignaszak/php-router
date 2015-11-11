@@ -71,13 +71,12 @@ $router->run();
 
 ```php
 // $router->add('viewpost', 'post/firstpost', 'controller');
-
 print_r( Ignaszak\Router\Client::getAllRoutes() );
 ```
 
 Method will return:
 
-```php
+```sh
 Array
 (
     [name] => viewpost
@@ -92,15 +91,14 @@ Array
 
 For routes with token:
 
-```
+```php
 // $router->add('viewpost', 'post/{token}', 'controller');
-
 print_r( Ignaszak\Router\Client::getAllRoutes() );
 ```
 
 Method will return:
 
-```php
+```sh
 Array
 (
     [name] => viewpost
