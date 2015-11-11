@@ -70,7 +70,7 @@ $router->run();
 #### Get all matched variables in array:
 
 ```php
-$router->add('viewpost', 'post/firstpost', 'controller');
+// $router->add('viewpost', 'post/firstpost', 'controller');
 
 print_r( Ignaszak\Router\Client::getAllRoutes() );
 ```
@@ -81,7 +81,10 @@ Method will return:
 Array
 (
     [name] => 'viewpost'
-    [controller] => 'controller'
+    [controller] => Array
+        (
+            [file] => file.php
+        )
     [route1] => 'post'
     [route2] => 'firstpost'
 )
@@ -90,7 +93,7 @@ Array
 For routes with token:
 
 ```php
-$router->add('viewpost', 'post/{token}', 'controller');
+// $router->add('viewpost', 'post/{token}', 'controller');
 
 print_r( Ignaszak\Router\Client::getAllRoutes() );
 ```
@@ -101,7 +104,10 @@ Method will return:
 Array
 (
     [name] => 'viewpost'
-    [controller] => 'controller'
+    [controller] => Array
+        (
+            [file] => file.php
+        )
     [route1] => 'post'
     [token] => 'firstpost'
 )
