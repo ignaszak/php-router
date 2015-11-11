@@ -26,7 +26,7 @@ RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . {directory}index.php [L]
 ```
-## Running the Tests
+## Running Tests
 
 Just run phpunit from the working directory
 
