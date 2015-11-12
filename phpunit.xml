@@ -7,6 +7,12 @@
     stopOnSkipped="false"
     stopOnRisky="false">
 
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src/</directory>
+        </whitelist>
+    </filter>
+
     <testsuites>
         <testsuite name="router">
             <file>tests/ClientTest.php</file>
