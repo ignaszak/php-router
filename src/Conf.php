@@ -12,7 +12,7 @@
 namespace Ignaszak\Router;
 
 /**
- * Store configuration settings
+ * Stores configuration settings
  * 
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Conf.php
