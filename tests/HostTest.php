@@ -15,12 +15,12 @@ class HostTest extends \PHPUnit_Framework_TestCase
     public function testConstruct()
     {
         $this->setHost('http://www.site.com');
-        $host = \PHPUnit_Framework_Assert::readAttribute($this->_host, 'host');
-        $this->assertEquals('site.com', $host);
+        $baseURL = \PHPUnit_Framework_Assert::readAttribute($this->_host, 'baseURL');
+        $this->assertEquals('site.com/', $baseURL);
 
         $this->setHost();
-        $host = \PHPUnit_Framework_Assert::readAttribute($this->_host, 'host');
-        $this->assertEquals(null, $host);
+        $baseURL = \PHPUnit_Framework_Assert::readAttribute($this->_host, 'baseURL');
+        $this->assertEquals(null, $baseURL);
     }
 
     public function testGetQueryString()
@@ -31,7 +31,7 @@ class HostTest extends \PHPUnit_Framework_TestCase
         $this->setHost('http://www.site.com/path');
         $queryString = $this->_host->getQueryString();
 
-        $this->assertEquals('/query', $queryString);
+        $this->assertEquals('query', $queryString);
     }
 
 }
