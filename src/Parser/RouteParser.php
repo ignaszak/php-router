@@ -87,7 +87,10 @@ class RouteParser extends ParserStrategy
                 $currentQueryArray['controller'] = $matchedRoute['controller'];
 
                 foreach ($matchedRoute['key'] as $key => $keyName) {
-                    $currentQueryArray[$keyName] = @$matchesArray[$key + 1];
+
+                    if (!empty($matchesArray[$key + 1]))
+                        $currentQueryArray[$keyName] = $matchesArray[$key + 1];
+
                 }
 
                 self::$currentQueryArray = $currentQueryArray;
