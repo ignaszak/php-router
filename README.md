@@ -51,9 +51,11 @@ $router->add('name', 'post/alias', 'controller');
 
 // Add route with token
 $router->add('name', 'post/{token}', 'controller');
-
 // Add token
 $router->addToken('token', '([a-z0-9_-]*)');
+
+// Add route with named pattern
+$router->add('name', 'post/{token:pattern}', 'controller');
 
 // Add controller
 $router->addController('controller', array('file' => 'file.php'));

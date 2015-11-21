@@ -6,7 +6,6 @@ use Ignaszak\Router\Client;
 include __DIR__ . '/autoload.php';
 
 $router = Start::instance();
-$router->baseURL = 'http://192.168.1.2/~tomek/Eclipse/PHP/Router/';
 
 $router->add('post', 'post/{alias}', 'myController');
 $router->addToken('alias', '(one|two)');
