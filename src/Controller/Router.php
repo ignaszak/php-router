@@ -105,29 +105,15 @@ abstract class Router
      * @param array $key
      * @throws Exception
      */
-    public function createRouteArray($name, $pattern, $controller = null, array $key = null)
+    public function createRouteArray($name, $pattern, $controller = null)
     {
-
         if (!empty($name) || !empty($pattern)) {
 
-            if (is_null($key)) {
-
-                return array(
-                    'name' => $name,
-                    'pattern' => $pattern,
-                    'controller' => $controller
-                );
-
-            } else {
-
-                return array(
-                    'name' => $name,
-                    'pattern' => $pattern,
-                    'key' => $key,
-                    'controller' => $controller
-                );
-
-            }
+            return array(
+                'name' => $name,
+                'pattern' => $pattern,
+                'controller' => $controller
+            );
 
         } else {
 

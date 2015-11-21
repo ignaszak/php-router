@@ -10,18 +10,18 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
 {
 
     private $_routeParser;
-    private $_routeContrroler;
+    private $_routeController;
 
     public function setUp()
     {
         new ConfTest;
 
         $this->_routeParser = new RouteParser;
-        $this->_routeContrroler = new RouteController($this->_routeParser);
+        $this->_routeController = new RouteController($this->_routeParser);
 
-        $this->_routeContrroler->add('name', '{token}', 'controller');
-        $this->_routeContrroler->addToken('token', '([a-z]*)');
-        $this->_routeContrroler->addController('controller', array('file'=>'file.php'));
+        $this->_routeController->add('name', '{token}', 'controller');
+        $this->_routeController->addToken('token', '([a-z]*)');
+        $this->_routeController->addController('controller', array('file'=>'file.php'));
     }
 
     public function testMatchRouteWithToken()
@@ -32,8 +32,7 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
 
         $output = array(
             'name' => 'name',
-            'pattern' => '([a-z]*)',
-            'key' => array('token'),
+            'pattern' => '(?P<token>([a-z]*))',
             'controller' => array('file'=>'file.php')
         );
 
@@ -57,7 +56,7 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
 
     public function testAddMatchedRoute()
     {
-        $args = array('name', 'pattern', 'controller', array('key'));
+        $args = array('name', 'pattern', 'controller');
 
         Mock\MockTest::callProtectedMethod($this->_routeParser, 'addMatchedRoute', $args);
         $matchedRouteArray = \PHPUnit_Framework_Assert::readAttribute($this->_routeParser, 'matchedRouteArray');
@@ -65,11 +64,26 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
         $output = array(
             'name' => 'name',
             'pattern' => 'pattern',
-            'key' => array('key'),
             'controller' => 'controller'
         );
 
         $this->assertEquals(array($output), $matchedRouteArray);
+
+    }
+
+    public function testAddNameToPatternWithDefinedToken()
+    {
+        $addNameToPatternWithDefinedToken = Mock\MockTest::callProtectedMethod($this->_routeParser, 'addNameToPatternWithDefinedToken', array('{token}'));
+        $this->assertEquals("(?P<token>([a-z]*))", $addNameToPatternWithDefinedToken);
+    }
+
+    public function testAddNameToPattern()
+    {
+        $addNameToPattern = Mock\MockTest::callProtectedMethod($this->_routeParser, 'addNameToPattern', array('{token:router}'));
+        $this->assertEquals("(?P<token>router)", $addNameToPattern);
+
+        $addNameToPattern = Mock\MockTest::callProtectedMethod($this->_routeParser, 'addNameToPattern', array('{router}'));
+        $this->assertEquals("(?P<route1>router)", $addNameToPattern);
     }
 
 }

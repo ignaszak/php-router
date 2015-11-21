@@ -16,14 +16,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->output = array(
             'name' => 'name',
             'pattern' => 'pattern',
-            'key' => array('key'),
             'controller' => 'controller'
         );
     }
 
     public function testCreateRouteArray()
     {
-        $args = array('name', 'pattern', 'controller', array('key'));
+        $args = array('name', 'pattern', 'controller');
 
         $method = Mock\MockTest::callProtectedMethod($this->_router, 'createRouteArray', $args);
 

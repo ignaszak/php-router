@@ -31,6 +31,13 @@ class RouteParser extends ParserStrategy
     private $matchedRouteArray = array();
 
     /**
+     * Counter used to name routes
+     * 
+     * @var integer
+     */
+    private static $countRoute = 0;
+
+    /**
      * {@inheritDoc}
      * @see \Ignaszak\Router\Parser\ParserStrategy::run()
      */
@@ -48,8 +55,19 @@ class RouteParser extends ParserStrategy
     {
         foreach ($this->_routeController->getProperty('addedRouteArray') as $addedRoute) {
 
-            $patternString = $this->addParenthesisToString($addedRoute['pattern']);
+            $patternArray = explode('/', $addedRoute['pattern']);
+            $returnArray = array();
 
+            foreach ($patternArray as $pattern) {
+                $patternString = $this->addParenthesisToString($pattern);
+                $patternString = $this->addNameToPatternWithDefinedToken($patternString);
+                $patternString = $this->addNameToPattern($patternString);
+                $returnArray[] = $patternString;
+            }
+
+            self::$countRoute = 0;
+            $patternString = implode('/', $returnArray);
+            
             $pattern = str_replace(
                 $this->_routeController->getProperty('tokenNameArray'),
                 $this->_routeController->getProperty('tokenPatternArray'),
@@ -59,51 +77,15 @@ class RouteParser extends ParserStrategy
             $this->addMatchedRoute(
                 $addedRoute['name'],
                 $pattern,
-                $this->addControllerArray($addedRoute['controller']),
-                $this->getTokenKeyArray($patternString)
+                $this->addControllerArray($addedRoute['controller'])
             );
 
         }
     }
 
     /**
-     * Matchs $matchedRouteArray with current query and adds result to $currentQueryArray
-     */
-    private function matchPatternWithQueryString()
-    {
-        $currentQueryArray = array();
-        $count = 0;
-
-        foreach ($this->matchedRouteArray as $matchedRoute) {
-
-            $pattern = $this->preparePatternToPregMatchFunction($matchedRoute['pattern']);
-
-            $matchesArray = array();
-
-            if (@preg_match($pattern, Conf::getQueryString(), $matchesArray) && !$count) {
-
-                ++ $count;
-                $currentQueryArray['name'] = $matchedRoute['name'];
-
-                if (!empty($matchedRoute['controller']))
-                    $currentQueryArray['controller'] = $matchedRoute['controller'];
-
-                foreach ($matchedRoute['key'] as $key => $keyName) {
-
-                    if (!empty($matchesArray[$key + 1]))
-                        $currentQueryArray[$keyName] = $matchesArray[$key + 1];
-
-                }
-
-                self::$currentQueryArray = $currentQueryArray;
-
-            }
-        }
-    }
-
-    /**
      * Adds matched rout array
-     * 
+     *
      * @param string $name
      * @param string $pattern
      * @param string $controller
@@ -116,52 +98,115 @@ class RouteParser extends ParserStrategy
     }
 
     /**
-     * Creates and returns kays as subpatterns name
-     * 
-     * @param string $pattern
-     * @return array
-     */
-    private function getTokenKeyArray($pattern)
-    {
-        $unamtchedTokenArray = explode('/', $pattern);
-        $tokenKeyArray = array();
-        $count = 1;
-
-        foreach($unamtchedTokenArray as $unmatchedToken) {
-
-            $tokenKeyArray[] = preg_replace(
-                array('/((\(.*)\))/', '/\{/', '/\}/'),
-                array("route$count", '', ''),
-                $unmatchedToken
-            );
-
-            ++$count;
-
-        }
-
-        return $tokenKeyArray;
-    }
-
-    /**
      * Adds parenthesis if pattern is alphabetic
-     * 
+     *
      * @param string $pattern
      * @return array
      */
     private function addParenthesisToString($pattern)
     {
-        $patternArray = explode('/', $pattern);
-        $returnArray = array();
+        return ctype_alpha($pattern) ? "($pattern)" : $pattern;
+    }
 
-        foreach ($patternArray as $value) {
-            if (ctype_alpha($value)) {
-                $returnArray[] = "($value)";
-            } else {
-                $returnArray[] = $value;
-            }
+    /**
+     * If route has controller returns controller array
+     *
+     * @param string $controllerName
+     * @return string
+     */
+    private function addControllerArray($controllerName)
+    {
+        $controllerArray = $this->_routeController->getProperty('controllerArray');
+    
+        if (array_key_exists($controllerName, $controllerArray))
+            return $controllerArray[$controllerName];
+    }
+
+    /**
+     * @param string $pattern
+     * @return string
+     */
+    private function addNameToPatternWithDefinedToken($pattern)
+    {
+        $replacement = array();
+        $tokenNameArray = $this->_routeController->getProperty('tokenNameArray');
+        $tokenPatternArray = $this->_routeController->getProperty('tokenPatternArray');
+        $count = count($tokenPatternArray);
+
+        for ($i=0;$i<$count;++$i) {
+            $name = $this->removeBraces($tokenNameArray[$i]);
+            $replacement[] = "(?P<$name>{$tokenPatternArray[$i]})";
         }
 
-        return implode('/', $returnArray);
+        return str_replace($tokenNameArray, $replacement, $pattern);
+    }
+
+    /**
+     * @param string $pattern
+     * @return string
+     */
+    private function addNameToPattern($pattern)
+    {
+        $patternArray = explode(':', $this->removeBraces($pattern));
+
+        if (count($patternArray) == 2) {
+
+            return "(?P<{$patternArray[0]}>{$patternArray[1]})";
+
+        } elseif (strpos($patternArray[0], '?P<') === false) {
+
+            ++ self::$countRoute;
+            return "(?P<route" . self::$countRoute . ">{$patternArray[0]})";
+
+        } else {
+            return $patternArray[0];
+        }
+    }
+
+    /**
+     * @param string $pattern
+     * @return string
+     */
+    private function removeBraces($pattern)
+    {
+        return str_replace(array('{','}'), '', $pattern);
+    }
+
+    /**
+     * Matchs $matchedRouteArray with current query and adds result to $currentQueryArray
+     */
+    private function matchPatternWithQueryString()
+    {
+        $count = 0;
+
+        foreach ($this->matchedRouteArray as $matchedRoute) {
+
+            $pattern = $this->preparePatternToPregMatchFunction($matchedRoute['pattern']);
+            $matchesArray = array();
+
+            if (@preg_match($pattern, Conf::getQueryString(), $matchesArray) && !$count) {
+
+                ++ $count;
+                $headerArray = array();
+
+                if (!empty($matchedRoute['controller'])) {
+                    $headerArray = array(
+                        'name' => $matchedRoute['name'],
+                        'controller' => $matchedRoute['controller']
+                    );
+                } else {
+                    $headerArray = array(
+                        'name' => $matchedRoute['name']
+                    );
+                }
+
+                // Remove integer keys
+                $keys = array_filter(array_keys($matchesArray), 'is_numeric');
+                $currentQueryArray = array_diff_key($matchesArray, array_flip($keys));
+
+                self::$currentQueryArray = array_merge($headerArray, $currentQueryArray);
+            }
+        }
     }
 
     /**
@@ -173,20 +218,6 @@ class RouteParser extends ParserStrategy
     private function preparePatternToPregMatchFunction($pattern)
     {
         return "/^" . str_replace("/", "\\/", $pattern) . "$/";
-    }
-
-    /**
-     * If route has controller returns controller array
-     * 
-     * @param string $controllerName
-     * @return string
-     */
-    private function addControllerArray($controllerName)
-    {
-        $controllerArray = $this->_routeController->getProperty('controllerArray');
-
-        if (array_key_exists($controllerName, $controllerArray))
-            return $controllerArray[$controllerName];
     }
 
 }
