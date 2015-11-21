@@ -112,7 +112,7 @@ class RouteParser extends ParserStrategy
     private function addMatchedRoute($name, $pattern, $controller = null, array $key = null)
     {
         $routeArray = $this->_routeController->createRouteArray($name, $pattern, $controller, $key);
-        $this->matchedRouteArray = array_merge($this->matchedRouteArray, array($routeArray));
+        $this->matchedRouteArray[] = $routeArray;
     }
 
     /**
@@ -129,13 +129,12 @@ class RouteParser extends ParserStrategy
 
         foreach($unamtchedTokenArray as $unmatchedToken) {
 
-            $matchedTokenArray = preg_replace(
+            $tokenKeyArray[] = preg_replace(
                 array('/((\(.*)\))/', '/\{/', '/\}/'),
                 array("route$count", '', ''),
                 $unmatchedToken
             );
 
-            $tokenKeyArray = array_merge($tokenKeyArray, array($matchedTokenArray));
             ++$count;
 
         }

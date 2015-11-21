@@ -49,7 +49,7 @@ class RouteController extends Router
     public function add($name, $pattern, $controller = null)
     {
         $routeArray = parent::createRouteArray($name, $pattern, $controller);
-        parent::$addedRouteArray = array_merge(parent::$addedRouteArray, array($routeArray));
+        parent::$addedRouteArray[] = $routeArray;
     }
 
     /**
@@ -58,11 +58,9 @@ class RouteController extends Router
      */
     public function addToken($name, $pattern)
     {
-        if (!empty($name) && !empty($pattern) && !in_array('{'.$name.'}', parent::$tokenNameArray)) {
-
-            parent::$tokenNameArray = array_merge(parent::$tokenNameArray, array('{'.$name.'}'));
-            parent::$tokenPatternArray = array_merge(parent::$tokenPatternArray, array($pattern));
-
+        if (!empty($name) && !empty($pattern) && !in_array("{{$name}}", parent::$tokenNameArray)) {
+            parent::$tokenNameArray[] = "{{$name}}";
+            parent::$tokenPatternArray[] = $pattern;
         }
     }
 
@@ -72,7 +70,7 @@ class RouteController extends Router
      */
     public function addController($name, array $options)
     {
-        parent::$controllerArray = array_merge(parent::$controllerArray, array($name => $options));
+        parent::$controllerArray[$name] = $options;
     }
 
     /**
