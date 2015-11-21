@@ -200,7 +200,8 @@ class RouteParser extends ParserStrategy
                     );
                 }
 
-                // Remove integer keys
+                // Remove integer keys and empty elements
+                $matchesArray = array_filter($matchesArray);
                 $keys = array_filter(array_keys($matchesArray), 'is_numeric');
                 $currentQueryArray = array_diff_key($matchesArray, array_flip($keys));
 
