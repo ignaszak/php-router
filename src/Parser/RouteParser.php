@@ -187,25 +187,17 @@ class RouteParser extends ParserStrategy
             if (@preg_match($pattern, Conf::getQueryString(), $matchesArray) && !$count) {
 
                 ++ $count;
-                $headerArray = array();
 
-                if (!empty($matchedRoute['controller'])) {
-                    $headerArray = array(
-                        'name' => $matchedRoute['name'],
-                        'controller' => $matchedRoute['controller']
-                    );
-                } else {
-                    $headerArray = array(
-                        'name' => $matchedRoute['name']
-                    );
-                }
+                $headerArray = array(
+                    'name' => $matchedRoute['name'],
+                    'controller' => $matchedRoute['controller']
+                );
 
-                // Remove integer keys and empty elements
-                $matchesArray = array_filter($matchesArray);
                 $keys = array_filter(array_keys($matchesArray), 'is_numeric');
-                $currentQueryArray = array_diff_key($matchesArray, array_flip($keys));
-
-                self::$currentQueryArray = array_merge($headerArray, $currentQueryArray);
+                $currentQueryArray = array_diff_key($matchesArray, array_flip($keys)); // Remove integer keys
+                $currentQueryArray = array_merge($headerArray, $currentQueryArray);
+                $currentQueryArray = array_filter($currentQueryArray); // Remove empty elements
+                self::$currentQueryArray = $currentQueryArray;
             }
         }
     }
