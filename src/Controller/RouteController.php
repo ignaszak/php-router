@@ -13,6 +13,7 @@ namespace Ignaszak\Router\Controller;
 
 use Ignaszak\Router\Parser\ParserStrategy;
 use Ignaszak\Router\Conf;
+use Ignaszak\Router\Exception;
 
 /**
  * Adds defined by user routes, tokens and controllers and runs route parser
@@ -80,6 +81,7 @@ class RouteController extends Router
     public function run()
     {
         $this->add(Conf::get('defaultRoute'), '(.*)');
+        $this->checkForDuplicates();
         $this->sortAddedRouteArray();
         $this->_parser->run();
     }
@@ -95,6 +97,21 @@ class RouteController extends Router
                 return strnatcmp($b['pattern'], $a['pattern']);
             }
         );
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function checkForDuplicates()
+    {
+        foreach (self::$addedRouteArray as $route) {
+            $tokensArray = array();
+            preg_match_all("/\{([[:alnum:]]*)(\:|\})/", $route['pattern'], $tokensArray);
+
+            if (count($tokensArray[1]) !== count(array_unique($tokensArray[1]))) {
+                throw new Exception("Detect duplicate tokens");
+            }
+        }
     }
 
 }
