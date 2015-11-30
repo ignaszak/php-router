@@ -44,13 +44,6 @@ abstract class Router
     protected static $tokenPatternArray = array();
 
     /**
-     * Stores added controllers
-     * 
-     * @var array
-     */
-    protected static $controllerArray = array();
-
-    /**
      * Adds to $addedRouteArray route name, pattern and if defined controller name
      * 
      * @param string $name
@@ -66,14 +59,6 @@ abstract class Router
      * @param string $pattern
      */
     abstract public function addToken($name, $pattern);
-
-    /**
-     * Adds to $controllerArray controller name and options
-     * 
-     * @param string $name
-     * @param array $options
-     */
-    abstract public function addController($name, array $options);
 
     /**
      * Adds default route, witch is activated when no routes is matched.

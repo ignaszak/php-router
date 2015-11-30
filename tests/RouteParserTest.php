@@ -21,7 +21,6 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
 
         $this->_routeController->add('name', '{token}', 'controller');
         $this->_routeController->addToken('token', '([a-z]*)');
-        $this->_routeController->addController('controller', array('file'=>'file.php'));
     }
 
     public function testMatchRouteWithToken()
@@ -33,7 +32,7 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
         $output = array(
             'name' => 'name',
             'pattern' => '(?P<token>([a-z]*))',
-            'controller' => array('file'=>'file.php')
+            'controller' => 'controller'
         );
 
         $this->assertEquals($output, $matchedRouteArray[$count - 1]);
@@ -47,7 +46,7 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
 
         $output = array(
             'name' => 'name',
-            'controller' => array('file'=>'file.php'),
+            'controller' => 'controller',
             'token' => 'router'
         );
 

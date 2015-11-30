@@ -20,12 +20,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $this->_routeContrroler->add('name', '{token}', 'controller');
         $this->_routeContrroler->addToken('token', '([a-z]*)');
-        $this->_routeContrroler->addController('controller', array('file'=>'file.php'));
         $this->_routeContrroler->run();
 
         $this->output = array(
             'name' => 'name',
-            'controller' => array('file'=>'file.php'),
+            'controller' => 'controller',
             'token' => 'router'
         );
     }
@@ -34,14 +33,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('', Client::getRoute());
         $this->assertEquals($this->output['token'], Client::getRoute('token'));
-    }
-
-    public function testGetRouteArray()
-    {
-        $this->assertEquals(
-            array('name' => $this->output['name'], 'token' => $this->output['token']),
-            Client::getRouteArray(array('name', 'token'))
-            );
     }
 
     public function testGetAllRoutes()
@@ -62,11 +53,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testGetDefaultRoute()
     {
         $this->assertEquals('', Client::getDefaultRoute());
-    }
-
-    public function testGetControllerFile()
-    {
-        $this->assertEquals($this->output['controller']['file'], Client::getControllerFile());
     }
 
 }

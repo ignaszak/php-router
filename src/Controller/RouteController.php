@@ -67,15 +67,6 @@ class RouteController extends Router
 
     /**
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Controller\Router::addController()
-     */
-    public function addController($name, array $options)
-    {
-        parent::$controllerArray[$name] = $options;
-    }
-
-    /**
-     * {@inheritDoc}
      * @see \Ignaszak\Router\Controller\Router::run()
      */
     public function run()

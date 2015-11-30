@@ -44,15 +44,6 @@ class RouteControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('([a-z]*)'), $tokenPatternArray);
     }
 
-    public function testAddController()
-    {
-        $this->_routeContrroler->addController('controller', array('file'=>'file.php'));
-        $controllerArray = \PHPUnit_Framework_Assert::readAttribute($this->_router, 'controllerArray');
-
-        $output = array('controller'=>array('file'=>'file.php'));
-        $this->assertEquals($output, $controllerArray);
-    }
-
     public function testRun()
     {
         new ConfTest;
@@ -63,7 +54,7 @@ class RouteControllerTest extends \PHPUnit_Framework_TestCase
         $output = array(
             'name' => 'name',
             'token' => 'router',
-            'controller' => array('file'=>'file.php')
+            'controller' => 'controller'
         );
         $this->assertEquals($output, $currentQueryArray);
     }

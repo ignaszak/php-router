@@ -26,11 +26,6 @@ interface IClient
      */
     public static function getRoute($route = '');
 
-    /**
-     * @param array $route
-     */
-    public static function getRouteArray(array $route);
-
     public static function getAllRoutes();
 
     public static function getRouteName();
@@ -41,7 +36,5 @@ interface IClient
     public static function isRouteName($name);
 
     public static function getDefaultRoute();
-
-    public static function getControllerFile();
 
 }

@@ -51,29 +51,6 @@ class Client implements Interfaces\IClient
     }
 
     /**
-     * Returns route array with defined keys
-     * 
-     * @param array $route
-     * @return array|null
-     */
-    public static function getRouteArray(array $route)
-    {
-        if (is_array($route) && !empty($route)) {
-
-            $currentQueryArray = ParserStrategy::getCurrentQueryArray();
-            $match = array();
-
-            foreach ($route as $key) {
-                $match[$key] = (isset($currentQueryArray[$key]) ?
-                    $currentQueryArray[$key] : null);
-            }
-
-            return $match;
-
-        }
-    }
-
-    /**
      * Returns all matched routes in array
      * 
      * @return array
@@ -112,18 +89,6 @@ class Client implements Interfaces\IClient
     public static function getDefaultRoute()
     {
         return Conf::get('defaultRoute');
-    }
-
-    /**
-     * Returns current route controller file
-     * 
-     * @return string
-     */
-    public static function getControllerFile()
-    {
-        $controller = self::getRoute('controller');
-        if (!empty($controller))
-            return $controller['file'];
     }
 
 }

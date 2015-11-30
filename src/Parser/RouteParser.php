@@ -77,7 +77,7 @@ class RouteParser extends ParserStrategy
             $this->addMatchedRoute(
                 $addedRoute['name'],
                 $pattern,
-                $this->addControllerArray($addedRoute['controller'])
+                $addedRoute['controller']
             );
 
         }
@@ -106,20 +106,6 @@ class RouteParser extends ParserStrategy
     private function addParenthesisToString($pattern)
     {
         return ctype_alpha($pattern) ? "($pattern)" : $pattern;
-    }
-
-    /**
-     * If route has controller returns controller array
-     *
-     * @param string $controllerName
-     * @return string
-     */
-    private function addControllerArray($controllerName)
-    {
-        $controllerArray = $this->_routeController->getProperty('controllerArray');
-    
-        if (array_key_exists($controllerName, $controllerArray))
-            return $controllerArray[$controllerName];
     }
 
     /**
