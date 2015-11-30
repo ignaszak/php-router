@@ -56,9 +56,6 @@ $router->addToken('token', '([a-z0-9_-]*)');
 
 // Add route with named pattern
 $router->add('name', 'post/{token:pattern}', 'controller');
-
-// Add controller
-$router->addController('controller', array('file' => 'file.php'));
 ```
 
 ### Run router
@@ -72,7 +69,7 @@ $router->run();
 #### Get all matched variables in array:
 
 ```php
-// $router->add('viewpost', 'post/firstpost', 'controller');
+// $router->add('viewpost', 'post/firstpost', 'myController');
 print_r( Ignaszak\Router\Client::getAllRoutes() );
 ```
 
@@ -82,10 +79,7 @@ Method will return:
 Array
 (
     [name] => viewpost
-    [controller] => Array
-        (
-            [file] => file.php
-        )
+    [controller] => myController
     [route1] => post
     [route2] => firstpost
 )
@@ -94,7 +88,7 @@ Array
 For routes with token:
 
 ```php
-// $router->add('viewpost', 'post/{token}', 'controller');
+// $router->add('viewpost', 'post/{token}', 'myController');
 print_r( Ignaszak\Router\Client::getAllRoutes() );
 ```
 
@@ -104,10 +98,7 @@ Method will return:
 Array
 (
     [name] => viewpost
-    [controller] => Array
-        (
-            [file] => file.php
-        )
+    [controller] => myController
     [route1] => post
     [token] => firstpost
 )
@@ -124,10 +115,4 @@ Ignaszak\Router\Client::getRoute($route = null);
 
 ```php
 Ignaszak\Router\Client::getRouteName();
-```
-
-#### Get controller file path:
-
-```php
-Ignaszak\Router\Client::getControllerFile();
 ```
