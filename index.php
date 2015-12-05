@@ -9,8 +9,6 @@ $router = Start::instance();
 
 $router->add('post', 'post/{alias}', 'myController');
 $router->addToken('alias', '(one|two)');
-$router->addController('myController', array('file' => __FILE__));
-
 $router->add('post', 'post/{alias:three}', 'myController2');
 
 $router->run();
