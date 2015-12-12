@@ -12,6 +12,7 @@
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Controller\RouteController;
+
 /**
  * Initializes router
  * 
