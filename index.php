@@ -16,5 +16,3 @@ $router->run();
 echo '<pre>';
 print_r(Client::getAllRoutes());
 echo '<pre>';
-
-?>

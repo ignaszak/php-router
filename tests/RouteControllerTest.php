@@ -67,5 +67,4 @@ class RouteControllerTest extends \PHPUnit_Framework_TestCase
         $this->_routeContrroler->add('duplicate', '{token}/{token}');
         Mock\MockTest::callProtectedMethod($this->_routeContrroler, 'checkForDuplicates');
     }
-
 }

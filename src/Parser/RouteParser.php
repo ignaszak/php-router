@@ -15,7 +15,7 @@ use Ignaszak\Router\Conf;
 
 /**
  * Matchs defined routes with current query
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Parser/RouteParser.php
  *
@@ -25,14 +25,14 @@ class RouteParser extends ParserStrategy
 
     /**
      * Stores $addedRouteArray matched with tokens and controllers
-     * 
+     *
      * @var array
      */
     private $matchedRouteArray = array();
 
     /**
      * Counter used to name routes
-     * 
+     *
      * @var integer
      */
     private static $countRoute = 0;
@@ -119,7 +119,7 @@ class RouteParser extends ParserStrategy
         $tokenPatternArray = $this->_routeController->getProperty('tokenPatternArray');
         $count = count($tokenPatternArray);
 
-        for ($i=0;$i<$count;++$i) {
+        for ($i=0; $i<$count; ++$i) {
             $name = $this->removeBraces($tokenNameArray[$i]);
             $replacement[] = "(?P<$name>{$tokenPatternArray[$i]})";
         }
@@ -190,7 +190,7 @@ class RouteParser extends ParserStrategy
 
     /**
      * Prepares patterns to preg_match function
-     * 
+     *
      * @param string $pattern
      * @return string
      */
@@ -198,5 +198,4 @@ class RouteParser extends ParserStrategy
     {
         return "/^" . str_replace("/", "\\/", $pattern) . "$/";
     }
-
 }

@@ -13,7 +13,7 @@ namespace Ignaszak\Router;
 
 /**
  * Class defines current query from $_SERVER['REQUEST_URI']
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Host.php
  *
@@ -23,25 +23,26 @@ class Host
 
     /**
      * Stores base URL defined in Conf class
-     * 
+     *
      * @var string|null
      */
     private $baseURL;
 
     /**
      * Sets base URL
-     * 
+     *
      * @param string $baseURL
      */
     public function __construct($baseURL = '')
     {
-        if (!empty($baseURL))
+        if (!empty($baseURL)) {
             $this->baseURL = $this->addSlashToURL($this->replaceURL($baseURL));
+        }
     }
 
     /**
      * Returns current query string from $_SERVER['REQUEST_URI']
-     * 
+     *
      * @return string
      */
     public function getQueryString()
@@ -53,7 +54,7 @@ class Host
 
     /**
      * If baseURL is defined, returns baseURL without server name
-     * 
+     *
      * @return string|null
      */
     private function baseRequestURI()
@@ -69,7 +70,7 @@ class Host
 
     /**
      * Removes protocols and replaces locals ip to 'localhost'
-     * 
+     *
      * @param string $url
      * @return string
      */
@@ -84,7 +85,7 @@ class Host
 
     /**
      * Adds slash to the end of url
-     * 
+     *
      * @param string $url
      * @return string
      */
@@ -92,5 +93,4 @@ class Host
     {
         return (substr($url, -1) == '/' ? $url : $url . '/');
     }
-
 }

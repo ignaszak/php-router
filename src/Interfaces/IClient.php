@@ -13,7 +13,7 @@ namespace Ignaszak\Router\Interfaces;
 
 /**
  * Client class interface
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Interfaces/IClient.php
  *
@@ -36,5 +36,4 @@ interface IClient
     public static function isRouteName($name);
 
     public static function getDefaultRoute();
-
 }

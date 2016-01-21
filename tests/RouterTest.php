@@ -38,5 +38,4 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         Mock\MockTest::callProtectedMethod($this->_router, 'createRouteArray', $args);
     }
-
 }

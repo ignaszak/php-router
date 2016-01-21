@@ -15,7 +15,7 @@ The package is avilable via [Composer/Packagist](https://packagist.org/packages/
 or:
 
 ```sh
-composer require ignaszak/router
+php composer.phar require ignaszak/router
 ```
 ## Configuration
 The easiest way is to configure mod_rewrite via .htaccess file in site base directory. Example:

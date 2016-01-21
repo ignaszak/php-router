@@ -84,5 +84,4 @@ class RouteParserTest extends \PHPUnit_Framework_TestCase
         $addNameToPattern = Mock\MockTest::callProtectedMethod($this->_routeParser, 'addNameToPattern', array('{router}'));
         $this->assertEquals("(?P<route1>router)", $addNameToPattern);
     }
-
 }

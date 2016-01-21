@@ -12,5 +12,4 @@ class MockTest
         $method->setAccessible(true);
         return $method->invokeArgs($object, $args);
     }
-
 }

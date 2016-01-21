@@ -22,5 +22,4 @@ class ConfTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('router', Conf::getQueryString());
     }
-
 }

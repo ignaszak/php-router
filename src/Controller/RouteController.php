@@ -17,7 +17,7 @@ use Ignaszak\Router\Exception;
 
 /**
  * Adds defined by user routes, tokens and controllers and runs route parser
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Controller/RouteController.php
  *
@@ -27,14 +27,14 @@ class RouteController extends Router
 
     /**
      * Stores instance of parser class
-     * 
+     *
      * @var ParserStrategy
      */
     private $_parser;
 
     /**
      * Sets parser instance and pass self reference to parser
-     * 
+     *
      * @param ParserStrategy $_parser
      */
     public function __construct(ParserStrategy $_parser)
@@ -82,9 +82,10 @@ class RouteController extends Router
      */
     private function sortAddedRouteArray()
     {
-        usort(parent::$addedRouteArray,
-            function($a, $b)
-            {
+        usort(
+            parent::$addedRouteArray,
+            function ($a, $b) {
+            
                 return strnatcmp($b['pattern'], $a['pattern']);
             }
         );
@@ -104,5 +105,4 @@ class RouteController extends Router
             }
         }
     }
-
 }

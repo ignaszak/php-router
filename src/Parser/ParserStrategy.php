@@ -15,7 +15,7 @@ use Ignaszak\Router\Controller\Router;
 
 /**
  * Stores reference to RouteController
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Parser/ParserStrategy.php
  *
@@ -25,14 +25,14 @@ abstract class ParserStrategy
 
     /**
      * Stores reference to RouteController
-     * 
+     *
      * @var Router
      */
     protected $_routeController;
 
     /**
      * Stores current query
-     * 
+     *
      * @var array
      */
     protected static $currentQueryArray = array();
@@ -44,7 +44,7 @@ abstract class ParserStrategy
 
     /**
      * Returns $currentQueryArray
-     * 
+     *
      * @return array
      */
     public static function getCurrentQueryArray()
@@ -54,12 +54,11 @@ abstract class ParserStrategy
 
     /**
      * Catchs reference to RouteController  class
-     * 
+     *
      * @param \Ignaszak\Router\Controller\Router $_routeController
      */
     public function passReference(\Ignaszak\Router\Controller\Router $_routeController)
     {
         $this->_routeController = $_routeController;
     }
-
 }

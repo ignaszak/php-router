@@ -7,7 +7,7 @@ spl_autoload_register(function ($class) {
         'Test\\' => __DIR__ . '/tests/'
     );
 
-    foreach ($psr4_dir as $key=>$dir) {
+    foreach ($psr4_dir as $key => $dir) {
 
         $isFound = @strpos($class, $key);
 

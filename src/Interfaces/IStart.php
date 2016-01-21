@@ -13,7 +13,7 @@ namespace Ignaszak\Router\Interfaces;
 
 /**
  * Start class interface
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Interfaces/IStart.php
  *
@@ -22,5 +22,4 @@ interface IStart
 {
 
     public static function instance();
-
 }

@@ -14,7 +14,7 @@ namespace Ignaszak\Router\Controller;
 use Ignaszak\Router\Exception;
 
 /**
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Controller/Router.php
  *
@@ -24,28 +24,28 @@ abstract class Router
 
     /**
      * Stores added routes
-     * 
+     *
      * @var array
      */
     protected static $addedRouteArray = array();
 
     /**
      * Stores added tokens name
-     * 
+     *
      * @var array
      */
     protected static $tokenNameArray = array();
 
     /**
      * Stores added tokens pattern
-     * 
+     *
      * @var array
      */
     protected static $tokenPatternArray = array();
 
     /**
      * Adds to $addedRouteArray route name, pattern and if defined controller name
-     * 
+     *
      * @param string $name
      * @param string $pattern
      * @param string $controller
@@ -54,7 +54,7 @@ abstract class Router
 
     /**
      * Adds to $tokenNameArray and $tokenPatternArray token name and pattern
-     * 
+     *
      * @param string $name
      * @param string $pattern
      */
@@ -68,7 +68,7 @@ abstract class Router
 
     /**
      * Returns properties
-     * 
+     *
      * @param string $property
      * @throws Exception
      */
@@ -83,7 +83,7 @@ abstract class Router
 
     /**
      * Returns route array
-     * 
+     *
      * @param string $name
      * @param string $pattern
      * @param string $controller
@@ -106,5 +106,4 @@ abstract class Router
 
         }
     }
-
 }

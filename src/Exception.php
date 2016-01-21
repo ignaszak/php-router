@@ -13,7 +13,7 @@ namespace Ignaszak\Router;
 
 /**
  * Exception class
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Exception.php
  *
@@ -23,7 +23,7 @@ class Exception extends \Exception
 
     /**
      * Pass params to \Exception constructor
-     * 
+     *
      * @param string $message
      * @param integer $code
      * @param \Exception $previous
@@ -35,7 +35,7 @@ class Exception extends \Exception
 
     /**
      * Returns excepton message
-     * 
+     *
      * {@inheritDoc}
      * @see Exception::__toString()
      */
@@ -43,5 +43,4 @@ class Exception extends \Exception
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
-
 }

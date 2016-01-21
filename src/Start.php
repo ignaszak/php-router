@@ -15,7 +15,7 @@ use Ignaszak\Router\Controller\RouteController;
 
 /**
  * Initializes router
- * 
+ *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  * @link https://github.com/ignaszak/router/blob/master/src/Start.php
  *
@@ -25,21 +25,21 @@ class Start implements Interfaces\IStart
 
     /**
      * Stores instance of Start class
-     * 
+     *
      * @var Start
      */
     private static $_start;
 
     /**
      * Stores instance of Conf class
-     * 
+     *
      * @var Conf
      */
     private $_conf;
 
     /**
      * Stores instance of RouteController class
-     * 
+     *
      * @var RouteController
      */
     private $_routeController;
@@ -55,20 +55,21 @@ class Start implements Interfaces\IStart
 
     /**
      * Singelton design pattern
-     * 
+     *
      * @return Conf
      */
     public static function instance()
     {
-        if (empty(self::$_start))
+        if (empty(self::$_start)) {
             self::$_start = new Start;
+        }
 
-       return self::$_start;
+        return self::$_start;
     }
 
     /**
      * Sets Conf property value
-     * 
+     *
      * @param string $property
      * @param string $value
      */
@@ -79,7 +80,7 @@ class Start implements Interfaces\IStart
 
     /**
      * Calls RouteController methods
-     * 
+     *
      * @param string $function
      * @param array $args
      * @throws Exception
@@ -93,5 +94,4 @@ class Start implements Interfaces\IStart
             throw new Exception("Call to undefined method Start::$function()");
         }
     }
-
 }

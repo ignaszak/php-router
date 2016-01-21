@@ -54,5 +54,4 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('', Client::getDefaultRoute());
     }
-
 }
