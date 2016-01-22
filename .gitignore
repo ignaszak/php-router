@@ -1,6 +1,5 @@
 $ cat
 doc/
-reports/
 .htaccess
 .gitignore
 .git
