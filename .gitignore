@@ -1,5 +1,6 @@
 $ cat .gitignore
 doc/
+vendor/
 composer.lock
 .htaccess
 .git
