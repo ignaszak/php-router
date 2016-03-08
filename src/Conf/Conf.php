@@ -1,21 +1,19 @@
 <?php
 /**
- * phpDocumentor
  *
- * PHP Version 5.5
+ * PHP Version 7.0
  *
  * @copyright 2015 Tomasz Ignaszak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      http://phpdoc.org
  */
+declare(strict_types=1);
 
-namespace Ignaszak\Router;
+namespace Ignaszak\Router\Conf;
 
 /**
  * Stores configuration settings
  *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
- * @link https://github.com/ignaszak/router/blob/master/src/Conf.php
  *
  */
 class Conf
@@ -26,21 +24,32 @@ class Conf
      *
      * @var Conf
      */
-    private static $_conf;
+    private static $conf;
+
+    /**
+     *
+     * @var Host
+     */
+    private $host;
 
     /**
      * Stores defined base url
      *
      * @var string
      */
-    private $baseURL;
+    private $baseURI = '';
 
     /**
      * Default route name
      *
      * @var string
      */
-    private $defaultRoute;
+    private $defaultRoute = '';
+
+    private function __construct()
+    {
+        $this->host = new Host();
+    }
 
     /**
      * Singelton design pattern
@@ -49,11 +58,11 @@ class Conf
      */
     public static function instance()
     {
-        if (empty(self::$_conf)) {
-            self::$_conf = new Conf;
+        if (empty(self::$conf)) {
+            self::$conf = new Conf;
         }
 
-        return self::$_conf;
+        return self::$conf;
     }
 
     /**
@@ -62,7 +71,7 @@ class Conf
      * @param string $property
      * @param string $value
      */
-    public function setProperty($property, $value)
+    public function setProperty(string $property, string $value)
     {
         if (property_exists($this, $property)) {
             $this->$property = $value;
@@ -75,10 +84,10 @@ class Conf
      * @param string $property
      * @return string
      */
-    public static function get($property)
+    public static function get(string $property): string
     {
-        if (property_exists(self::$_conf, $property)) {
-            return self::$_conf->$property;
+        if (property_exists(self::$conf, $property)) {
+            return self::$conf->$property;
         }
     }
 
@@ -87,9 +96,9 @@ class Conf
      *
      * @return string
      */
-    public static function getQueryString()
+    public static function getQueryString(): string
     {
-        $host = new Host(self::$_conf->baseURL);
-        return $host->getQueryString();
+        self::$conf->host->validBaseURI(self::$conf->baseURI);
+        return self::$conf->host->getQueryString() ?? '';
     }
 }

@@ -11,8 +11,6 @@
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Parser\ParserStrategy;
-
 /**
  * Class provides methods for users to get matched routes
  *
@@ -33,7 +31,7 @@ class Client implements Interfaces\IClient
     {
         if (is_string($route)) {
 
-            $currentQueryArray = ParserStrategy::getCurrentQueryArray();
+            $currentQueryArray = Route::$request;
 
             if (empty($route)) {
 
@@ -57,7 +55,7 @@ class Client implements Interfaces\IClient
      */
     public static function getAllRoutes()
     {
-        return ParserStrategy::getCurrentQueryArray();
+        return Route::$request;
     }
 
     /**
@@ -78,7 +76,7 @@ class Client implements Interfaces\IClient
      */
     public static function isRouteName($name)
     {
-        return (self::getRoute('name') == $name);
+        return self::getRoute('name') == $name;
     }
 
     /**

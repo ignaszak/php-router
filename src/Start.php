@@ -8,10 +8,12 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      http://phpdoc.org
  */
+declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Controller\RouteController;
+use Ignaszak\Router\Parser\Parser;
+use Ignaszak\Router\Conf\Conf;
 
 /**
  * Initializes router
@@ -24,47 +26,47 @@ class Start implements Interfaces\IStart
 {
 
     /**
-     * Stores instance of Start class
      *
      * @var Start
      */
-    private static $_start;
+    private static $start;
 
     /**
-     * Stores instance of Conf class
      *
      * @var Conf
      */
-    private $_conf;
+    private $conf;
 
     /**
-     * Stores instance of RouteController class
      *
-     * @var RouteController
+     * @var Route
      */
-    private $_routeController;
+    private $route;
 
     /**
-     * Sets instances of Conf and RouteController classes
+     *
+     * @var RouteParser
      */
-    public function __construct()
+    private $parser;
+
+    private function __construct()
     {
-        $this->_conf = Conf::instance();
-        $this->_routeController = new Controller\RouteController(new Parser\RouteParser);
+        $this->conf = Conf::instance();
+        $this->route = new Route();
+        $this->parser = new Parser($this->route);
     }
 
     /**
-     * Singelton design pattern
      *
-     * @return Conf
+     * @return Start
      */
     public static function instance()
     {
-        if (empty(self::$_start)) {
-            self::$_start = new Start;
+        if (empty(self::$start)) {
+            self::$start = new self();
         }
 
-        return self::$_start;
+        return self::$start;
     }
 
     /**
@@ -73,25 +75,37 @@ class Start implements Interfaces\IStart
      * @param string $property
      * @param string $value
      */
-    public function __set($property, $value)
+    public function __set(string $property, string $value)
     {
-        $this->_conf->setProperty($property, $value);
+        $this->conf->setProperty($property, $value);
     }
 
     /**
-     * Calls RouteController methods
      *
-     * @param string $function
-     * @param array $args
-     * @throws Exception
-     * @return callable
+     * @param string $name
+     * @param string $pattern
+     * @param string $controller
      */
-    public function __call($function, $args)
+    public function add(string $name, string $pattern, string $controller = '')
     {
-        if (method_exists($this->_routeController, $function)) {
-            return call_user_func_array(array($this->_routeController, $function), $args);
-        } else {
-            throw new Exception("Call to undefined method Start::$function()");
-        }
+        $this->route->add($name, $pattern, $controller);
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     */
+    public function addToken(string $name, string $pattern)
+    {
+        $this->route->addToken($name, $pattern);
+    }
+
+    public function run()
+    {
+        $this->route->add(Conf::get('defaultRoute'), '(.*)');
+        //$this->checkForDuplicates();
+        $this->route->sort();
+        $this->parser->run();
     }
 }
