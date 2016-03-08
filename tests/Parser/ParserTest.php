@@ -6,6 +6,7 @@ use Ignaszak\Router\Parser\Parser;
 use Test\Mock\MockTest;
 use Ignaszak\Router\Route;
 use Ignaszak\Router\Conf\Conf;
+use Ignaszak\Router\Interfaces\IRouteParser;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -32,49 +33,84 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddTokenToRoute()
+    public function testParseNoNamedRoutes()
     {
-        $route = 'post/{page}/{alias:anyAlias}.{format}';
-        $token = [
-            'page' => '([0-9]*)',
-            'format' => '(html|xml)'
+        $route = [
+            'pattern' => 'noNamed1/:token2(noNamed2)/noNamed3/',
+            'token' => [
+                ':token' => 'anyPattern'
+            ]
         ];
-        $this->parser = new Parser($this->mockRoute([], $token));
+        $result = MockTest::callMockMethod(
+            $this->parser,
+            'parseNoNamedRoutes',
+            [$route]
+        );
         $this->assertEquals(
-            'post/{page:([0-9]*)}/{alias:anyAlias}.{format:(html|xml)}',
-            MockTest::callMockMethod($this->parser, 'addTokenToRoute', [$route])
+            '(?P<route1>noNamed1)/:token2(?P<route2>(noNamed2))/(?P<route3>noNamed3)/',
+            $result
         );
     }
 
-    public function testPrepareRoute()
+    public function testAddRouteTokens()
     {
-        $route = 'post/{page:([0-9]*)}/{alias:anyAlias}.{format:(html|xml)}';
+        $route = [
+            'pattern' => ':token1(anyPattern)/:token2.:format',
+            'token' => [
+                ':token1' => 'pattern1',
+                ':token2' => 'pattern2',
+                ':format' => 'pattern3'
+            ]
+        ];
+        $result = MockTest::callMockMethod(
+            $this->parser,
+            'addTokens',
+            [$route['token'], $route['pattern']]
+        );
         $this->assertEquals(
-            '/(?P<route1>post)\/(?P<page>([0-9]*))\/(?P<alias>anyAlias)\.(?P<format>(html|xml))/',
-            MockTest::callMockMethod($this->parser, 'prepareRoute', [$route])
+            '(?P<token1>pattern1)(anyPattern)/(?P<token2>pattern2).(?P<format>pattern3)',
+            $result
         );
     }
 
-    public function testParse()
+    public function testPreparePattern()
     {
-        $this->mockHost('post/1/anyAlias.html');
-        $result = '/(?P<route1>post)\/(?P<page>([0-9]*))\/(?P<alias>anyAlias)\.(?P<format>(html|xml))/';
-        $parse = MockTest::callMockMethod($this->parser, 'parse', [$result]);
+        $pattern = '(?P<route1>noNamed1)/(?P<token>(noNamed2)).html';
+        $result = MockTest::callMockMethod(
+            $this->parser,
+            'preparePattern',
+            [$pattern]
+        );
+        $this->assertEquals(
+            '/(?P<route1>noNamed1)\/(?P<token>(noNamed2))\.html/',
+            $result
+        );
+    }
+
+    public function testRun()
+    {
+        $route = [
+            'name' => [
+                'pattern' => 'firstRoute/:token/:routeToken/',
+                'token' => [
+                    ':routeToken' => 'anyPattern1'
+                ]
+            ]
+        ];
+        $token = [
+            ':token' => 'anyPattern2'
+        ];
+        $this->mockHost('firstRoute/anyPattern2/anyPattern1/');
+        $this->parser = new Parser($this->mockRoute($route, $token));
+        $this->parser->run();
         $this->assertEquals(
             [
-                0 => 'post/1/anyAlias.html',
-                'route1' => 'post',
-                1 => 'post',
-                'page' => 1,
-                2 => 1,
-                3 => 1,
-                'alias' => 'anyAlias',
-                4 => 'anyAlias',
-                'format' => 'html',
-                5 => 'html',
-                6 => 'html'
+                'name' => 'name',
+                'route1' => 'firstRoute',
+                'token' => 'anyPattern2',
+                'routeToken' => 'anyPattern1'
             ],
-            $parse
+            IRouteParser::$request
         );
     }
 
@@ -106,31 +142,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'format' => 'html'
             ],
             $result
-        );
-    }
-
-    public function testRun()
-    {
-        $route = [
-            [
-                'name' => 'name1',
-                'pattern' => 'firstRoute/{token}/{definedToken:[a-z]*}/'
-            ]
-        ];
-        $token = [
-            'token' => 'anyToken'
-        ];
-        $this->mockHost('firstRoute/anyToken/any/');
-        $this->parser = new Parser($this->mockRoute($route, $token));
-        $this->parser->run();
-        $this->assertEquals(
-            [
-                'name' => 'name1',
-                'route1' => 'firstRoute',
-                'token' => 'anyToken',
-                'definedToken' => 'any'
-            ],
-            Route::$request
         );
     }
 

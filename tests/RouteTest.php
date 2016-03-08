@@ -20,20 +20,56 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAdd()
     {
-        $this->route->add('name1', 'pattern/subpattern', 'controller1');
-        $this->route->add('name2', 'pattern', 'controller2');
+        $this->route->add('name1', 'pattern/subpattern');
+        $this->assertEquals(
+            'name1',
+            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
+        );
+        $this->route->add('name2', 'pattern');
+        $this->assertEquals(
+            'name2',
+            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
+        );
+
         $this->assertEquals(
             [
-                0 => [
-                    'name' => 'name1',
-                    'pattern' => 'pattern/subpattern',
-                    'controller' => 'controller1'
+                'name1' => [
+                    'pattern' => 'pattern/subpattern'
                 ],
-                1 => [
-                    'name' => 'name2',
-                    'pattern' => 'pattern',
-                    'controller' => 'controller2'
+                'name2' => [
+                    'pattern' => 'pattern'
                 ]
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
+    public function testAddController()
+    {
+        $this->route->add('anyName', 'anyPattern')->controller('anyController');
+        $this->assertEquals(
+            [
+                'anyName' => [
+                    'pattern' => 'anyPattern',
+                    'controller' => 'anyController'
+                ],
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
+    public function testAddTokenToRoute()
+    {
+        $this->route->add('anyName', 'anyPattern')
+            ->token('anyTokenName', 'anyPattern');
+        $this->assertEquals(
+            [
+                'anyName' => [
+                    'pattern' => 'anyPattern',
+                    'token' => [
+                        ':anyTokenName' => 'anyPattern'
+                    ]
+                ],
             ],
             $this->route->getRouteArray()
         );
@@ -45,8 +81,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->addToken('name2', 'token2');
         $this->assertEquals(
             [
-                'name1' => 'token1',
-                'name2' => 'token2'
+                ':name1' => 'token1',
+                ':name2' => 'token2'
             ],
             $this->route->getTokenArray()
         );
@@ -54,20 +90,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testSort()
     {
-        $this->route->add('name1', 'pattern/subpattern', 'controller1');
-        $this->route->add('name2', 'pattern', 'controller2');
+        $this->route->add('name1', 'pattern/subpattern');
+        $this->route->add('name2', 'pattern');
         $this->route->sort();
         $this->assertEquals(
             [
-                0 => [
-                    'name' => 'name2',
-                    'pattern' => 'pattern',
-                    'controller' => 'controller2'
+                'name2' => [
+                    'pattern' => 'pattern'
                 ],
-                1 => [
-                    'name' => 'name1',
-                    'pattern' => 'pattern/subpattern',
-                    'controller' => 'controller1'
+                'name1' => [
+                    'pattern' => 'pattern/subpattern'
                 ]
             ],
             $this->route->getRouteArray()

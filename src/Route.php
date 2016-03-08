@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-class Route
-{
+use Ignaszak\Router\Interfaces\IRouteAdd;
+use Ignaszak\Router\Interfaces\IRouteParser;
+use Ignaszak\Router\Interfaces\IRouteStart;
 
-    /**
-     *
-     * @var string[]
-     */
-    public static $request = [];
+class Route extends IRouteParser implements IRouteStart, IRouteAdd
+{
 
     /**
      * Stores added routes
@@ -28,18 +26,9 @@ class Route
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
-     * @param string $controller
+     * @var string
      */
-    public function add(string $name, string $pattern, string $controller = '')
-    {
-        $this->routeArray[] = [
-            'name'       => $name,
-            'pattern'    => $pattern,
-            'controller' => $controller
-        ];
-    }
+    private $lastName = '';
 
     /**
      * @return array
@@ -47,16 +36,6 @@ class Route
     public function getRouteArray(): array
     {
         return $this->routeArray;
-    }
-
-    /**
-     *
-     * @param string $name
-     * @param string $pattern
-     */
-    public function addToken(string $name, string $pattern)
-    {
-        $this->tokenArray[$name] = $pattern;
     }
 
     /**
@@ -68,11 +47,63 @@ class Route
     }
 
     /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @param string $controller
+     */
+    public function add(string $name, string $pattern): IRouteAdd
+    {
+        $this->lastName = $name;
+        $this->routeArray[$name] = [
+            'pattern'    => $pattern
+        ];
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteAdd::controller($controller)
+     */
+    public function controller(string $controller): IRouteAdd
+    {
+        $this->routeArray[$this->lastName]['controller'] = $controller;
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteAdd::token($token)
+     */
+    public function token(string $name, string $pattern): IRouteAdd
+    {
+        $this->routeArray[$this->lastName]['token'][":{$name}"] = $pattern;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     */
+    public function addToken(string $name, string $pattern): IRouteStart
+    {
+        $this->tokenArray[":{$name}"] = $pattern;
+
+        return $this;
+    }
+
+    /**
      * Sorts route array
      */
     public function sort()
     {
-        usort(
+        uasort(
             $this->routeArray,
             function ($a, $b) {
                 return $a['pattern'] <=> $b['pattern'];

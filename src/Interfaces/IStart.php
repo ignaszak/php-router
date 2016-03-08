@@ -21,5 +21,27 @@ namespace Ignaszak\Router\Interfaces;
 interface IStart
 {
 
-    public static function instance();
+    /**
+     *
+     * @return \Ignaszak\Router\Interfaces\IStart
+     */
+    public static function instance(): IStart;
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     */
+    public function add(string $name, string $pattern): IRouteAdd;
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     */
+    public function addToken(string $name, string $pattern): IRouteStart;
+
+    public function run();
 }

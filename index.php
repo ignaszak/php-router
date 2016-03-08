@@ -12,8 +12,11 @@ $exception->run();
 
 $router = Start::instance();
 $router->baseURI = 'http://192.168.1.2/~tomek/Eclipse/PHP/router/';
-$router->add('post', 'post/{alias}.{format:html}/', 'myController');
-$router->addToken('alias', '(one)');
+$router->add('post', 'post/:alias.:format/')
+    ->token('format', 'html')
+    ->controller('controller');
+$router->addToken('alias', 'one')
+    ->addToken('format', 'xml');
 
 $router->run();
 

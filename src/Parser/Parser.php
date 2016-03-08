@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Parser;
 
-use Ignaszak\Router\Route;
 use Ignaszak\Router\Conf\Conf;
+use Ignaszak\Router\Interfaces\IRouteParser;
 
 class Parser
 {
@@ -21,7 +21,7 @@ class Parser
      *
      * @param Route $route
      */
-    public function __construct(Route $route)
+    public function __construct(IRouteParser $route)
     {
         $this->route = $route;
     }
@@ -29,79 +29,73 @@ class Parser
     public function run()
     {
         $request = [];
-        foreach ($this->route->getRouteArray() as $route) {
-            $routeWithTokens = $this->addTokenToRoute($route['pattern']);
-            $routeWithRegEx = $this->prepareRoute($routeWithTokens);
-            $find = $this->parse($routeWithRegEx);
-            if (! empty($find)) {
+        foreach ($this->route->getRouteArray() as $name => $route) {
+            $pattern = $this->parseNoNamedRoutes($route);
+            $pattern = $this->addTokens($route['token'], $pattern);
+            $pattern = $this->addTokens($this->route->getTokenArray(), $pattern);
+            $pattern = $this->preparePattern($pattern);
+            $m = [];
+            if (preg_match($pattern, Conf::getQueryString(), $m)) {
                 $request = array_merge(
                     [
-                        'name' => $route['name'],
+                        'name' => $name,
                         'controller' => $route['controller'] ?? ''
                     ],
-                    $find
+                    $m
                 );
+                IRouteParser::$request = $this->formatArray($request);
+                return;
             }
         }
-
-        Route::$request = $this->formatArray($request);
     }
 
     /**
      *
-     * @param string $route
+     * @param array $route
      * @return string
      */
-    private function addTokenToRoute(string $route): string
+    private function parseNoNamedRoutes(array $route): string
     {
-        $m = [];
-        preg_match_all('/\{(\w+)\}/', $route, $m);
-        $tokenArray = $this->route->getTokenArray();
-        foreach ($m[1] as $token) {
-            $route = str_replace(
-                "{{$token}}",
-                "{{$token}:{$tokenArray[$token]}}",
-                $route
-            );
-        }
-        return $route;
+        $result = preg_replace_callback(
+            "/\\b(?<!:)[a-zA-Z0-9_(),{}]*/",
+            function ($m) {
+                return empty($m[0]) ? "" :
+                    "(?P<route" . ++self::$counter .">{$m[0]})";
+            },
+            $route['pattern']
+        );
+        self::$counter = 0;
+        return $result;
     }
 
     /**
-     * todo change regex
-     * @param string $route
+     *
+     * @param string[] $token
+     * @param string $pattern
      * @return string
      */
-    private function prepareRoute(string $route): string
+    private function addTokens(array $token, string $pattern): string
     {
-        $route = preg_replace_callback(
-            "/\\b(?<!{)\\b(?<!\\()\\b(?<!\\[)[a-zA-Z0-9_\+]+(?!\\])\\b(?!\\))\\b(?!})\\b/",
-            function ($m) {
-                return "(?P<route" . ++self::$counter .">{$m[0]})";
-            },
-            $route
-        );
+        $p = [];
+        $r = [];
 
-        self::$counter = 0;
+        foreach ($token as $key => $value) {
+            $p[] = "/{$key}/";
+            $subpattern = substr($key, 1);
+            $r[] = "(?P<{$subpattern}>{$value})";
+        }
 
-        return '/' . preg_replace(
-            ["/\./", "/\//", "/{/", "/:/", "/}/"],
-            ["\.", "\/", "(?P<", ">",")"],
-            $route
-        ) . '/';
+        return preg_replace($p, $r, $pattern);
     }
 
     /**
      *
      * @param string $pattern
-     * @return string[]
+     * @return string
      */
-    private function parse(string $pattern): array
+    private function preparePattern(string $pattern): string
     {
-        echo $pattern;
-        $m = [];
-        preg_match($pattern, Conf::getQueryString(), $m);
-        return $m;
+        return '/' . str_replace(['/', '.'], ['\/', '\.'], $pattern) . '/';
     }
 
     /**

@@ -14,6 +14,9 @@ namespace Ignaszak\Router;
 
 use Ignaszak\Router\Parser\Parser;
 use Ignaszak\Router\Conf\Conf;
+use Ignaszak\Router\Interfaces\IRouteAdd;
+use Ignaszak\Router\Interfaces\IRouteStart;
+use Ignaszak\Router\Interfaces\IStart;
 
 /**
  * Initializes router
@@ -58,9 +61,10 @@ class Start implements Interfaces\IStart
 
     /**
      *
-     * @return Start
+     *  {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IStart::instance()
      */
-    public static function instance()
+    public static function instance(): IStart
     {
         if (empty(self::$start)) {
             self::$start = new self();
@@ -70,7 +74,6 @@ class Start implements Interfaces\IStart
     }
 
     /**
-     * Sets Conf property value
      *
      * @param string $property
      * @param string $value
@@ -82,28 +85,32 @@ class Start implements Interfaces\IStart
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
-     * @param string $controller
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IStart::add($name, $pattern)
      */
-    public function add(string $name, string $pattern, string $controller = '')
+    public function add(string $name, string $pattern): IRouteAdd
     {
-        $this->route->add($name, $pattern, $controller);
+        return $this->route->add($name, $pattern);
     }
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IStart::addToken($name, $pattern)
      */
-    public function addToken(string $name, string $pattern)
+    public function addToken(string $name, string $pattern): IRouteStart
     {
-        $this->route->addToken($name, $pattern);
+        return $this->route->addToken($name, $pattern);
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IStart::run()
+     */
     public function run()
     {
-        $this->route->add(Conf::get('defaultRoute'), '(.*)');
+        //$this->route->add(Conf::get('defaultRoute'), '(.*)');
         //$this->checkForDuplicates();
         $this->route->sort();
         $this->parser->run();
