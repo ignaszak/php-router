@@ -5,7 +5,7 @@
  *
  * @copyright 2016 Tomasz Ignaszak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * 
+ *
  */
 declare(strict_types=1);
 
@@ -34,7 +34,6 @@ class Parser
 
     public function run()
     {
-        $request = [];
         foreach ($this->route->getRouteArray() as $name => $route) {
             $m = [];
             if (preg_match($route['pattern'], Conf::getQueryString(), $m)) {
