@@ -49,7 +49,7 @@ $router->run();
 // Display matched route
 echo '<pre>';
 print_r(Client::getRoutes());
-echo '<pre>';
+echo '</pre>';
 
 // Get concrete route
 echo Client::getRoute('post');
