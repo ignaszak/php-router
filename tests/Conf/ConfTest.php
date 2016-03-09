@@ -32,14 +32,6 @@ class ConfTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testSetAndGetProperty()
-    {
-        $this->conf->setProperty('baseURI', 'anyURI');
-        $this->conf->setProperty('defaultRoute', 'anyDefaultRoute');
-        $this->assertEquals('anyURI', Conf::get('baseURI'));
-        $this->assertEquals('anyDefaultRoute', Conf::get('defaultRoute'));
-    }
-
     public function testGetQueryString()
     {
         $stub = $this->getMockBuilder('Host')

@@ -12,8 +12,8 @@
 		}
 	],
 	"require" : {
-		"php" : ">=5.5",
-		"ignaszak/exception" : "dev-master",
+		"php" : ">=7.0",
+		"ignaszak/exception" : "1.1.2",
 		"phpunit/phpunit" : "*"
 	},
 	"autoload" : {

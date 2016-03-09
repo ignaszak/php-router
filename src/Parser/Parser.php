@@ -1,4 +1,12 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * 
+ */
 declare(strict_types=1);
 
 namespace Ignaszak\Router\Parser;
@@ -8,8 +16,6 @@ use Ignaszak\Router\Interfaces\IRouteParser;
 
 class Parser
 {
-
-    private static $counter = 0;
 
     /**
      *
@@ -30,12 +36,8 @@ class Parser
     {
         $request = [];
         foreach ($this->route->getRouteArray() as $name => $route) {
-            $pattern = $this->parseNoNamedRoutes($route);
-            $pattern = $this->addTokens($route['token'], $pattern);
-            $pattern = $this->addTokens($this->route->getTokenArray(), $pattern);
-            $pattern = $this->preparePattern($pattern);
             $m = [];
-            if (preg_match($pattern, Conf::getQueryString(), $m)) {
+            if (preg_match($route['pattern'], Conf::getQueryString(), $m)) {
                 $request = array_merge(
                     [
                         'name' => $name,
@@ -47,55 +49,7 @@ class Parser
                 return;
             }
         }
-    }
-
-    /**
-     *
-     * @param array $route
-     * @return string
-     */
-    private function parseNoNamedRoutes(array $route): string
-    {
-        $result = preg_replace_callback(
-            "/\\b(?<!:)[a-zA-Z0-9_(),{}]*/",
-            function ($m) {
-                return empty($m[0]) ? "" :
-                    "(?P<route" . ++self::$counter .">{$m[0]})";
-            },
-            $route['pattern']
-        );
-        self::$counter = 0;
-        return $result;
-    }
-
-    /**
-     *
-     * @param string[] $token
-     * @param string $pattern
-     * @return string
-     */
-    private function addTokens(array $token, string $pattern): string
-    {
-        $p = [];
-        $r = [];
-
-        foreach ($token as $key => $value) {
-            $p[] = "/{$key}/";
-            $subpattern = substr($key, 1);
-            $r[] = "(?P<{$subpattern}>{$value})";
-        }
-
-        return preg_replace($p, $r, $pattern);
-    }
-
-    /**
-     *
-     * @param string $pattern
-     * @return string
-     */
-    private function preparePattern(string $pattern): string
-    {
-        return '/' . str_replace(['/', '.'], ['\/', '\.'], $pattern) . '/';
+        IRouteParser::$request = [];
     }
 
     /**

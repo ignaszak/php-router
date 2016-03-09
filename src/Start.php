@@ -1,28 +1,28 @@
 <?php
 /**
- * phpDocumentor
  *
- * PHP Version 5.5
+ * PHP Version 7.0
  *
- * @copyright 2015 Tomasz Ignaszak
+ * @copyright 2016 Tomasz Ignaszak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      http://phpdoc.org
+ *
  */
 declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Parser\Parser;
 use Ignaszak\Router\Conf\Conf;
+use Ignaszak\Router\Interfaces\IFormatterStart;
 use Ignaszak\Router\Interfaces\IRouteAdd;
 use Ignaszak\Router\Interfaces\IRouteStart;
 use Ignaszak\Router\Interfaces\IStart;
+use Ignaszak\Router\Parser\Parser;
+use Ignaszak\Router\Parser\RouteFormatter;
 
 /**
  * Initializes router
  *
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
- * @link https://github.com/ignaszak/router/blob/master/src/Start.php
  *
  */
 class Start implements Interfaces\IStart
@@ -48,6 +48,12 @@ class Start implements Interfaces\IStart
 
     /**
      *
+     * @var RouteFormatter
+     */
+    private $formatter;
+
+    /**
+     *
      * @var RouteParser
      */
     private $parser;
@@ -56,7 +62,8 @@ class Start implements Interfaces\IStart
     {
         $this->conf = Conf::instance();
         $this->route = new Route();
-        $this->parser = new Parser($this->route);
+        $this->formatter = new RouteFormatter($this->route);
+        $this->parser = new Parser($this->formatter);
     }
 
     /**
@@ -80,7 +87,11 @@ class Start implements Interfaces\IStart
      */
     public function __set(string $property, string $value)
     {
-        $this->conf->setProperty($property, $value);
+        if ($property == 'baseURI') {
+            $this->conf->baseURI = $value;
+        } else {
+            throw new \RuntimeException('Invalid property');
+        }
     }
 
     /**
@@ -106,12 +117,20 @@ class Start implements Interfaces\IStart
     /**
      *
      * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteParser::getRouteArray()
+     */
+    public function addPattern(string $name, string $pattern): IFormatterStart
+    {
+        return $this->formatter->addPattern($name, $pattern);
+    }
+
+    /**
+     *
+     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IStart::run()
      */
     public function run()
     {
-        //$this->route->add(Conf::get('defaultRoute'), '(.*)');
-        //$this->checkForDuplicates();
         $this->route->sort();
         $this->parser->run();
     }

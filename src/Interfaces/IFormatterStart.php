@@ -11,18 +11,14 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Interfaces;
 
-abstract class IRouteParser
+interface IFormatterStart
 {
 
     /**
      *
-     * @var string[]
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IFormatterStart
      */
-    public static $request = [];
-
-    /**
-     *
-     * @return array
-     */
-    abstract public function getRouteArray(): array;
+    public function addPattern(string $name, string $pattern): IFormatterStart;
 }

@@ -36,83 +36,47 @@ php phpunit.phar
 
 ## Example
 
-### Getting started
-
 ```php
-$router = Ignaszak\Router\Start::instance();
-$router->baseURL = 'www.base.url.com';
-```
+// Set router instnce
+$router = Start::instance();
 
-### Add routes
+// Set baseURI - optional (default gets value from $_SERVER['SERVER_NAME'])
+// $router->baseURI = 'www.example.com';
 
-```php
-// Add route name, pattern and controller (not required)
-$router->add('name', 'post/alias', 'controller');
+// Adds route by calling Start::add(string $name, string $pattern)
+// Name must be unique for each defined routes
+// It is possible to use regular expression
+$router->add('name1', 'pattern/anotherPattern/[a-z]*/');
 
-// Add route with token
-$router->add('name', 'post/{token}', 'controller');
-// Add token
-$router->addToken('token', '([a-z0-9_-]*)');
+// Adds token for route (:tokenName)
+$router->add('name2', 'route/:alias.:format')
+    ->controller('AnyController') // define controller class name
+    ->token('format', '(html|xml)'); // token avilable only local
+$router->addToken('alias', '\w+'); // token avilable for all routes
+// It is posible to override global token
 
-// Add route with named pattern
-$router->add('name', 'post/{token:pattern}', 'controller');
-```
+// Adds defined regular expressions
+// Router provides some defined regular expressions such as:
+//   @default  - use to define default route
+//   @digit    - digits [0-9]
+//   @alpha    - Alphabetic characters [A-Za-z_-]
+//   @alnum    - alphanumeric characters [A-Za-z0-9_-]
+$router->add('name3', 'route/:page/:post/')->token('page', '@digit');
+$router->addToken('post', '@alnum');
 
-### Run router
+// Adds default route
+// Defult route is active when no routes is match
+$router->add('default', '@default')->controller('DefaultController');
 
-```php
+// Initialize router
 $router->run();
-```
 
-### Get variables
+// Get request
+// Display matched route
+echo '<pre>';
+print_r(Client::getRoutes());
+echo '<pre>';
 
-#### Get all matched variables in array:
-
-```php
-// $router->add('viewpost', 'post/firstpost', 'myController');
-print_r( Ignaszak\Router\Client::getAllRoutes() );
-```
-
-Method will return:
-
-```sh
-Array
-(
-    [name] => viewpost
-    [controller] => myController
-    [route1] => post
-    [route2] => firstpost
-)
-```
-
-For routes with token:
-
-```php
-// $router->add('viewpost', 'post/{token}', 'myController');
-print_r( Ignaszak\Router\Client::getAllRoutes() );
-```
-
-Method will return:
-
-```sh
-Array
-(
-    [name] => viewpost
-    [controller] => myController
-    [route1] => post
-    [token] => firstpost
-)
-```
-
-#### Get single matched route:
-
-```php
-// If $route is empty, method will return 'route1'
-Ignaszak\Router\Client::getRoute($route = null);
-```
-
-#### Get route name:
-
-```php
-Ignaszak\Router\Client::getRouteName();
+// Get concrete route
+echo Client::getRoute('post');
 ```

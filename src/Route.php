@@ -1,13 +1,20 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * 
+ */
 declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Interfaces\IRouteAdd;
-use Ignaszak\Router\Interfaces\IRouteParser;
 use Ignaszak\Router\Interfaces\IRouteStart;
 
-class Route extends IRouteParser implements IRouteStart, IRouteAdd
+class Route implements IRouteStart, IRouteAdd
 {
 
     /**
@@ -56,7 +63,7 @@ class Route extends IRouteParser implements IRouteStart, IRouteAdd
     {
         $this->lastName = $name;
         $this->routeArray[$name] = [
-            'pattern'    => $pattern
+            'pattern' => $pattern
         ];
 
         return $this;
@@ -81,7 +88,7 @@ class Route extends IRouteParser implements IRouteStart, IRouteAdd
      */
     public function token(string $name, string $pattern): IRouteAdd
     {
-        $this->routeArray[$this->lastName]['token'][":{$name}"] = $pattern;
+        $this->routeArray[$this->lastName]['token'][$name] = $pattern;
 
         return $this;
     }
@@ -93,7 +100,7 @@ class Route extends IRouteParser implements IRouteStart, IRouteAdd
      */
     public function addToken(string $name, string $pattern): IRouteStart
     {
-        $this->tokenArray[":{$name}"] = $pattern;
+        $this->tokenArray[$name] = $pattern;
 
         return $this;
     }

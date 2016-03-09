@@ -67,7 +67,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 'anyName' => [
                     'pattern' => 'anyPattern',
                     'token' => [
-                        ':anyTokenName' => 'anyPattern'
+                        'anyTokenName' => 'anyPattern'
                     ]
                 ],
             ],
@@ -81,8 +81,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->addToken('name2', 'token2');
         $this->assertEquals(
             [
-                ':name1' => 'token1',
-                ':name2' => 'token2'
+                'name1' => 'token1',
+                'name2' => 'token2'
             ],
             $this->route->getTokenArray()
         );
