@@ -120,7 +120,7 @@ class Start implements Interfaces\IStart
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteParser::getRouteArray()
+     * @see \Ignaszak\Router\Interfaces\IStart::addPattern($name, $pattern)
      */
     public function addPattern(string $name, string $pattern): IFormatterStart
     {

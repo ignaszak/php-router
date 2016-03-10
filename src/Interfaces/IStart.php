@@ -36,5 +36,13 @@ interface IStart
      */
     public function addToken(string $name, string $pattern): IRouteStart;
 
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IFormatterStart
+     */
+    public function addPattern(string $name, string $pattern): IFormatterStart;
+
     public function run();
 }
