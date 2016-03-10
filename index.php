@@ -33,10 +33,14 @@ $router->addToken('alias', '\w+'); // token avilable for all routes
 // Router provides some defined regular expressions such as:
 //   @default  - use to define default route
 //   @digit    - digits [0-9]
-//   @alpha    - Alphabetic characters [A-Za-z_-]
+//   @alpha    - alphabetic characters [A-Za-z_-]
 //   @alnum    - alphanumeric characters [A-Za-z0-9_-]
 $router->add('name3', 'route/{page}/{post}/')->token('page', '@digit');
 $router->addToken('post', '@alnum');
+
+// Define custom regular expression. It will be avilable for all routes
+$router->addPattern('custom', '[a-z]{2,5}');
+$router->add('routeWithCustomRegEx', 'route/@custom/');
 
 // Adds default route
 // Defult route is active when no routes is match
@@ -52,7 +56,7 @@ print_r(Client::getRoutes());
 echo '</pre>';
 
 // Get concrete route
-echo Client::getRoute('post');
+echo Client::getRoute('tokenName');
 
 // Get route name
 echo Client::getName();
