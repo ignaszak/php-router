@@ -54,9 +54,11 @@ class Start implements Interfaces\IStart
 
     /**
      *
-     * @var RouteParser
+     * @var Parser
      */
     private $parser;
+
+    private $link;
 
     private function __construct()
     {
@@ -64,11 +66,12 @@ class Start implements Interfaces\IStart
         $this->route = new Route();
         $this->formatter = new RouteFormatter($this->route);
         $this->parser = new Parser($this->formatter);
+        $this->link = Link::instance();
     }
 
     /**
      *
-     *  {@inheritDoc}
+     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IStart::instance()
      */
     public static function instance(): IStart
@@ -132,6 +135,7 @@ class Start implements Interfaces\IStart
     public function run()
     {
         $this->route->sort();
+        $this->formatter->format();
         $this->parser->run();
     }
 }

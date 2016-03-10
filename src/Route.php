@@ -112,7 +112,7 @@ class Route implements IRouteStart, IRouteAdd
         uasort(
             $this->routeArray,
             function ($a, $b) {
-                return $a['pattern'] <=> $b['pattern'];
+                return $b['pattern'] <=> $a['pattern'];
             }
         );
     }

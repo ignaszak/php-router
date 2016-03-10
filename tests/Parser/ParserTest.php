@@ -1,6 +1,5 @@
 <?php
-
-namespace Test\Controller;
+namespace Test\Parser;
 
 use Ignaszak\Router\Parser\Parser;
 use Test\Mock\MockTest;
@@ -25,7 +24,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $formatedRoute = [
             'name' => [
-                'pattern' => '/^(?P<route1>firstRoute)\/(?P<token>anyPattern)\/$/'
+                'pattern' => '/^firstRoute\/(?P<token>anyPattern)\/$/'
             ]
         ];
         $this->mockHost('firstRoute/anyPattern/');
@@ -34,8 +33,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name' => 'name',
-                'route1' => 'firstRoute',
-                'token' => 'anyPattern'
+                'controller' => '',
+                'routes' => [
+                    'token' => 'anyPattern'
+                ]
             ],
             IRouteParser::$request
         );
@@ -51,7 +52,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $array = [
             0 => 'post/1/anyAlias.html',
-            'route1' => 'post',
             1 => 'post',
             'page' => 1,
             2 => 1,
@@ -69,7 +69,6 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             [
-                'route1' => 'post',
                 'page' => 1,
                 'alias' => 'anyAlias',
                 'format' => 'html'

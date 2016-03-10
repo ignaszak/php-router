@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Controller;
+namespace Test;
 
 use Ignaszak\Router\Start;
 use Test\Mock\MockTest;
@@ -37,6 +37,10 @@ class StartTest extends \PHPUnit_Framework_TestCase
             $this->start,
             'parser'
         );
+        $link = \PHPUnit_Framework_Assert::readAttribute(
+            $this->start,
+            'link'
+        );
         $this->assertInstanceOf('Ignaszak\Router\Conf\Conf', $conf);
         $this->assertInstanceOf('Ignaszak\Router\Route', $route);
         $this->assertInstanceOf(
@@ -47,6 +51,7 @@ class StartTest extends \PHPUnit_Framework_TestCase
             'Ignaszak\Router\Parser\Parser',
             $parser
         );
+        $this->assertInstanceOf('Ignaszak\Router\Link', $link);
     }
 
     public function testSetBaseURI()
@@ -105,6 +110,12 @@ class StartTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $stub->expects($this->once())->method('sort');
         MockTest::inject($this->start, 'route', $stub);
+
+        $stub = $this->getMockBuilder('Formatter')
+        ->setMethods(['format'])
+        ->getMock();
+        $stub->expects($this->once())->method('format');
+        MockTest::inject($this->start, 'formatter', $stub);
 
         $stub = $this->getMockBuilder('Parser')
             ->setMethods(['run'])

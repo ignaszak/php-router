@@ -11,17 +11,25 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         IRouteParser::$request = [
             'name' => 'anyRouteName',
-            'controllr' => 'anyController',
-            'route1' => 'anyPattern1',
-            'token' => 'anyPattern2'
+            'controller' => 'AnyController',
+            'routes' => [
+                'token' => 'anyPattern2'
+            ]
         ];
+    }
+
+    public function testGetName()
+    {
+        $this->assertEquals('anyRouteName', Client::getName());
+    }
+
+    public function testGetController()
+    {
+        $this->assertEquals('AnyController', Client::getController());
     }
 
     public function testGetRoute()
     {
-        $this->assertEquals('anyRouteName', Client::getRoute('name'));
-        $this->assertEquals('anyController', Client::getRoute('controllr'));
-        $this->assertEquals('anyPattern1', Client::getRoute('route1'));
         $this->assertEquals('anyPattern2', Client::getRoute('token'));
     }
 
@@ -34,9 +42,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             [
-                'name' => 'anyRouteName',
-                'controllr' => 'anyController',
-                'route1' => 'anyPattern1',
                 'token' => 'anyPattern2'
             ],
             Client::getRoutes()

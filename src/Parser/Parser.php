@@ -19,13 +19,13 @@ class Parser
 
     /**
      *
-     * @var Route
+     * @var IRouteParser
      */
     private $route;
 
     /**
      *
-     * @param Route $route
+     * @param IRouteParser $route
      */
     public function __construct(IRouteParser $route)
     {
@@ -37,14 +37,12 @@ class Parser
         foreach ($this->route->getRouteArray() as $name => $route) {
             $m = [];
             if (preg_match($route['pattern'], Conf::getQueryString(), $m)) {
-                $request = array_merge(
-                    [
-                        'name' => $name,
-                        'controller' => $route['controller'] ?? ''
-                    ],
-                    $m
-                );
-                IRouteParser::$request = $this->formatArray($request);
+                $request = [
+                    'name' => $name,
+                    'controller' => $route['controller'] ?? '',
+                    'routes' => $this->formatArray($m)
+                ];
+                IRouteParser::$request = $request;
                 return;
             }
         }

@@ -5,7 +5,7 @@
  *
  * @copyright 2016 Tomasz Ignaszak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * 
+ *
  */
 declare(strict_types=1);
 
@@ -29,7 +29,7 @@ class Client implements Interfaces\IClient
      */
     public static function getRoute(string $route): string
     {
-        return IRouteParser::$request[$route] ?? '';
+        return IRouteParser::$request['routes'][$route] ?? '';
     }
 
     /**
@@ -39,6 +39,26 @@ class Client implements Interfaces\IClient
      */
     public static function getRoutes(): array
     {
-        return IRouteParser::$request;
+        return IRouteParser::$request['routes'] ?? [];
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IClient::getName()
+     */
+    public static function getName(): string
+    {
+        return IRouteParser::$request['name'] ?? '';
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IClient::getController()
+     */
+    public static function getController(): string
+    {
+        return IRouteParser::$request['controller'] ?? '';
     }
 }

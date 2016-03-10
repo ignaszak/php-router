@@ -5,7 +5,7 @@
  *
  * @copyright 2016 Tomasz Ignaszak
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * 
+ *
  */
 declare(strict_types=1);
 
@@ -44,11 +44,38 @@ class RouteFormatter extends IRouteParser implements IFormatterStart
 
     /**
      *
+     * @var array
+     */
+    private $routeArray = [];
+
+    /**
+     *
      * @param Route $route
      */
     public function __construct(Route $route)
     {
         $this->route = $route;
+    }
+
+    public function format()
+    {
+        $routeArray = $this->route->getRouteArray();
+        foreach ($routeArray as $name => $route) {
+            $pattern = $this->addTokens(
+                $route['token'] ?? [],
+                $route['pattern']
+            );
+            $pattern = $this->addTokens(
+                $this->route->getTokenArray() ?? [],
+                $pattern
+            );
+            $pattern = $this->addTokens($this->patternArray, $pattern, '@');
+            $pattern = $this->preparePattern($pattern);
+
+            $this->validRoute($pattern, $name);
+            $routeArray[$name]['pattern'] = $pattern;
+        }
+        $this->routeArray = $routeArray;
     }
 
     /**
@@ -70,45 +97,7 @@ class RouteFormatter extends IRouteParser implements IFormatterStart
      */
     public function getRouteArray(): array
     {
-        $routeArray = $this->route->getRouteArray();
-        foreach ($routeArray as $name => $route) {
-            $pattern = $this->parseNoNamedRoutes($route);
-            $pattern = $this->addTokens(
-                $route['token'] ?? [],
-                $pattern,
-                ':'
-            );
-            $pattern = $this->addTokens(
-                $this->route->getTokenArray() ?? [],
-                $pattern,
-                ':'
-            );
-            $pattern = $this->addTokens($this->patternArray, $pattern, '@');
-            $pattern = $this->preparePattern($pattern);
-
-            $this->validRoute($pattern, $name);
-            $routeArray[$name]['pattern'] = $pattern;
-        }
-        return $routeArray;
-    }
-
-    /**
-     *
-     * @param array $route
-     * @return string
-     */
-    private function parseNoNamedRoutes(array $route): string
-    {
-        $result = preg_replace_callback(
-            "/@?\\b(?<!:)[\\w@,.{|}()*+=?<>\\\\]+/",
-            function ($m) {
-                return empty($m[0]) ? "" :
-                "(?P<route" . ++self::$counter .">{$m[0]})";
-            },
-            $route['pattern']
-        );
-        self::$counter = 0;
-        return $result;
+        return $this->routeArray;
     }
 
     /**
@@ -121,7 +110,7 @@ class RouteFormatter extends IRouteParser implements IFormatterStart
     private function addTokens(
         array $token,
         string $pattern,
-        string $symbol
+        string $symbol = ''
     ): string {
         if (empty($token)) {
             return $pattern;
@@ -130,8 +119,16 @@ class RouteFormatter extends IRouteParser implements IFormatterStart
         $p = [];
         $r = [];
 
+        if (empty($symbol)) {
+            $open = '{';
+            $close = '}';
+        } else {
+            $open = '';
+            $close = '';
+        }
+
         foreach ($token as $key => $value) {
-            $p[] = "/{$symbol}{$key}/";
+            $p[] = "/{$open}{$symbol}{$key}{$close}/";
             $r[] = $symbol == "@" ? $value : "(?P<{$key}>{$value})";
         }
 

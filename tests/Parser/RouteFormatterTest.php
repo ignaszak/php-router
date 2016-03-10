@@ -1,6 +1,6 @@
 <?php
 
-namespace Test\Controller;
+namespace Test\Parser;
 
 use Ignaszak\Router\Parser\Parser;
 use Test\Mock\MockTest;
@@ -33,29 +33,10 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testParseNoNamedRoutes()
-    {
-        $route = [
-            'pattern' => 'noNamed1/:token2(noNamed2)/noNamed3/',
-            'token' => [
-                ':token' => 'anyPattern'
-            ]
-        ];
-        $result = MockTest::callMockMethod(
-            $this->routeFormatter,
-            'parseNoNamedRoutes',
-            [$route]
-        );
-        $this->assertEquals(
-            '(?P<route1>noNamed1)/:token2(?P<route2>(noNamed2))/(?P<route3>noNamed3)/',
-            $result
-        );
-    }
-
     public function testAddRouteTokens()
     {
         $route = [
-            'pattern' => ':token1(anyPattern)/:token2.:format',
+            'pattern' => '{token1}(anyPattern)/{token2}.{format}',
             'token' => [
                 'token1' => 'pattern1',
                 'token2' => 'pattern2',
@@ -65,7 +46,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $result = MockTest::callMockMethod(
             $this->routeFormatter,
             'addTokens',
-            [$route['token'], $route['pattern'], ':']
+            [$route['token'], $route['pattern']]
         );
         $this->assertEquals(
             '(?P<token1>pattern1)(anyPattern)/(?P<token2>pattern2).(?P<format>pattern3)',
@@ -76,25 +57,25 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     public function testAddEmptyTokenArray()
     {
         $this->assertEquals(
-            'anyPattern:token',
+            'anyPattern{token}',
             MockTest::callMockMethod(
                 $this->routeFormatter,
                 'addTokens',
-                [[], 'anyPattern:token', ':']
+                [[], 'anyPattern{token}']
             )
         );
     }
 
     public function testPreparePattern()
     {
-        $pattern = '(?P<route1>noNamed1)/(?P<token>(noNamed2))\.html';
+        $pattern = 'noNamed1/(?P<token>(noNamed2))\.html';
         $result = MockTest::callMockMethod(
             $this->routeFormatter,
             'preparePattern',
             [$pattern]
         );
         $this->assertEquals(
-            '/^(?P<route1>noNamed1)\/(?P<token>(noNamed2))\.html$/',
+            '/^noNamed1\/(?P<token>(noNamed2))\.html$/',
             $result
         );
     }
@@ -118,7 +99,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidRouteWithBrokenRoute()
     {
-        $route = 'route/@pattern/:token/';
+        $route = 'route/@pattern/{token}/';
         MockTest::callMockMethod(
             $this->routeFormatter,
             'validRoute',
@@ -138,14 +119,14 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetRouteArray()
+    public function testFormat()
     {
         $route = [
             'name1' => [
-                'pattern' => 'route/@digit/:globalToken/'
+                'pattern' => 'route/@digit/{globalToken}/'
             ],
             'name2' => [
-                'pattern' => 'route2/:localToken/:globalToken/',
+                'pattern' => 'route2/{localToken}/{globalToken}/',
                 'token' => [
                     'localToken' => 'anyPattern',
                     'globalToken' => 'overrideGlobalToken'
@@ -158,13 +139,16 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->routeFormatter = new RouteFormatter(
             $this->mockRoute($route, $token)
         );
+
+        $this->routeFormatter->format();
+
         $this->assertEquals(
             [
                 'name1' => [
-                    'pattern' => '/^(?P<route1>route)\/(?P<route2>\d*)\/(?P<globalToken>globalPattern)\/$/'
+                    'pattern' => '/^route\/\d*\/(?P<globalToken>globalPattern)\/$/'
                 ],
                 'name2' => [
-                    'pattern' => '/^(?P<route1>route2)\/(?P<localToken>anyPattern)\/(?P<globalToken>overrideGlobalToken)\/$/',
+                    'pattern' => '/^route2\/(?P<localToken>anyPattern)\/(?P<globalToken>overrideGlobalToken)\/$/',
                     'token' => [
                         'localToken' => 'anyPattern',
                         'globalToken' => 'overrideGlobalToken'
