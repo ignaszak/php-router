@@ -26,7 +26,7 @@ interface IStart
      * @param string $pattern
      * @return \Ignaszak\Router\Interfaces\IRouteAdd
      */
-    public function add(string $name, string $pattern): IRouteAdd;
+    public function add(string $name = null, string $pattern): IRouteAdd;
 
     /**
      *

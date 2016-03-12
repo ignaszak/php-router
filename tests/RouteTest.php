@@ -18,7 +18,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route = new Route();
     }
 
-    public function testAdd()
+    public function testAddWithName()
     {
         $this->route->add('name1', 'pattern/subpattern');
         $this->assertEquals(
@@ -42,6 +42,41 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             ],
             $this->route->getRouteArray()
         );
+    }
+
+    public function testAddWithoutNAme()
+    {
+        $this->route->add(null, 'pattern/subpattern');
+        $this->assertEquals(
+            0,
+            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
+        );
+        $this->route->add(null, 'pattern');
+        $this->assertEquals(
+            1,
+            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
+        );
+
+        $this->assertEquals(
+            [
+                0 => [
+                    'pattern' => 'pattern/subpattern'
+                ],
+                1 => [
+                    'pattern' => 'pattern'
+                ]
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testAddDuplicateName()
+    {
+        $this->route->add('name', 'anyPattern');
+        $this->route->add('name', 'anyPattern');
     }
 
     public function testAddController()

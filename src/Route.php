@@ -58,12 +58,21 @@ class Route implements IRouteStart, IRouteAdd
      * @param string $name
      * @param string $pattern
      */
-    public function add(string $name, string $pattern): IRouteAdd
+    public function add(string $name = null, string $pattern): IRouteAdd
     {
+        if (is_null($name)) {
+            $this->routeArray[] = ['pattern' => $pattern];
+            // Last array key
+            $name = key(array_slice($this->routeArray, -1, 1, true));
+        } else {
+            if (array_key_exists($name, $this->routeArray)) {
+                throw new \RuntimeException(
+                    "Route name '{$name}' alredy exists"
+                );
+            }
+            $this->routeArray[$name] = ['pattern' => $pattern];
+        }
         $this->lastName = $name;
-        $this->routeArray[$name] = [
-            'pattern' => $pattern
-        ];
 
         return $this;
     }
