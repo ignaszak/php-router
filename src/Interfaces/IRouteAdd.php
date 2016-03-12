@@ -35,4 +35,12 @@ interface IRouteAdd
      * @return \Ignaszak\Router\Interfaces\IRouteAdd
      */
     public function tokens(array $tokens): IRouteAdd;
+
+    /**
+     *
+     * @param \Closure $closure
+     * @param bool $call
+     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     */
+    public function attach(\Closure $closure, bool $call = false): IRouteAdd;
 }

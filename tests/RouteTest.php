@@ -124,6 +124,41 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testAttach()
+    {
+        $anyAttachment = function () {
+        };
+        $this->route->add('anyName', 'anyPattern')->attach($anyAttachment);
+        $this->assertEquals(
+            [
+                'anyName' => [
+                    'pattern' => 'anyPattern',
+                    'callAttachment' => true,
+                    'attachment' => $anyAttachment
+                ],
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
+    public function testCallableAttach()
+    {
+        $anyAttachment = function () {
+        };
+        $this->route->add('anyName', 'anyPattern')
+            ->attach($anyAttachment, false);
+        $this->assertEquals(
+            [
+                'anyName' => [
+                    'pattern' => 'anyPattern',
+                    'callAttachment' => false,
+                    'attachment' => $anyAttachment
+                ],
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
     public function testSort()
     {
         $this->route->add('name1', 'pattern/subpattern');

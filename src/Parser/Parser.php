@@ -36,13 +36,19 @@ class Parser
     {
         foreach ($this->route->getRouteArray() as $name => $route) {
             $m = [];
-            if (preg_match($route['pattern'], Conf::getQueryString(), $m)) {
+            if (preg_match($route['pattern'], Conf::getQueryString(), $m, PREG_OFFSET_CAPTURE)) {
+                $attachment = $route['attachment'] ?? '';
+                $callAttachment = $route['callAttachment'] ?? false;
                 $request = [
                     'name' => $name,
                     'controller' => $route['controller'] ?? '',
+                    'callAttachment' => $callAttachment,
+                    'attachment' => $attachment,
                     'routes' => $this->formatArray($m)
                 ];
+
                 IRouteParser::$request = $request;
+                $this->callAttachment($request);
                 return;
             }
         }
@@ -56,11 +62,30 @@ class Parser
      */
     private function formatArray(array $array): array
     {
-        foreach ($array as $key => $value) {
-            if (is_int($key) || empty($value)) {
-                unset($array[$key]);
+        unset($array[0]);
+        $multi = array_map(
+            'unserialize',
+            array_unique(array_map('serialize', $array))
+        );
+        $return = [];
+        foreach ($multi as $key => $value) {
+            if (is_int($key)) {
+                $return[] = $value[0];
+            } else {
+                $return[$key] = $value[0];
             }
         }
-        return $array;
+        return $return;
+    }
+
+    /**
+     *
+     * @param array $request
+     */
+    private function callAttachment(array $request)
+    {
+        if ($request['callAttachment']) {
+            call_user_func_array($request['attachment'], $request['routes']);
+        }
     }
 }

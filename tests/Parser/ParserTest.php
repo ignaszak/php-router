@@ -34,11 +34,33 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'name',
                 'controller' => '',
+                'callAttachment' => '',
+                'attachment' => '',
                 'routes' => [
                     'token' => 'anyPattern'
                 ]
             ],
             IRouteParser::$request
+        );
+    }
+
+    public function testCallAttachment()
+    {
+        $request = [
+            'name' => 'anyRouteName',
+            'controller' => '',
+            'callAttachment' => true,
+            'attachment' => function ($name) {
+                define('NAME', $name);
+            },
+            'routes' => [
+                'name' => 'Tomek'
+            ]
+        ];
+        MockTest::callMockMethod($this->parser, 'callAttachment', [$request]);
+        $this->assertEquals(
+            'Tomek',
+            @NAME
         );
     }
 
@@ -51,16 +73,15 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testFormatArray()
     {
         $array = [
-            0 => 'post/1/anyAlias.html',
-            1 => 'post',
-            'page' => 1,
-            2 => 1,
-            3 => 1,
-            'alias' => 'anyAlias',
-            4 => 'anyAlias',
-            'format' => 'html',
-            5 => 'html',
-            6 => 'html'
+            0 => ['attach/name/string/post/1234/', 0],
+            'name' => ['name', 7],
+            1 => ['name', 7],
+            2 => ['name', 7],
+            3 => ['string', 12],
+            'post' => ['post', 19],
+            4 => ['post', 19],
+            5 => ['post', 19],
+            6 => [1234, 24]
         ];
         $result = MockTest::callMockMethod(
             $this->parser,
@@ -69,9 +90,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals(
             [
-                'page' => 1,
-                'alias' => 'anyAlias',
-                'format' => 'html'
+                'name' => 'name',
+                0 => 'string',
+                'post' => 'post',
+                1 => 1234
             ],
             $result
         );

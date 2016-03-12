@@ -46,4 +46,10 @@ interface IClient
      * @return string
      */
     public static function getLink(string $name, array $replacement): string;
+
+    /**
+     *
+     * @return \Closure
+     */
+    public static function getAttachment(): \Closure;
 }

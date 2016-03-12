@@ -62,8 +62,24 @@ class Client implements Interfaces\IClient
         return IRouteParser::$request['controller'] ?? '';
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IClient::getLink()
+     */
     public static function getLink(string $name, array $replacement): string
     {
         return Link::instance()->getLink($name, $replacement);
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IClient::getAttachment()
+     */
+    public static function getAttachment(): \Closure
+    {
+        return IRouteParser::$request['attachment'] instanceof \Closure ?
+            IRouteParser::$request['attachment'] : function () {};
     }
 }

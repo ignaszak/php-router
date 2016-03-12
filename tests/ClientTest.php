@@ -14,6 +14,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         IRouteParser::$request = [
             'name' => 'anyRouteName',
             'controller' => 'AnyController',
+            'callAttachment' => false,
+            'attachment' => function () {},
             'routes' => [
                 'token' => 'anyPattern2'
             ]
@@ -57,5 +59,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $stub->expects($this->once())->method('getLink');
         MockTest::inject(Link::instance(), 'link', $stub);
         Client::getLink('routeName', []);
+    }
+
+    public function testGetDefinedAttachment()
+    {
+        $this->assertInstanceOf('\Closure', Client::getAttachment());
+    }
+
+    public function testGetNoDefinedAttachment()
+    {
+        IRouteParser::$request = ['attachment' => ''];
+        $this->assertInstanceOf('\Closure', Client::getAttachment());
     }
 }

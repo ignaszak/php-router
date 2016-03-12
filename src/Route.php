@@ -110,6 +110,20 @@ class Route implements IRouteStart, IRouteAdd
     /**
      *
      * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteAdd::attach($closure)
+     */
+    public function attach(\Closure $closure, bool $call = true): IRouteAdd
+    {
+        $this->routeArray[$this->lastName]['callAttachment'] = $call;
+        $this->routeArray[$this->lastName]['attachment'] = $closure;
+
+        return $this;
+    }
+
+
+    /**
+     *
+     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouteStart::addToken($name, $pattern)
      */
     public function addToken(string $name, string $pattern): IRouteStart
