@@ -76,7 +76,7 @@ class RouteFormatter extends IRouteParser implements
             $pattern = $this->addTokens($this->patternArray, $pattern, '@');
             $pattern = $this->preparePattern($pattern);
 
-            $this->validRoute($pattern, $name);
+            $this->validRoute($pattern, (string)$name);
             $routeArray[$name]['pattern'] = $pattern;
         }
         $this->routeArray = $routeArray;
