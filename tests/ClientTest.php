@@ -3,6 +3,8 @@ namespace Test;
 
 use Ignaszak\Router\Client;
 use Ignaszak\Router\Interfaces\IRouteParser;
+use Test\Mock\MockTest;
+use Ignaszak\Router\Link;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,5 +48,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             ],
             Client::getRoutes()
         );
+    }
+
+    public function testGetLink()
+    {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Link')
+            ->disableOriginalConstructor()->setMethods(['getLink'])->getMock();
+        $stub->expects($this->once())->method('getLink');
+        MockTest::inject(Link::instance(), 'link', $stub);
+        Client::getLink('routeName', []);
     }
 }

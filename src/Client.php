@@ -61,4 +61,9 @@ class Client implements Interfaces\IClient
     {
         return IRouteParser::$request['controller'] ?? '';
     }
+
+    public static function getLink(string $name, array $replacement): string
+    {
+        return Link::instance()->getLink($name, $replacement);
+    }
 }

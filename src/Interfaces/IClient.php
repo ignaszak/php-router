@@ -38,4 +38,12 @@ interface IClient
      * @return string
      */
     public static function getController(): string;
+
+    /**
+     *
+     * @param string $name
+     * @param array $replacement
+     * @return string
+     */
+    public static function getLink(string $name, array $replacement): string;
 }

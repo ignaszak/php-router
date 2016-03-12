@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Interfaces\IFormatterStart;
+use Ignaszak\Router\Interfaces\IFormatterLink;
 use Ignaszak\Router\Conf\Conf;
 
 class Link
@@ -25,9 +25,21 @@ class Link
 
     /**
      *
+     * @var Route
+     */
+    private $route;
+
+    /**
+     *
      * @var string
      */
     private $baseURI = '';
+
+    /**
+     *
+     * @var string
+     */
+    private $patternArray = [];
 
     /**
      *
@@ -50,5 +62,56 @@ class Link
         }
 
         return self::$link;
+    }
+
+    /**
+     *
+     * @param Route $route
+     */
+    public function set(IFormatterLink $formatter)
+    {
+        $this->route = $formatter->getRoute();
+        $this->patternArray = $formatter->getPatternArray();
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param string[] $replacement
+     * @return string
+     */
+    public function getLink(string $name, array $replacement): string
+    {
+        $route = $this->route->getRouteArray()[$name];
+        $localTokens = $route['token'] ?? [];
+        $globalTokens = $this->route->getTokenArray() ?? [];
+        $tokenPattern = [];
+        foreach ($replacement as $token => $value) {
+            $pattern = ($localTokens[$token] ?? $globalTokens[$token]);
+            $regEx = $this->replacePattern($pattern);
+            if (! preg_match("/^{$regEx}$/", (string)$value)) {
+                throw new \RuntimeException(
+                    "Value '{$value}' don't match token '{$token}' ({$pattern}) in route '{$name}'"
+                );
+            }
+            $tokenPattern[] = "{{$token}}";
+        }
+
+        return Conf::getBaseURI() .
+            str_replace($tokenPattern, $replacement, $route['pattern']);
+    }
+
+    /**
+     *
+     * @param string $pattern
+     * @return string
+     */
+    private function replacePattern(string $pattern): string
+    {
+        $name = [];
+        foreach ($this->patternArray as $key => $value) {
+            $name[] = "@{$key}";
+        }
+        return str_replace($name, $this->patternArray, $pattern);
     }
 }
