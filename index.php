@@ -15,7 +15,7 @@ $exception->run();
 $router = Start::instance();
 
 // Set baseURI - optional (default gets value from $_SERVER['SERVER_NAME'])
-// $router->baseURI = 'http://www.base.com/';
+// $router->baseURI = 'http://www.example.com/';
 
 // Adds route by calling Start::add(string $name, string $pattern)
 // Name must be unique for each defined routes
@@ -31,10 +31,11 @@ $router->addToken('alias', '\w+'); // token avilable for all routes
 
 // Adds defined regular expressions
 // Router provides some defined regular expressions such as:
-//   @default  - use to define default route
-//   @digit    - digits [0-9]
-//   @alpha    - alphabetic characters [A-Za-z_-]
-//   @alnum    - alphanumeric characters [A-Za-z0-9_-]
+//   @base  - use to define default route
+//   @404   - not found
+//   @digit - digits [0-9]
+//   @alpha - alphabetic characters [A-Za-z_-]
+//   @alnum - alphanumeric characters [A-Za-z0-9_-]
 $router->add('name3', 'route/{page}/{post}/')->token('page', '@digit');
 $router->addToken('post', '@alnum');
 
@@ -43,15 +44,17 @@ $router->addPattern('custom', '[a-z]{2,5}');
 $router->add('routeWithCustomRegEx', 'route/@custom/');
 
 // Adds default route
-// Defult route is active when no routes is match
-$router->add('default', '@default')->controller('DefaultController');
+$router->add('default', '@base')->controller('DefaultController');
+
+// Not found
+$router->add('error', '@404')->controller('ErrorController');
 
 // Initialize router
 $router->run();
 
 // Get request
 // Display matched routes
-echo '<pre>';
+echo 'Routes:<pre>';
 print_r(Client::getRoutes());
 echo '</pre>';
 
@@ -59,7 +62,18 @@ echo '</pre>';
 echo Client::getRoute('tokenName');
 
 // Get route name
+echo 'Route name: ';
 echo Client::getName();
+echo '<br />';
 
 // Get route controller
+echo 'Controller: ';
 echo Client::getController();
+echo '<br />';
+
+// Get link
+echo 'Link: ';
+echo Client::getLink('name3', [
+    'page' => '2',
+    'post' => 'anyPost'
+]);
