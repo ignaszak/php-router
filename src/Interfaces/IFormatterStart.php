@@ -23,4 +23,11 @@ interface IFormatterStart
      * @return \Ignaszak\Router\Interfaces\IFormatterStart
      */
     public function addPattern(string $name, string $pattern): IFormatterStart;
+
+    /**
+     *
+     * @param array $patterns
+     * @return \Ignaszak\Router\Interfaces\IFormatterStart
+     */
+    public function addPatterns(array $patterns): IFormatterStart;
 }

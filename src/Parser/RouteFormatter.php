@@ -12,10 +12,13 @@ declare(strict_types=1);
 namespace Ignaszak\Router\Parser;
 
 use Ignaszak\Router\Interfaces\IRouteParser;
+use Ignaszak\Router\Interfaces\IFormatterLink;
 use Ignaszak\Router\Interfaces\IFormatterStart;
 use Ignaszak\Router\Route;
 
-class RouteFormatter extends IRouteParser implements IFormatterStart
+class RouteFormatter extends IRouteParser implements
+    IFormatterStart,
+    IFormatterLink
 {
 
     /**
@@ -35,11 +38,12 @@ class RouteFormatter extends IRouteParser implements IFormatterStart
      * @var string[]
      */
     private $patternArray = [
-        'default' => '(.*)',
-        'dot'     => '\.',
-        'digit'   => '\d*',
-        'alpha'   => '[A-Za-z_-]*',
-        'alnum'   => '[\w-]*'
+        'base'  => '',
+        '404'   => '.{1,}',
+        'dot'   => '\.',
+        'digit' => '\d*',
+        'alpha' => '[A-Za-z_-]*',
+        'alnum' => '[\w-]*'
     ];
 
     /**
@@ -88,6 +92,41 @@ class RouteFormatter extends IRouteParser implements IFormatterStart
         $this->patternArray[$name] = $pattern;
 
         return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addPatterns($patterns)
+     */
+    public function addPatterns(array $patterns): IFormatterStart
+    {
+        $this->patternArray = array_merge(
+            $this->patternArray,
+            $patterns
+        );
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getRoute()
+     */
+    public function getRoute(): Route
+    {
+        return $this->route;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getPatternArray()
+     */
+    public function getPatternArray(): array
+    {
+        return $this->patternArray;
     }
 
     /**

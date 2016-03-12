@@ -26,10 +26,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Ignaszak\Router\Route',
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'route'
-            )
+            $this->routeFormatter->getRoute()
         );
     }
 
@@ -86,11 +83,24 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             in_array(
                 'testPattern',
-                \PHPUnit_Framework_Assert::readAttribute(
-                    $this->routeFormatter,
-                    'patternArray'
-                )
+                $this->routeFormatter->getPatternArray()
             )
+        );
+    }
+
+    public function testAddPatterns()
+    {
+        $patterns = [
+            'name1' => 'testPattern1',
+            'name2' => 'testPattern2',
+            'name3' => 'testPattern3',
+        ];
+        $this->routeFormatter->addPatterns($patterns);
+        $patternArray = $this->routeFormatter->getPatternArray();
+        $this->assertTrue(
+            in_array('testPattern1', $patternArray) &&
+            in_array('testPattern2', $patternArray) &&
+            in_array('testPattern3', $patternArray)
         );
     }
 
