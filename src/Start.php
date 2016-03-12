@@ -107,7 +107,7 @@ class Start implements Interfaces\IStart
      * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IStart::add($name, $pattern)
      */
-    public function add(string $name, string $pattern): IRouteAdd
+    public function add(string $name = null, string $pattern): IRouteAdd
     {
         return $this->route->add($name, $pattern);
     }
