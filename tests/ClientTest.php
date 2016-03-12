@@ -15,7 +15,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'name' => 'anyRouteName',
             'controller' => 'AnyController',
             'callAttachment' => false,
-            'attachment' => function () {},
+            'attachment' => function () {
+            },
             'routes' => [
                 'token' => 'anyPattern2'
             ]

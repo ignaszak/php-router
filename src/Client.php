@@ -80,6 +80,7 @@ class Client implements Interfaces\IClient
     public static function getAttachment(): \Closure
     {
         return IRouteParser::$request['attachment'] instanceof \Closure ?
-            IRouteParser::$request['attachment'] : function () {};
+            IRouteParser::$request['attachment'] : function () {
+            };
     }
 }
