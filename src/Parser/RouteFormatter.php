@@ -41,9 +41,9 @@ class RouteFormatter extends IRouteParser implements
         'base'  => '',
         '404'   => '.{1,}',
         'dot'   => '\.',
-        'digit' => '\d*',
-        'alpha' => '[A-Za-z_-]*',
-        'alnum' => '[\w-]*'
+        'digit' => '(\d+)',
+        'alpha' => '([A-Za-z_-]+)',
+        'alnum' => '([\w-]+)'
     ];
 
     /**

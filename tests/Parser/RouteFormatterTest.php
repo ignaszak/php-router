@@ -155,7 +155,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name1' => [
-                    'pattern' => '/^route\/\d*\/(?P<globalToken>globalPattern)\/$/'
+                    'pattern' => '/^route\/(\d+)\/(?P<globalToken>globalPattern)\/$/'
                 ],
                 'name2' => [
                     'pattern' => '/^route2\/(?P<localToken>anyPattern)\/(?P<globalToken>overrideGlobalToken)\/$/',
