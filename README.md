@@ -44,7 +44,7 @@ use Ignaszak\Router\Client;
 $router = Start::instance();
 
 // Set baseURI - optional (default gets value from $_SERVER['SERVER_NAME'])
-// $router->baseURI = 'http://www.example.com/';
+// $router->baseURI = 'http://example.com';
 
 // Adds route by calling Start::add(string $name, string $pattern)
 // Name must be unique for each defined routes
@@ -69,7 +69,7 @@ $router->add('name3', 'route/{page}/{post}/')->token('page', '@digit');
 $router->addToken('post', '@alnum');
 
 // Define custom regular expression. It will be avilable for all routes
-$router->addPattern('custom', '[a-z]{2,5}');
+$router->addPattern('custom', '([a-z]{2,5})');
 $router->add('routeWithCustomRegEx', 'route/@custom/');
 
 // Adds default route
@@ -77,6 +77,13 @@ $router->add('default', '@base')->controller('DefaultController');
 
 // Not found
 $router->add('error', '@404')->controller('ErrorController');
+
+// Adds attachment
+$router->add('attachment', 'attach/{name}/([a-z]+)/{post}/@digit/')
+    ->token('name', '@alpha')
+    ->attach(function ($name, $string, $post, $digit) {
+        echo "{$name}, {$string}, {$post}, {$digit}";
+    });
 
 // Initialize router
 $router->run();
@@ -100,10 +107,13 @@ echo 'Controller: ';
 echo Client::getController();
 echo '<br />';
 
+// Get attachment
+$attachment = Client::getAttachment();
+$attachment();
+
 // Get link
 echo 'Link: ';
-echo Client::getLink('name3', [
-    'page' => '2',
-    'post' => 'anyPost'
+echo Client::getLink('attachment', [
+    'name' => 'Tomek'
 ]);
 ```
