@@ -37,6 +37,9 @@ php phpunit.phar
 ## Example
 
 ```php
+use Ignaszak\Router\Start;
+use Ignaszak\Router\Client;
+
 // Set router instnce
 $router = Start::instance();
 
