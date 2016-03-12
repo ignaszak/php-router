@@ -93,6 +93,16 @@ class StartTest extends \PHPUnit_Framework_TestCase
         $this->start->addToken('token', 'pattern');
     }
 
+    public function testAddTokens()
+    {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Route')
+        ->setMethods(['addTokens'])
+        ->getMock();
+        $stub->expects($this->once())->method('addTokens');
+        MockTest::inject($this->start, 'route', $stub);
+        $this->start->addTokens(['token' => 'pattern']);
+    }
+
     public function testAddPattern()
     {
         $stub = $this->getMockBuilder(
@@ -101,6 +111,16 @@ class StartTest extends \PHPUnit_Framework_TestCase
         $stub->expects($this->once())->method('addPattern');
         MockTest::inject($this->start, 'formatter', $stub);
         $this->start->addPattern('name', 'pattern');
+    }
+
+    public function testAddPatterns()
+    {
+        $stub = $this->getMockBuilder(
+            'Ignaszak\Router\Parser\RouteFormatter'
+        )->disableOriginalConstructor()->setMethods(['addPatterns'])->getMock();
+        $stub->expects($this->once())->method('addPatterns');
+        MockTest::inject($this->start, 'formatter', $stub);
+        $this->start->addPatterns(['name' => 'pattern']);
     }
 
     public function testRun()

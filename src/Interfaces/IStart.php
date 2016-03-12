@@ -38,11 +38,25 @@ interface IStart
 
     /**
      *
+     * @param string[] $tokens
+     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     */
+    public function addTokens(array $tokens): IRouteStart;
+
+    /**
+     *
      * @param string $name
      * @param string $pattern
      * @return \Ignaszak\Router\Interfaces\IFormatterStart
      */
     public function addPattern(string $name, string $pattern): IFormatterStart;
+
+    /**
+     *
+     * @param array $patterns
+     * @return \Ignaszak\Router\Interfaces\IFormatterStart
+     */
+    public function addPatterns(array $patterns): IFormatterStart;
 
     public function run();
 }

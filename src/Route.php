@@ -94,12 +94,42 @@ class Route implements IRouteStart, IRouteAdd
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteAdd::tokens($tokens)
+     */
+    public function tokens(array $tokens): IRouteAdd
+    {
+        $this->routeArray[$this->lastName]['token'] = array_merge(
+            $this->routeArray[$this->lastName]['token'] ?? [],
+            $tokens
+        );
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteStart::addToken($name, $pattern)
      */
     public function addToken(string $name, string $pattern): IRouteStart
     {
         $this->tokenArray[$name] = $pattern;
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteStart::addTokens($tokens)
+     */
+    public function addTokens(array $tokens): IRouteStart
+    {
+        $this->tokenArray = array_merge(
+            $this->tokenArray,
+            $tokens
+        );
 
         return $this;
     }
@@ -112,7 +142,7 @@ class Route implements IRouteStart, IRouteAdd
         uasort(
             $this->routeArray,
             function ($a, $b) {
-                return $b['pattern'] <=> $a['pattern'];
+                return strlen($b['pattern']) <=> strlen($a['pattern']);
             }
         );
     }

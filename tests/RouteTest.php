@@ -75,6 +75,28 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testAddTokensToRoute()
+    {
+        $this->route->add('anyName', 'anyPattern')->tokens([
+            'tokenName1' => 'pattern1',
+            'tokenName2' => 'pattern2',
+            'tokenName3' => 'pattern3'
+        ]);
+        $this->assertEquals(
+            [
+                'anyName' => [
+                    'pattern' => 'anyPattern',
+                    'token' => [
+                        'tokenName1' => 'pattern1',
+                        'tokenName2' => 'pattern2',
+                        'tokenName3' => 'pattern3'
+                    ]
+                ],
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
     public function testAddToken()
     {
         $this->route->addToken('name1', 'token1');
@@ -84,6 +106,20 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 'name1' => 'token1',
                 'name2' => 'token2'
             ],
+            $this->route->getTokenArray()
+        );
+    }
+
+    public function testAddTokens()
+    {
+        $tokens = [
+            'tokenName1' => 'pattern1',
+            'tokenName2' => 'pattern2',
+            'tokenName3' => 'pattern3'
+        ];
+        $this->route->addTokens($tokens);
+        $this->assertEquals(
+            $tokens,
             $this->route->getTokenArray()
         );
     }

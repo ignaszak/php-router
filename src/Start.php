@@ -58,6 +58,10 @@ class Start implements Interfaces\IStart
      */
     private $parser;
 
+    /**
+     *
+     * @var Link
+     */
     private $link;
 
     private function __construct()
@@ -67,6 +71,7 @@ class Start implements Interfaces\IStart
         $this->formatter = new RouteFormatter($this->route);
         $this->parser = new Parser($this->formatter);
         $this->link = Link::instance();
+        $this->link->set($this->formatter);
     }
 
     /**
@@ -120,11 +125,31 @@ class Start implements Interfaces\IStart
     /**
      *
      * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IStart::addTokens($tokens)
+     */
+    public function addTokens(array $tokens): IRouteStart
+    {
+        return $this->route->addTokens($tokens);
+    }
+
+    /**
+     *
+     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IStart::addPattern($name, $pattern)
      */
     public function addPattern(string $name, string $pattern): IFormatterStart
     {
         return $this->formatter->addPattern($name, $pattern);
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IStart::addPatterns($patterns)
+     */
+    public function addPatterns(array $patterns): IFormatterStart
+    {
+        return $this->formatter->addPatterns($patterns);
     }
 
     /**

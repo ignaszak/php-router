@@ -21,4 +21,11 @@ interface IRouteStart
      * @return \Ignaszak\Router\Interfaces\IRouteStart
      */
     public function addToken(string $name, string $pattern): IRouteStart;
+
+    /**
+     *
+     * @param array $tokens
+     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     */
+    public function addTokens(array $tokens): IRouteStart;
 }

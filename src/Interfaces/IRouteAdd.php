@@ -28,4 +28,11 @@ interface IRouteAdd
      * @return \Ignaszak\Router\Interfaces\IRouteAdd
      */
     public function token(string $name, string $pattern): IRouteAdd;
+
+    /**
+     *
+     * @param string[] $tokens
+     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     */
+    public function tokens(array $tokens): IRouteAdd;
 }
