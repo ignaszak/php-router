@@ -40,6 +40,8 @@ php phpunit.phar
 use Ignaszak\Router\Start;
 use Ignaszak\Router\Client;
 
+include __DIR__ . '/autoload.php';
+
 // Set router instnce
 $router = Start::instance();
 
@@ -47,16 +49,32 @@ $router = Start::instance();
 // $router->baseURI = 'http://example.com';
 
 // Adds route by calling Start::add(string $name, string $pattern)
-// Name must be unique for each defined routes
+// Name is not required but if is defined it must be unique for each defined routes
 // It is possible to use regular expression
-$router->add('name1', 'pattern/anotherPattern/[a-z]*/');
+$router->add('name1', 'pattern/anotherPattern/([a-z]+)/');
+$router->add(null, 'pattern/anotherPattern/([a-z]+)/'); // No defined name
 
-// Adds token for route {tokenName}
+// Adds token for route
 $router->add('name2', 'route/{alias}.{format}')
     ->controller('AnyController') // define controller class name
-    ->token('format', '(html|xml)'); // token avilable only local
+    ->token('format', '(html|xml)') // token avilable only local
+    ->tokens([ // add many tokens in array
+        'token' => 'pattern'
+    ]);
+
+// Define global tokens (local tokens overrides global tokens)
 $router->addToken('alias', '\w+'); // token avilable for all routes
-// It is posible to override global token
+$router->addTokens([
+    'token' => 'pattern',
+]);
+
+// Define controller from route
+$router->add(null, 'route/{controller}/{action}/')
+    ->controller('\\Namespace\\{controller}::{action}')
+    ->tokens([
+        'controller' => '([a-zA-Z]+)',
+        'action' => '([a-zA-Z]+)'
+    ]);
 
 // Adds defined regular expressions
 // Router provides some defined regular expressions such as:
