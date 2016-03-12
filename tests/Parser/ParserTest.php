@@ -99,6 +99,23 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testMatchController()
+    {
+        $controller = '\\Namespace\\{controller}::{action}';
+        $routes = [
+            'controller' => 'AnyController',
+            'action' => 'anyAction'
+        ];
+        $result = MockTest::callMockMethod($this->parser, 'matchController', [
+            $controller,
+            $routes
+        ]);
+        $this->assertEquals(
+            '\\Namespace\\AnyController::anyAction',
+            $result
+        );
+    }
+
     private function mockRoute(array $route = [])
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Interfaces\IRouteParser')

@@ -34,17 +34,27 @@ class Parser
 
     public function run()
     {
+        $queryString = Conf::getQueryString();
+        $m = [];
+
         foreach ($this->route->getRouteArray() as $name => $route) {
-            $m = [];
-            if (preg_match($route['pattern'], Conf::getQueryString(), $m, PREG_OFFSET_CAPTURE)) {
+            if (preg_match(
+                $route['pattern'],
+                $queryString,
+                $m,
+                PREG_OFFSET_CAPTURE
+            )) {
+                $controller = $route['controller'] ?? '';
                 $attachment = $route['attachment'] ?? '';
                 $callAttachment = $route['callAttachment'] ?? false;
+                $routes = $this->formatArray($m);
+
                 $request = [
                     'name' => $name,
-                    'controller' => $route['controller'] ?? '',
+                    'controller' => $controller,
                     'callAttachment' => $callAttachment,
                     'attachment' => $attachment,
-                    'routes' => $this->formatArray($m)
+                    'routes' => $routes
                 ];
 
                 IRouteParser::$request = $request;
@@ -52,6 +62,7 @@ class Parser
                 return;
             }
         }
+
         IRouteParser::$request = [];
     }
 
@@ -76,6 +87,21 @@ class Parser
             }
         }
         return $return;
+    }
+
+    /**
+     *
+     * @param string $controller
+     * @param string[] $routes
+     * @return string
+     */
+    private function matchController(string $controller, array $routes): string
+    {
+        $pattern = [];
+        foreach ($routes as $key => $value) {
+            $pattern[] = "{{$key}}";
+        }
+        return str_replace($pattern, $routes, $controller);
     }
 
     /**
