@@ -11,13 +11,13 @@ $router = Start::instance();
 // Set baseURI - optional (default gets value from $_SERVER['SERVER_NAME'])
 // $router->baseURI = 'http://example.com';
 
-// Adds route by calling Start::add(string $name, string $pattern)
+// Add route by calling Start::add(string $name, string $pattern)
 // Name is not required but if is defined it must be unique for each defined routes
 // It is possible to use regular expression
 $router->add('name1', 'pattern/anotherPattern/([a-z]+)/');
 $router->add(null, 'pattern/anotherPattern/([a-z]+)/'); // No defined name
 
-// Adds token for route
+// Add token for route
 $router->add('name2', 'route/{alias}.{format}')
     ->controller('AnyController') // define controller class name
     ->token('format', '(html|xml)') // token avilable only local
@@ -39,7 +39,7 @@ $router->add(null, 'route/{controller}/{action}/')
         'action' => '([a-zA-Z]+)'
     ]);
 
-// Adds defined regular expressions
+// Add defined regular expressions
 // Router provides some defined regular expressions such as:
 //   @base  - use to define default route
 //   @404   - not found
@@ -53,13 +53,13 @@ $router->addToken('post', '@alnum');
 $router->addPattern('custom', '([a-z]{2,5})');
 $router->add('routeWithCustomRegEx', 'route/@custom/');
 
-// Adds default route
+// Add default route
 $router->add('default', '@base')->controller('DefaultController');
 
 // Not found
 $router->add('error', '@404')->controller('ErrorController');
 
-// Adds attachment
+// Add attachment
 $router->add('attachment', 'attach/{name}/([a-z]+)/{post}/@digit/')
     ->token('name', '@alpha')
     ->attach(function ($name, $string, $post, $digit) {
