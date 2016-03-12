@@ -66,4 +66,13 @@ class Conf
         self::$conf->host->validBaseURI(self::$conf->baseURI);
         return self::$conf->host->getQueryString() ?? '';
     }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getBaseURI(): string
+    {
+        return self::$conf->host->getBaseURI();
+    }
 }

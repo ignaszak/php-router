@@ -18,11 +18,25 @@ class HostTest extends \PHPUnit_Framework_TestCase
         $this->host = new Host();
     }
 
+    public function testGetBaseURIFromServerName()
+    {
+        @$_SERVER['SERVER_NAME'] = 'baseuri.com';
+        $this->assertEquals(
+            'http://baseuri.com/',
+            MockTest::callMockMethod($this->host, 'getBaseURIFromServerName')
+        );
+    }
+
     public function testValidEmptyBaseURI()
     {
+        @$_SERVER['SERVER_NAME'] = 'baseuri.com';
         $this->host->validBaseURI('');
+        $this->assertEquals(
+            'http://baseuri.com/',
+            $this->host->getBaseURI()
+        );
         $this->assertEmpty(
-            \PHPUnit_Framework_Assert::readAttribute($this->host, 'baseURI')
+            \PHPUnit_Framework_Assert::readAttribute($this->host, 'base')
         );
     }
 
@@ -30,14 +44,12 @@ class HostTest extends \PHPUnit_Framework_TestCase
     {
         $this->host->validBaseURI('http://www.baseURI.com');
         $this->assertEquals(
-            'baseURI.com/',
-            \PHPUnit_Framework_Assert::readAttribute($this->host, 'baseURI')
+            'http://www.baseURI.com/',
+            $this->host->getBaseURI()
         );
-
-        $this->host->validBaseURI('http://www.baseURI.com/');
         $this->assertEquals(
             'baseURI.com/',
-            \PHPUnit_Framework_Assert::readAttribute($this->host, 'baseURI')
+            \PHPUnit_Framework_Assert::readAttribute($this->host, 'base')
         );
     }
 
@@ -45,8 +57,12 @@ class HostTest extends \PHPUnit_Framework_TestCase
     {
         $this->host->validBaseURI('www.baseURI.com');
         $this->assertEquals(
+            'www.baseURI.com/',
+            $this->host->getBaseURI()
+        );
+        $this->assertEquals(
             'baseURI.com/',
-            \PHPUnit_Framework_Assert::readAttribute($this->host, 'baseURI')
+            \PHPUnit_Framework_Assert::readAttribute($this->host, 'base')
         );
     }
 

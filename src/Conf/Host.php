@@ -28,13 +28,43 @@ class Host
 
     /**
      *
+     * @var string
+     */
+    private $base = '';
+
+    /**
+     *
      * @param string $baseURI
      */
     public function validBaseURI(string $baseURI)
     {
-        if (! empty($baseURI)) {
-            $this->baseURI = $this->addSlashToURI($this->replaceURI($baseURI));
+        if (empty($baseURI)) {
+            $this->baseURI = $this->addSlashToURI(
+                $this->getBaseURIFromServerName()
+            );
+        } else {
+            $this->baseURI = $this->addSlashToURI($baseURI);
+            $this->base = $this->replaceURI($this->baseURI);
         }
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getBaseURI(): string
+    {
+        return $this->baseURI;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    private function getBaseURIFromServerName(): string
+    {
+        return 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' .
+            "{$_SERVER['SERVER_NAME']}/";
     }
 
     /**
@@ -58,11 +88,11 @@ class Host
      */
     private function baseRequestURI(): string
     {
-        if (! empty($this->baseURI)) {
+        if (! empty($this->base)) {
             return str_replace(
                 $this->replaceURI($_SERVER['SERVER_NAME']),
                 '',
-                $this->baseURI
+                $this->base
             );
         }
         return '';

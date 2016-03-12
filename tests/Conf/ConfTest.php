@@ -42,4 +42,13 @@ class ConfTest extends \PHPUnit_Framework_TestCase
         MockTest::inject($this->conf, 'host', $stub);
         $this->conf->getQueryString();
     }
+
+    public function testGetBaseURIFromServerName()
+    {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')
+            ->setMethods(['getBaseURI'])->getMock();
+        $stub->expects($this->once())->method('getBaseURI');
+        MockTest::inject($this->conf, 'host', $stub);
+        $this->conf->getBaseURI();
+    }
 }
