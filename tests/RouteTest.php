@@ -1,5 +1,4 @@
 <?php
-
 namespace Test;
 
 use Ignaszak\Router\Route;
@@ -15,7 +14,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->route = new Route();
+        $this->route = Route::start();
     }
 
     public function testAddWithName()
@@ -34,10 +33,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name1' => [
-                    'pattern' => 'pattern/subpattern'
+                    'pattern' => 'pattern/subpattern',
+                    'group' => ''
                 ],
                 'name2' => [
-                    'pattern' => 'pattern'
+                    'pattern' => 'pattern',
+                    'group' => ''
                 ]
             ],
             $this->route->getRouteArray()
@@ -60,10 +61,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 0 => [
-                    'pattern' => 'pattern/subpattern'
+                    'pattern' => 'pattern/subpattern',
+                    'group' => ''
                 ],
                 1 => [
-                    'pattern' => 'pattern'
+                    'pattern' => 'pattern',
+                    'group' => ''
                 ]
             ],
             $this->route->getRouteArray()
@@ -86,7 +89,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 'anyName' => [
                     'pattern' => 'anyPattern',
-                    'controller' => 'anyController'
+                    'controller' => 'anyController',
+                    'group' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -103,7 +107,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'pattern' => 'anyPattern',
                     'token' => [
                         'anyTokenName' => 'anyPattern'
-                    ]
+                    ],
+                    'group' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -125,7 +130,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                         'tokenName1' => 'pattern1',
                         'tokenName2' => 'pattern2',
                         'tokenName3' => 'pattern3'
-                    ]
+                    ],
+                    'group' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -169,7 +175,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 'anyName' => [
                     'pattern' => 'anyPattern',
                     'callAttachment' => true,
-                    'attachment' => $anyAttachment
+                    'attachment' => $anyAttachment,
+                    'group' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -187,25 +194,49 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 'anyName' => [
                     'pattern' => 'anyPattern',
                     'callAttachment' => false,
-                    'attachment' => $anyAttachment
+                    'attachment' => $anyAttachment,
+                    'group' => ''
                 ],
             ],
             $this->route->getRouteArray()
         );
     }
 
-    public function testSort()
+    public function testGroup()
     {
-        $this->route->add('name1', 'pattern/subpattern');
-        $this->route->add('name2', 'pattern');
-        $this->route->sort();
+        $this->route->group('anyGroupName');
+        $this->route->add(null, 'anyPattern');
+        $this->route->add(null, 'anyPattern');
         $this->assertEquals(
             [
-                'name2' => [
-                    'pattern' => 'pattern'
+                [
+                    'pattern' => 'anyPattern',
+                    'group' => 'anyGroupName'
                 ],
-                'name1' => [
-                    'pattern' => 'pattern/subpattern'
+                [
+                    'pattern' => 'anyPattern',
+                    'group' => 'anyGroupName'
+                ]
+            ],
+            $this->route->getRouteArray()
+        );
+    }
+
+    public function testClearGroup()
+    {
+        $this->route->group('anyGroupName');
+        $this->route->add(null, 'anyPattern');
+        $this->route->group();
+        $this->route->add(null, 'anyPattern');
+        $this->assertEquals(
+            [
+                [
+                    'pattern' => 'anyPattern',
+                    'group' => 'anyGroupName'
+                ],
+                [
+                    'pattern' => 'anyPattern',
+                    'group' => ''
                 ]
             ],
             $this->route->getRouteArray()

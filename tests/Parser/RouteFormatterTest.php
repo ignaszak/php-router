@@ -169,9 +169,38 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testSort()
+    {
+        MockTest::inject($this->routeFormatter, 'routeArray', [
+            'name2' => [
+                'pattern' => 'pattern',
+                'group' => ''
+            ],
+            'name1' => [
+                'pattern' => 'pattern/subpattern',
+                'group' => ''
+            ]
+        ]);
+        $this->routeFormatter->sort();
+        $this->assertEquals(
+            [
+                'name1' => [
+                    'pattern' => 'pattern/subpattern',
+                    'group' => ''
+                ],
+                'name2' => [
+                    'pattern' => 'pattern',
+                    'group' => ''
+                ]
+            ],
+            $this->routeFormatter->getRouteArray()
+        );
+    }
+
     private function mockRoute(array $route = [], array $token = [])
     {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Route')->getMock();
+        $stub = $this->getMockBuilder('Ignaszak\Router\Route')
+            ->disableOriginalConstructor()->getMock();
         $stub->method('getRouteArray')->willReturn($route);
         $stub->method('getTokenArray')->willReturn($token);
         return $stub;

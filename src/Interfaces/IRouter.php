@@ -11,37 +11,8 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Interfaces;
 
-interface IStart
+interface IRouter
 {
-
-    /**
-     *
-     * @return \Ignaszak\Router\Interfaces\IStart
-     */
-    public static function instance(): IStart;
-
-    /**
-     *
-     * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
-     */
-    public function add(string $name = null, string $pattern): IRouteAdd;
-
-    /**
-     *
-     * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
-     */
-    public function addToken(string $name, string $pattern): IRouteStart;
-
-    /**
-     *
-     * @param string[] $tokens
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
-     */
-    public function addTokens(array $tokens): IRouteStart;
 
     /**
      *

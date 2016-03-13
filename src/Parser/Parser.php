@@ -54,7 +54,8 @@ class Parser
                     'controller' => $controller,
                     'callAttachment' => $callAttachment,
                     'attachment' => $attachment,
-                    'routes' => $routes
+                    'routes' => $routes,
+                    'group' => $route['group']
                 ];
 
                 IRouteParser::$request = $request;

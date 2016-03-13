@@ -24,7 +24,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $formatedRoute = [
             'name' => [
-                'pattern' => '/^firstRoute\/(?P<token>anyPattern)\/$/'
+                'pattern' => '/^firstRoute\/(?P<token>anyPattern)\/$/',
+                'group' => ''
             ]
         ];
         $this->mockHost('firstRoute/anyPattern/');
@@ -38,7 +39,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'attachment' => '',
                 'routes' => [
                     'token' => 'anyPattern'
-                ]
+                ],
+                'group' => ''
             ],
             IRouteParser::$request
         );

@@ -38,6 +38,26 @@ class Route implements IRouteStart, IRouteAdd
     private $lastName = '';
 
     /**
+     *
+     * @var string
+     */
+    private $group = '';
+
+    private function __construct()
+    {
+    }
+
+    /**
+     *
+     * @return IRouteStart
+     */
+    public static function start(): IRouteStart
+    {
+        return new Route();
+    }
+
+    /**
+     *
      * @return array
      */
     public function getRouteArray(): array
@@ -46,6 +66,7 @@ class Route implements IRouteStart, IRouteAdd
     }
 
     /**
+     *
      * @return array
      */
     public function getTokenArray(): array
@@ -55,8 +76,8 @@ class Route implements IRouteStart, IRouteAdd
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteStart::add($name, $pattern)
      */
     public function add(string $name = null, string $pattern): IRouteAdd
     {
@@ -72,6 +93,7 @@ class Route implements IRouteStart, IRouteAdd
             }
             $this->routeArray[$name] = ['pattern' => $pattern];
         }
+        $this->routeArray[$name]['group'] = $this->group;
         $this->lastName = $name;
 
         return $this;
@@ -158,15 +180,14 @@ class Route implements IRouteStart, IRouteAdd
     }
 
     /**
-     * Sorts route array
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteStart::group($name)
      */
-    public function sort()
+    public function group(string $name = ''): IRouteStart
     {
-        uasort(
-            $this->routeArray,
-            function ($a, $b) {
-                return strlen($b['pattern']) <=> strlen($a['pattern']);
-            }
-        );
+        $this->group = $name;
+
+        return $this;
     }
 }

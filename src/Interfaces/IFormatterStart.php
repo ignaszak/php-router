@@ -16,6 +16,8 @@ interface IFormatterStart
 
     public function format();
 
+    public function sort();
+
     /**
      *
      * @param string $name

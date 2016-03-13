@@ -16,7 +16,7 @@ abstract class IRouteParser
 
     /**
      *
-     * @var string[]
+     * @var array
      */
     public static $request = [];
 

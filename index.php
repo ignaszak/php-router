@@ -1,42 +1,5 @@
-# ignaszak/router
+<?php
 
-Router based on mod_rewrite module
-
-## Installing
-
-The package is avilable via [Composer/Packagist](https://packagist.org/packages/ignaszak/router), so just add following lines to your composer.json file:
-
-```json
-"require" : {
-    "ignaszak/router" : "*"
-}
-```
-
-or:
-
-```sh
-php composer.phar require ignaszak/router
-```
-## Configuration
-The easiest way is to configure mod_rewrite via .htaccess file in site base directory. Example:
-
-```
-RewriteEngine On
-RewriteBase /
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ index.php [L]
-```
-## Running Tests
-
-Just run phpunit from the working directory
-
-```sh
-php phpunit.phar
-```
-
-## Example
-
-```php
 use Ignaszak\Router\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Client;
@@ -159,4 +122,3 @@ echo 'Link: ';
 echo Client::getLink('user', [
     'user' => 'UserName'
 ]);
-```

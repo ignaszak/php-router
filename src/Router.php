@@ -13,9 +13,7 @@ namespace Ignaszak\Router;
 
 use Ignaszak\Router\Conf\Conf;
 use Ignaszak\Router\Interfaces\IFormatterStart;
-use Ignaszak\Router\Interfaces\IRouteAdd;
-use Ignaszak\Router\Interfaces\IRouteStart;
-use Ignaszak\Router\Interfaces\IStart;
+use Ignaszak\Router\Interfaces\IRouter;
 use Ignaszak\Router\Parser\Parser;
 use Ignaszak\Router\Parser\RouteFormatter;
 
@@ -25,7 +23,7 @@ use Ignaszak\Router\Parser\RouteFormatter;
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  *
  */
-class Start implements Interfaces\IStart
+class Router implements Interfaces\IRouter
 {
 
     /**
@@ -39,12 +37,6 @@ class Start implements Interfaces\IStart
      * @var Conf
      */
     private $conf;
-
-    /**
-     *
-     * @var Route
-     */
-    private $route;
 
     /**
      *
@@ -64,28 +56,13 @@ class Start implements Interfaces\IStart
      */
     private $link;
 
-    private function __construct()
+    public function __construct(Route $route)
     {
         $this->conf = Conf::instance();
-        $this->route = new Route();
-        $this->formatter = new RouteFormatter($this->route);
+        $this->formatter = new RouteFormatter($route);
         $this->parser = new Parser($this->formatter);
         $this->link = Link::instance();
         $this->link->set($this->formatter);
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::instance()
-     */
-    public static function instance(): IStart
-    {
-        if (empty(self::$start)) {
-            self::$start = new self();
-        }
-
-        return self::$start;
     }
 
     /**
@@ -105,37 +82,7 @@ class Start implements Interfaces\IStart
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::add($name, $pattern)
-     */
-    public function add(string $name = null, string $pattern): IRouteAdd
-    {
-        return $this->route->add($name, $pattern);
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::addToken($name, $pattern)
-     */
-    public function addToken(string $name, string $pattern): IRouteStart
-    {
-        return $this->route->addToken($name, $pattern);
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::addTokens($tokens)
-     */
-    public function addTokens(array $tokens): IRouteStart
-    {
-        return $this->route->addTokens($tokens);
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::addPattern($name, $pattern)
+     * @see \Ignaszak\Router\Interfaces\IRouter::addPattern($name, $pattern)
      */
     public function addPattern(string $name, string $pattern): IFormatterStart
     {
@@ -145,7 +92,7 @@ class Start implements Interfaces\IStart
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::addPatterns($patterns)
+     * @see \Ignaszak\Router\Interfaces\IRouter::addPatterns($patterns)
      */
     public function addPatterns(array $patterns): IFormatterStart
     {
@@ -155,12 +102,12 @@ class Start implements Interfaces\IStart
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IStart::run()
+     * @see \Ignaszak\Router\Interfaces\IRouter::run()
      */
     public function run()
     {
-        $this->route->sort();
         $this->formatter->format();
+        $this->formatter->sort();
         $this->parser->run();
     }
 }

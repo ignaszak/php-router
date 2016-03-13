@@ -38,12 +38,12 @@ class RouteFormatter extends IRouteParser implements
      * @var string[]
      */
     private $patternArray = [
-        'base'  => '',
-        '404'   => '.{1,}',
-        'dot'   => '\.',
-        'digit' => '(\d+)',
-        'alpha' => '([A-Za-z_-]+)',
-        'alnum' => '([\w-]+)'
+        'base'      => '',
+        'notfound' => '.+',
+        'dot'       => '\.',
+        'digit'     => '(\d+)',
+        'alpha'     => '([A-Za-z_-]+)',
+        'alnum'     => '([\w-]+)'
     ];
 
     /**
@@ -61,6 +61,11 @@ class RouteFormatter extends IRouteParser implements
         $this->route = $route;
     }
 
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterStart::format()
+     */
     public function format()
     {
         $routeArray = $this->route->getRouteArray();
@@ -76,10 +81,25 @@ class RouteFormatter extends IRouteParser implements
             $pattern = $this->addTokens($this->patternArray, $pattern, '@');
             $pattern = $this->preparePattern($pattern);
 
-            $this->validRoute($pattern, (string)$name);
+            //$this->validRoute($pattern, (string)$name);
             $routeArray[$name]['pattern'] = $pattern;
         }
         $this->routeArray = $routeArray;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterStart::sort()
+     */
+    public function sort()
+    {
+        uasort(
+            $this->routeArray,
+            function ($a, $b) {
+                return strlen($b['pattern']) <=> strlen($a['pattern']);
+            }
+        );
     }
 
     /**
