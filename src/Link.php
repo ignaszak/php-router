@@ -37,14 +37,10 @@ class Link
 
     /**
      *
-     * @var string
+     * @var string[]
      */
     private $patternArray = [];
 
-    /**
-     *
-     * @param IFormatterStart|null $formatter
-     */
     private function __construct()
     {
         $this->baseURI = Conf::instance()->baseURI;
@@ -52,7 +48,6 @@ class Link
 
     /**
      *
-     * @param IFormatterStart|null $formatter
      * @return Link
      */
     public static function instance(): Link
@@ -66,7 +61,7 @@ class Link
 
     /**
      *
-     * @param Route $route
+     * @param IFormatterLink $formatter
      */
     public function set(IFormatterLink $formatter)
     {
