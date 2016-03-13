@@ -18,16 +18,34 @@ interface IRouter
      *
      * @param string $name
      * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IFormatterStart
+     * @return \Ignaszak\Router\Interfaces\IRouter
      */
-    public function addPattern(string $name, string $pattern): IFormatterStart;
+    public function addToken(string $name, string $pattern): IRouter;
 
     /**
      *
      * @param array $patterns
-     * @return \Ignaszak\Router\Interfaces\IFormatterStart
+     * @return \Ignaszak\Router\Interfaces\IRouter
      */
-    public function addPatterns(array $patterns): IFormatterStart;
+    public function addTokens(array $patterns): IRouter;
 
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IRouter
+     */
+    public function addPattern(string $name, string $pattern): IRouter;
+
+    /**
+     *
+     * @param array $patterns
+     * @return \Ignaszak\Router\Interfaces\IRouter
+     */
+    public function addPatterns(array $patterns): IRouter;
+
+    /**
+     * Parse definded routes
+     */
     public function run();
 }

@@ -25,13 +25,6 @@ class Route implements IRouteStart, IRouteAdd
     private $routeArray = [];
 
     /**
-     * Stores added tokens name as key and token pattern as value
-     *
-     * @var array
-     */
-    private $tokenArray = [];
-
-    /**
      *
      * @var string
      */
@@ -63,15 +56,6 @@ class Route implements IRouteStart, IRouteAdd
     public function getRouteArray(): array
     {
         return $this->routeArray;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getTokenArray(): array
-    {
-        return $this->tokenArray;
     }
 
     /**
@@ -147,34 +131,6 @@ class Route implements IRouteStart, IRouteAdd
     {
         $this->routeArray[$this->lastName]['callAttachment'] = $call;
         $this->routeArray[$this->lastName]['attachment'] = $closure;
-
-        return $this;
-    }
-
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::addToken($name, $pattern)
-     */
-    public function addToken(string $name, string $pattern): IRouteStart
-    {
-        $this->tokenArray[$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::addTokens($tokens)
-     */
-    public function addTokens(array $tokens): IRouteStart
-    {
-        $this->tokenArray = array_merge(
-            $this->tokenArray,
-            $tokens
-        );
 
         return $this;
     }

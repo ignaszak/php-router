@@ -25,21 +25,6 @@ interface IRouteStart
     /**
      *
      * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
-     */
-    public function addToken(string $name, string $pattern): IRouteStart;
-
-    /**
-     *
-     * @param array $tokens
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
-     */
-    public function addTokens(array $tokens): IRouteStart;
-
-    /**
-     *
-     * @param string $name
      * @return \Ignaszak\Router\Interfaces\IRouteStart
      */
     public function group(string $name): IRouteStart;

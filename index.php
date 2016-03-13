@@ -16,17 +16,11 @@ $route->add('test', 'test/(\w+)/');
 
 // Add token
 $route->add(null, 'post/{slug}/')->token('slug', '(\w+)');
-
-// It is possible to define global token avilable for all routes.
-// Local tokens overrides global tokens.
-$route->addToken('slug', '(\w+)/');
-
-// Add multi tokens in array
-$route->addTokens([
-    'user' => '(\w+)',
-    'page' => '(\d+)'
+// Add many tokens in array
+$route->add(null, 'tokens/{token1}/{token2}/')->tokens([
+    'token1' => '(\w+)',
+    'token2' => '(\d+)'
 ]);
-$route->add(null, 'tokens/')->tokens([]);
 
 // Add controller
 $route->add('user', 'user/{user}/')->controller('UserController');
@@ -41,6 +35,10 @@ $route->add(null, 'test/{controller}/{action}')
 
 // Add attachment
 $route->add('attach', 'attach/{name}/(\w+)/{id}/')
+    ->tokens([
+        'name' => '(\w+)',
+        'id' => '(\d+)'
+    ])
     ->attach(function ($name, $string, $id) {
         echo "{$name}, {$string}, {$id}";
     });
@@ -78,6 +76,14 @@ $router = new Router($route);
 // Set baseURI - optional (default gets value from $_SERVER['SERVER_NAME'])
 // $router->baseURI = 'http://baseuri.com/';
 
+// It is possible to define global token avilable for all routes.
+$router->addToken('slug', '(\w+)/');
+// Add many tokens in array
+$router->addTokens([
+    'user' => '(\w+)',
+    'page' => '(\d+)'
+]);
+
 // Define custom regular expression. It will be avilable for all routes
 $router->addPattern('day', '([0-9]{2})');
 $router->addPatterns([
@@ -114,8 +120,8 @@ echo Client::getController();
 echo '<br />';
 
 // Get attachment
-//$attachment = Client::getAttachment();
-//$attachment();
+$attachment = Client::getAttachment();
+$attachment();
 
 // Get link
 echo 'Link: ';

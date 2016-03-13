@@ -53,6 +53,13 @@ class RouteFormatter extends IRouteParser implements
     private $routeArray = [];
 
     /**
+     * Stores added tokens name as key and token pattern as value
+     *
+     * @var string[]
+     */
+    private $tokenArray = [];
+
+    /**
      *
      * @param Route $route
      */
@@ -70,15 +77,19 @@ class RouteFormatter extends IRouteParser implements
     {
         $routeArray = $this->route->getRouteArray();
         foreach ($routeArray as $name => $route) {
-            $pattern = $this->addTokens(
+            $pattern = $this->addTokensToRoute(
                 $route['token'] ?? [],
                 $route['pattern']
             );
-            $pattern = $this->addTokens(
-                $this->route->getTokenArray() ?? [],
+            $pattern = $this->addTokensToRoute(
+                $this->tokenArray ?? [],
                 $pattern
             );
-            $pattern = $this->addTokens($this->patternArray, $pattern, '@');
+            $pattern = $this->addTokensToRoute(
+                $this->patternArray,
+                $pattern,
+                '@'
+            );
             $pattern = $this->preparePattern($pattern);
 
             //$this->validRoute($pattern, (string)$name);
@@ -100,6 +111,33 @@ class RouteFormatter extends IRouteParser implements
                 return strlen($b['pattern']) <=> strlen($a['pattern']);
             }
         );
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addToken($name, $pattern)
+     */
+    public function addToken(string $name, string $pattern): IFormatterStart
+    {
+        $this->tokenArray[$name] = $pattern;
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addTokens($tokens)
+     */
+    public function addTokens(array $tokens): IFormatterStart
+    {
+        $this->tokenArray = array_merge(
+            $this->tokenArray,
+            $tokens
+        );
+
+        return $this;
     }
 
     /**
@@ -166,7 +204,7 @@ class RouteFormatter extends IRouteParser implements
      * @param string $symbol
      * @return string
      */
-    private function addTokens(
+    private function addTokensToRoute(
         array $token,
         string $pattern,
         string $symbol = ''

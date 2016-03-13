@@ -138,33 +138,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddToken()
-    {
-        $this->route->addToken('name1', 'token1');
-        $this->route->addToken('name2', 'token2');
-        $this->assertEquals(
-            [
-                'name1' => 'token1',
-                'name2' => 'token2'
-            ],
-            $this->route->getTokenArray()
-        );
-    }
-
-    public function testAddTokens()
-    {
-        $tokens = [
-            'tokenName1' => 'pattern1',
-            'tokenName2' => 'pattern2',
-            'tokenName3' => 'pattern3'
-        ];
-        $this->route->addTokens($tokens);
-        $this->assertEquals(
-            $tokens,
-            $this->route->getTokenArray()
-        );
-    }
-
     public function testAttach()
     {
         $anyAttachment = function () {

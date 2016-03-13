@@ -42,7 +42,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         ];
         $result = MockTest::callMockMethod(
             $this->routeFormatter,
-            'addTokens',
+            'addTokensToRoute',
             [$route['token'], $route['pattern']]
         );
         $this->assertEquals(
@@ -57,7 +57,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
             'anyPattern{token}',
             MockTest::callMockMethod(
                 $this->routeFormatter,
-                'addTokens',
+                'addTokensToRoute',
                 [[], 'anyPattern{token}']
             )
         );
@@ -74,6 +74,39 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             '/^noNamed1\/(?P<token>(noNamed2))\.html$/',
             $result
+        );
+    }
+
+    public function testAddToken()
+    {
+        $this->routeFormatter->addToken('name1', 'token1');
+        $this->routeFormatter->addToken('name2', 'token2');
+        $this->assertEquals(
+            [
+                'name1' => 'token1',
+                'name2' => 'token2'
+            ],
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->routeFormatter,
+                'tokenArray'
+            )
+        );
+    }
+
+    public function testAddTokens()
+    {
+        $tokens = [
+            'tokenName1' => 'pattern1',
+            'tokenName2' => 'pattern2',
+            'tokenName3' => 'pattern3'
+        ];
+        $this->routeFormatter->addTokens($tokens);
+        $this->assertEquals(
+            $tokens,
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->routeFormatter,
+                'tokenArray'
+            )
         );
     }
 
@@ -147,8 +180,9 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
             'globalToken' => 'globalPattern'
         ];
         $this->routeFormatter = new RouteFormatter(
-            $this->mockRoute($route, $token)
+            $this->mockRoute($route)
         );
+        MockTest::inject($this->routeFormatter, 'tokenArray', $token);
 
         $this->routeFormatter->format();
 
@@ -197,12 +231,11 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function mockRoute(array $route = [], array $token = [])
+    private function mockRoute(array $route = [])
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Route')
             ->disableOriginalConstructor()->getMock();
         $stub->method('getRouteArray')->willReturn($route);
-        $stub->method('getTokenArray')->willReturn($token);
         return $stub;
     }
 

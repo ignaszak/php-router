@@ -22,6 +22,21 @@ interface IFormatterStart
      *
      * @param string $name
      * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     */
+    public function addToken(string $name, string $pattern): IFormatterStart;
+
+    /**
+     *
+     * @param array $tokens
+     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     */
+    public function addTokens(array $tokens): IFormatterStart;
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
      * @return \Ignaszak\Router\Interfaces\IFormatterStart
      */
     public function addPattern(string $name, string $pattern): IFormatterStart;
