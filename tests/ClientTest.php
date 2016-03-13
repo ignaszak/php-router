@@ -19,7 +19,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             },
             'routes' => [
                 'token' => 'anyPattern2'
-            ]
+            ],
+            'group' => 'anyGroup'
         ];
     }
 
@@ -50,6 +51,14 @@ class ClientTest extends \PHPUnit_Framework_TestCase
                 'token' => 'anyPattern2'
             ],
             Client::getRoutes()
+        );
+    }
+
+    public function testGetGroup()
+    {
+        $this->assertEquals(
+            'anyGroup',
+            Client::getGroup()
         );
     }
 

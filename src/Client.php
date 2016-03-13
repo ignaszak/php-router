@@ -65,11 +65,11 @@ class Client implements Interfaces\IClient
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IClient::getLink()
+     * @see \Ignaszak\Router\Interfaces\IClient::getGroup()
      */
-    public static function getLink(string $name, array $replacement): string
+    public static function getGroup(): string
     {
-        return Link::instance()->getLink($name, $replacement);
+        return IRouteParser::$request['group'] ?? '';
     }
 
     /**
@@ -80,7 +80,17 @@ class Client implements Interfaces\IClient
     public static function getAttachment(): \Closure
     {
         return IRouteParser::$request['attachment'] instanceof \Closure ?
-            IRouteParser::$request['attachment'] : function () {
-            };
+        IRouteParser::$request['attachment'] : function () {
+        };
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IClient::getLink()
+     */
+    public static function getLink(string $name, array $replacement): string
+    {
+        return Link::instance()->getLink($name, $replacement);
     }
 }

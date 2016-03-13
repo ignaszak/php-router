@@ -41,15 +41,21 @@ interface IClient
 
     /**
      *
-     * @param string $name
-     * @param array $replacement
      * @return string
      */
-    public static function getLink(string $name, array $replacement): string;
+    public static function getGroup(): string;
 
     /**
      *
      * @return \Closure
      */
     public static function getAttachment(): \Closure;
+
+    /**
+     *
+     * @param string $name
+     * @param array $replacement
+     * @return string
+     */
+    public static function getLink(string $name, array $replacement): string;
 }
