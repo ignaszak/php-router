@@ -27,4 +27,10 @@ interface IFormatterLink
      * @return string[]
      */
     public function getPatternArray(): array;
+
+    /**
+     *
+     * @return string[]
+     */
+    public function getTokenArray(): array;
 }

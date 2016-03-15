@@ -180,21 +180,32 @@ class RouteFormatter extends IRouteParser implements
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getPatternArray()
-     */
-    public function getPatternArray(): array
-    {
-        return $this->patternArray;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouteParser::getRouteArray()
      */
     public function getRouteArray(): array
     {
         return $this->routeArray;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getTokenArray()
+     */
+    public function getTokenArray(): array
+    {
+//var_dump($this->tokenArray);
+        return $this->tokenArray;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getPatternArray()
+     */
+    public function getPatternArray(): array
+    {
+        return $this->patternArray;
     }
 
     /**

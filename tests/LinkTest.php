@@ -28,8 +28,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     {
         $this->link->set($this->mockFormatter());
         $this->assertInstanceOf(
-            'Ignaszak\Router\Route',
-            \PHPUnit_Framework_Assert::readAttribute($this->link, 'route')
+            'Ignaszak\Router\Interfaces\IFormatterLink',
+            \PHPUnit_Framework_Assert::readAttribute($this->link, 'formatter')
         );
     }
 
@@ -81,6 +81,25 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testInvalidLink()
+    {
+        MockTest::callMockMethod($this->link, 'validLink', [
+            'anyLink/with/unreplaced/{token}/', 'routName'
+        ]);
+    }
+
+    public function testValidLink()
+    {
+        $this->assertTrue(
+            MockTest::callMockMethod($this->link, 'validLink', [
+                'anyLink/with/replaced/token/', 'routName'
+            ])
+        );
+    }
+
     public function testReplacePattern()
     {
         $routeArray = [
@@ -114,17 +133,17 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     ) {
         $route = $this->getMockBuilder('Ignaszak\Router\Route')
             ->disableOriginalConstructor()
-            ->setMethods(['getRouteArray', 'getTokenArray'])
+            ->setMethods(['getRouteArray'])
             ->getMock();
         $route->method('getRouteArray')->willReturn($routeArray);
-        $route->method('getTokenArray')->willReturn($tokenArray);
 
         $formatter = $this->getMockBuilder(
             'Ignaszak\Router\Interfaces\IFormatterLink'
         )->disableOriginalConstructor()
-            ->setMethods(['getRoute', 'getPatternArray'])
+            ->setMethods(['getRoute', 'getTokenArray', 'getPatternArray'])
             ->getMock();
         $formatter->method('getRoute')->willReturn($route);
+        $formatter->method('getTokenArray')->willReturn($tokenArray);
         $formatter->method('getPatternArray')->willReturn($patternArray);
 
         return $formatter;

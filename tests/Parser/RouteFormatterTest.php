@@ -86,10 +86,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
                 'name1' => 'token1',
                 'name2' => 'token2'
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'tokenArray'
-            )
+            $this->routeFormatter->getTokenArray()
         );
     }
 
@@ -103,10 +100,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->routeFormatter->addTokens($tokens);
         $this->assertEquals(
             $tokens,
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'tokenArray'
-            )
+            $this->routeFormatter->getTokenArray()
         );
     }
 

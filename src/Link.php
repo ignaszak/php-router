@@ -25,21 +25,15 @@ class Link
 
     /**
      *
-     * @var Route
-     */
-    private $route;
-
-    /**
-     *
      * @var string
      */
     private $baseURI = '';
 
     /**
      *
-     * @var string[]
+     * @var IFormatterLink
      */
-    private $patternArray = [];
+    private $formatter;
 
     private function __construct()
     {
@@ -65,8 +59,7 @@ class Link
      */
     public function set(IFormatterLink $formatter)
     {
-        $this->route = $formatter->getRoute();
-        $this->patternArray = $formatter->getPatternArray();
+        $this->formatter = $formatter;
     }
 
     /**
@@ -77,23 +70,36 @@ class Link
      */
     public function getLink(string $name, array $replacement): string
     {
-        $route = $this->route->getRouteArray()[$name];
+        $route = $this->formatter->getRoute()->getRouteArray()[$name];
         $localTokens = $route['token'] ?? [];
-        $globalTokens = $this->route->getTokenArray() ?? [];
+        $globalTokens = $this->formatter->getTokenArray() ?? [];
         $tokenPattern = [];
+
         foreach ($replacement as $token => $value) {
-            $pattern = ($localTokens[$token] ?? $globalTokens[$token]);
-            $regEx = $this->replacePattern($pattern);
-            if (! preg_match("/^{$regEx}$/", (string)$value)) {
-                throw new \RuntimeException(
-                    "Value '{$value}' don't match token '{$token}' ({$pattern}) in route '{$name}'"
-                );
+            $pattern = @$localTokens[$token] ?? @$globalTokens[$token];
+
+            if (! empty($pattern)) {
+                $regEx = $this->replacePattern($pattern);
+
+                if (! preg_match("/^{$regEx}$/", (string)$value)) {
+                    throw new \RuntimeException(
+                        "Value '{$value}' don't match token '{$token}' ({$pattern}) in route '{$name}'"
+                    );
+                }
+
+                $tokenPattern[] = "{{$token}}";
             }
-            $tokenPattern[] = "{{$token}}";
         }
 
-        return Conf::getBaseURI() .
-            str_replace($tokenPattern, $replacement, $route['pattern']);
+        $link = Conf::getBaseURI() . str_replace(
+            $tokenPattern,
+            $replacement,
+            $route['pattern']
+        );
+
+        $this->validLink($link, $name);
+
+        return $link;
     }
 
     /**
@@ -104,9 +110,30 @@ class Link
     private function replacePattern(string $pattern): string
     {
         $name = [];
-        foreach ($this->patternArray as $key => $value) {
+        $patternArray = $this->formatter->getPatternArray();
+        foreach ($patternArray as $key => $value) {
             $name[] = "@{$key}";
         }
-        return str_replace($name, $this->patternArray, $pattern);
+        return str_replace($name, $patternArray, $pattern);
+    }
+
+    /**
+     *
+     * @param string $route
+     * @param string $name
+     * @throws \RuntimeException
+     * @return boolean
+     */
+    private function validLink(string $route, string $name): bool
+    {
+        $m = [];
+        if (preg_match_all("/{[a-z]+}/", $route, $m)) {
+            throw new \RuntimeException(
+                "Detect unadded tokens: " .
+                implode(', ', $m[0]) . " in route '{$name}'"
+            );
+        } else {
+            return true;
+        }
     }
 }
