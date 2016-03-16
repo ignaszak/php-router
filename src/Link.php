@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Interfaces\IFormatterLink;
-use Ignaszak\Router\Conf\Conf;
+use Ignaszak\Router\Conf\Host;
 
 class Link
 {
@@ -25,19 +25,18 @@ class Link
 
     /**
      *
-     * @var string
-     */
-    private $baseURI = '';
-
-    /**
-     *
      * @var IFormatterLink
      */
     private $formatter;
 
+    /**
+     *
+     * @var string
+     */
+    private $baseURL = '';
+
     private function __construct()
     {
-        $this->baseURI = Conf::instance()->baseURI;
     }
 
     /**
@@ -57,9 +56,10 @@ class Link
      *
      * @param IFormatterLink $formatter
      */
-    public function set(IFormatterLink $formatter)
+    public function set(IFormatterLink $formatter, Host $host = null)
     {
         $this->formatter = $formatter;
+        $this->baseURL = ! is_null($host) ? $host->getBaseURL() : '';
     }
 
     /**
@@ -91,7 +91,7 @@ class Link
             }
         }
 
-        $link = Conf::getBaseURI() . str_replace(
+        $link = $this->baseURL . str_replace(
             $tokenPattern,
             $replacement,
             $route['pattern']

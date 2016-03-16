@@ -19,12 +19,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAddWithName()
     {
-        $this->route->add('name1', 'pattern/subpattern');
+        $this->route->add('name1', '/pattern/subpattern');
         $this->assertEquals(
             'name1',
             \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
         );
-        $this->route->add('name2', 'pattern');
+        $this->route->add('name2', '/pattern');
         $this->assertEquals(
             'name2',
             \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
@@ -33,11 +33,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name1' => [
-                    'pattern' => 'pattern/subpattern',
+                    'pattern' => '/pattern/subpattern',
                     'group' => ''
                 ],
                 'name2' => [
-                    'pattern' => 'pattern',
+                    'pattern' => '/pattern',
                     'group' => ''
                 ]
             ],
@@ -47,12 +47,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAddWithoutNAme()
     {
-        $this->route->add(null, 'pattern/subpattern');
+        $this->route->add(null, '/pattern/subpattern');
         $this->assertEquals(
             0,
             \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
         );
-        $this->route->add(null, 'pattern');
+        $this->route->add(null, '/pattern');
         $this->assertEquals(
             1,
             \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
@@ -61,11 +61,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 0 => [
-                    'pattern' => 'pattern/subpattern',
+                    'pattern' => '/pattern/subpattern',
                     'group' => ''
                 ],
                 1 => [
-                    'pattern' => 'pattern',
+                    'pattern' => '/pattern',
                     'group' => ''
                 ]
             ],
@@ -78,17 +78,17 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddDuplicateName()
     {
-        $this->route->add('name', 'anyPattern');
-        $this->route->add('name', 'anyPattern');
+        $this->route->add('name', '/anyPattern');
+        $this->route->add('name', '/anyPattern');
     }
 
     public function testAddController()
     {
-        $this->route->add('anyName', 'anyPattern')->controller('anyController');
+        $this->route->add('anyName', '/anyPattern')->controller('anyController');
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'controller' => 'anyController',
                     'group' => ''
                 ],
@@ -99,12 +99,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAddTokenToRoute()
     {
-        $this->route->add('anyName', 'anyPattern')
+        $this->route->add('anyName', '/anyPattern')
             ->token('anyTokenName', 'anyPattern');
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'token' => [
                         'anyTokenName' => 'anyPattern'
                     ],
@@ -117,7 +117,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAddTokensToRoute()
     {
-        $this->route->add('anyName', 'anyPattern')->tokens([
+        $this->route->add('anyName', '/anyPattern')->tokens([
             'tokenName1' => 'pattern1',
             'tokenName2' => 'pattern2',
             'tokenName3' => 'pattern3'
@@ -125,7 +125,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'token' => [
                         'tokenName1' => 'pattern1',
                         'tokenName2' => 'pattern2',
@@ -142,11 +142,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $anyAttachment = function () {
         };
-        $this->route->add('anyName', 'anyPattern')->attach($anyAttachment);
+        $this->route->add('anyName', '/anyPattern')->attach($anyAttachment);
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'callAttachment' => true,
                     'attachment' => $anyAttachment,
                     'group' => ''
@@ -160,12 +160,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $anyAttachment = function () {
         };
-        $this->route->add('anyName', 'anyPattern')
+        $this->route->add('anyName', '/anyPattern')
             ->attach($anyAttachment, false);
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'callAttachment' => false,
                     'attachment' => $anyAttachment,
                     'group' => ''
@@ -178,16 +178,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testGroup()
     {
         $this->route->group('anyGroupName');
-        $this->route->add(null, 'anyPattern');
-        $this->route->add(null, 'anyPattern');
+        $this->route->add(null, '/anyPattern');
+        $this->route->add(null, '/anyPattern');
         $this->assertEquals(
             [
                 [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'group' => 'anyGroupName'
                 ],
                 [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'group' => 'anyGroupName'
                 ]
             ],
@@ -198,17 +198,17 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     public function testClearGroup()
     {
         $this->route->group('anyGroupName');
-        $this->route->add(null, 'anyPattern');
+        $this->route->add(null, '/anyPattern');
         $this->route->group();
-        $this->route->add(null, 'anyPattern');
+        $this->route->add(null, '/anyPattern');
         $this->assertEquals(
             [
                 [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'group' => 'anyGroupName'
                 ],
                 [
-                    'pattern' => 'anyPattern',
+                    'pattern' => '/anyPattern',
                     'group' => ''
                 ]
             ],

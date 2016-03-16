@@ -1,5 +1,4 @@
 <?php
-
 namespace Test;
 
 use Ignaszak\Router\Router;
@@ -24,10 +23,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testConstructor()
     {
-        $conf = \PHPUnit_Framework_Assert::readAttribute(
-            $this->router,
-            'conf'
-        );
         $formatter = \PHPUnit_Framework_Assert::readAttribute(
             $this->router,
             'formatter'
@@ -40,7 +35,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             $this->router,
             'link'
         );
-        $this->assertInstanceOf('Ignaszak\Router\Conf\Conf', $conf);
         $this->assertInstanceOf(
             'Ignaszak\Router\Interfaces\IFormatterStart',
             $formatter
@@ -50,25 +44,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             $parser
         );
         $this->assertInstanceOf('Ignaszak\Router\Link', $link);
-    }
-
-    public function testSetBaseURI()
-    {
-        $stub = $this->getMockBuilder('Conf')->getMock();
-        $stub->baseURI = false;
-        MockTest::inject($this->router, 'conf', $stub);
-        $this->router->baseURI = 'anyBaseUrl';
-        $this->assertEquals('anyBaseUrl', $stub->baseURI);
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testInvalidProperty()
-    {
-        $stub = $this->getMockBuilder('Conf')->getMock();
-        MockTest::inject($this->router, 'conf', $stub);
-        $this->router->invalidProperty = 'anyValue';
     }
 
     public function testAddTokenAndAddTokens()
@@ -103,7 +78,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
     public function testRun()
     {
-        $stub = $this->getMockBuilder('Formatter')
+        $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
+            ->disableOriginalConstructor()
             ->setMethods(['sort', 'format'])
             ->getMock();
         $stub->expects($this->once())->method('format');
@@ -116,6 +92,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $stub->expects($this->once())->method('run');
         MockTest::inject($this->router, 'parser', $stub);
 
-        $this->router->run();
+        $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')->getMock();
+
+        $this->router->run($stub);
     }
 }

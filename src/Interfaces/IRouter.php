@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Interfaces;
 
+use Ignaszak\Router\Conf\Host;
+
 interface IRouter
 {
 
@@ -45,7 +47,14 @@ interface IRouter
     public function addPatterns(array $patterns): IRouter;
 
     /**
-     * Parse definded routes
+     *
+     * @param Host $host
+     * @param string $query
+     * @param string $httpMethod
      */
-    public function run();
+    public function run(
+        Host $host = null,
+        string $query = '',
+        string $httpMethod = ''
+    );
 }

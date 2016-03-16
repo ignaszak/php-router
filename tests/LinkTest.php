@@ -37,7 +37,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     {
         $routeArray = [
             'name' => [
-                'pattern' => 'route/{alias}.{format}',
+                'pattern' => '/route/{alias}.{format}',
                 'token' => [
                     'alias' => '[a-z]+'
                 ]
@@ -49,7 +49,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         ];
         $this->link->set($this->mockFormatter($routeArray, $tokenArray));
         $this->assertEquals(
-            'route/anyalias.html',
+            '/route/anyalias.html',
             $this->link->getLink('name', [
                 'alias' => 'anyalias',
                 'format' => 'html'
@@ -64,7 +64,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     {
         $routeArray = [
             'name' => [
-                'pattern' => 'route/{alias}.{format}',
+                'pattern' => '/route/{alias}.{format}',
                 'token' => [
                     'alias' => '[a-z]+'
                 ]
@@ -87,7 +87,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     public function testInvalidLink()
     {
         MockTest::callMockMethod($this->link, 'validLink', [
-            'anyLink/with/unreplaced/{token}/', 'routName'
+            '/anyLink/with/unreplaced/{token}/', 'routName'
         ]);
     }
 
@@ -95,7 +95,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(
             MockTest::callMockMethod($this->link, 'validLink', [
-                'anyLink/with/replaced/token/', 'routName'
+                '/anyLink/with/replaced/token/', 'routName'
             ])
         );
     }
@@ -104,7 +104,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     {
         $routeArray = [
             'name' => [
-                'pattern' => '{alias}',
+                'pattern' => '/{alias}',
                 'token' => [
                     'alias' => '@alnum'
                 ]

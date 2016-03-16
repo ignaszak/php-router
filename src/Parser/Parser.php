@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Parser;
 
-use Ignaszak\Router\Conf\Conf;
 use Ignaszak\Router\Interfaces\IRouteParser;
+use Ignaszak\Router\Conf\Host;
 
 class Parser
 {
@@ -32,15 +32,27 @@ class Parser
         $this->route = $route;
     }
 
-    public function run()
-    {
-        $queryString = Conf::getQueryString();
+    /**
+     *
+     * @param Host $host
+     * @param string $query
+     * @param string $httpMethod
+     */
+    public function run(
+        Host $host = null,
+        string $query = '',
+        string $httpMethod = ''
+    ) {
         $m = [];
+        if (! is_null($host)) {
+            $query = $host->getQuery();
+            $httpMethod = $host->getHttpMethod();
+        }
 
         foreach ($this->route->getRouteArray() as $name => $route) {
             if (preg_match(
                 $route['pattern'],
-                $queryString,
+                $query,
                 $m,
                 PREG_OFFSET_CAPTURE
             )) {

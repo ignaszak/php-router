@@ -11,10 +11,10 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Conf\Conf;
 use Ignaszak\Router\Interfaces\IRouter;
 use Ignaszak\Router\Parser\Parser;
 use Ignaszak\Router\Parser\RouteFormatter;
+use Ignaszak\Router\Conf\Host;
 
 /**
  * Initializes router
@@ -24,18 +24,6 @@ use Ignaszak\Router\Parser\RouteFormatter;
  */
 class Router implements Interfaces\IRouter
 {
-
-    /**
-     *
-     * @var Start
-     */
-    private static $start;
-
-    /**
-     *
-     * @var Conf
-     */
-    private $conf;
 
     /**
      *
@@ -57,25 +45,9 @@ class Router implements Interfaces\IRouter
 
     public function __construct(Route $route)
     {
-        $this->conf = Conf::instance();
         $this->formatter = new RouteFormatter($route);
         $this->parser = new Parser($this->formatter);
         $this->link = Link::instance();
-        $this->link->set($this->formatter);
-    }
-
-    /**
-     *
-     * @param string $property
-     * @param string $value
-     */
-    public function __set(string $property, string $value)
-    {
-        if ($property == 'baseURI') {
-            $this->conf->baseURI = $value;
-        } else {
-            throw new \RuntimeException('Invalid property');
-        }
     }
 
     /**
@@ -131,10 +103,14 @@ class Router implements Interfaces\IRouter
      * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouter::run()
      */
-    public function run()
-    {
+    public function run(
+        Host $host = null,
+        string $query = '',
+        string $httpMethod = ''
+    ) {
+        $this->link->set($this->formatter, $host);
         $this->formatter->format();
         $this->formatter->sort();
-        $this->parser->run();
+        $this->parser->run($host, $query, $httpMethod);
     }
 }

@@ -24,27 +24,46 @@ class Host
      *
      * @var string
      */
-    private $baseURI = '';
+    private $baseQuery = '';
 
     /**
      *
-     * @var string
+     * @param string $baseQuery
      */
-    private $base = '';
-
-    /**
-     *
-     * @param string $baseURI
-     */
-    public function validBaseURI(string $baseURI)
+    public function __construct(string $baseQuery = '')
     {
-        if (empty($baseURI)) {
-            $this->baseURI = $this->addSlashToURI(
-                $this->getBaseURIFromServerName()
-            );
+        $this->baseQuery = $baseQuery;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getBaseURL(): string
+    {
+        $url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') .
+            "://{$_SERVER['SERVER_NAME']}";
+        return !empty($this->baseQuery) ? $url . $this->baseQuery : $url;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getQuery(): string
+    {
+        if (empty($this->baseQuery)) {
+
+            return $_SERVER['REQUEST_URI'];
+
         } else {
-            $this->baseURI = $this->addSlashToURI($baseURI);
-            $this->base = $this->replaceURI($this->baseURI);
+
+            return $_SERVER['REQUEST_URI'] != $this->baseQuery ?
+                substr(
+                    $_SERVER['REQUEST_URI'],
+                    strlen($this->baseQuery) - strlen($_SERVER['REQUEST_URI'])
+                ) : '';
+
         }
     }
 
@@ -52,75 +71,8 @@ class Host
      *
      * @return string
      */
-    public function getBaseURI(): string
+    public function getHttpMethod(): string
     {
-        return $this->baseURI;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    private function getBaseURIFromServerName(): string
-    {
-        return 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' .
-            "{$_SERVER['SERVER_NAME']}/";
-    }
-
-    /**
-     * Returns current query string from $_SERVER['REQUEST_URI']
-     *
-     * @return string
-     */
-    public function getQueryString(): string
-    {
-        $requestURI = $_SERVER['REQUEST_URI'];
-        $baseRequestURI = $this->baseRequestURI();
-        return $requestURI != $baseRequestURI ?
-            substr($requestURI, strlen($baseRequestURI) - strlen($requestURI)) :
-            '';
-    }
-
-    /**
-     * If baseURI is defined, returns baseURI without server name
-     *
-     * @return string
-     */
-    private function baseRequestURI(): string
-    {
-        if (! empty($this->base)) {
-            return str_replace(
-                $this->replaceURI($_SERVER['SERVER_NAME']),
-                '',
-                $this->base
-            );
-        }
-        return '';
-    }
-
-    /**
-     * Removes protocols and replaces locals ip to 'localhost'
-     *
-     * @param string $uri
-     * @return string
-     */
-    private function replaceURI(string $uri): string
-    {
-        return preg_replace(
-            ['/^(https?:\/\/)|(www\.)/', '/^(192\.168\.1\..)|(127\.0\.0\.1)/'],
-            ['', 'localhost'],
-            $uri
-        );
-    }
-
-    /**
-     * Adds slash to the end of uri
-     *
-     * @param string $uri
-     * @return string
-     */
-    private function addSlashToURI(string $uri): string
-    {
-        return substr($uri, -1) == '/' ? $uri : "{$uri}/";
+        return $_SERVER['REQUEST_METHOD'];
     }
 }

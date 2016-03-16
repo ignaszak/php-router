@@ -3,7 +3,6 @@ namespace Test\Parser;
 
 use Ignaszak\Router\Parser\Parser;
 use Test\Mock\MockTest;
-use Ignaszak\Router\Conf\Conf;
 use Ignaszak\Router\Interfaces\IRouteParser;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
@@ -24,13 +23,12 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $formatedRoute = [
             'name' => [
-                'pattern' => '/^firstRoute\/(?P<token>anyPattern)\/$/',
+                'pattern' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
                 'group' => ''
             ]
         ];
-        $this->mockHost('firstRoute/anyPattern/');
         $this->parser = new Parser($this->mockRoute($formatedRoute));
-        $this->parser->run();
+        $this->parser->run($this->mockHost('/firstRoute/anyPattern/'));
         $this->assertEquals(
             [
                 'name' => 'name',
@@ -75,7 +73,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     public function testFormatArray()
     {
         $array = [
-            0 => ['attach/name/string/post/1234/', 0],
+            0 => ['/attach/name/string/post/1234/', 0],
             'name' => ['name', 7],
             1 => ['name', 7],
             2 => ['name', 7],
@@ -129,7 +127,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     private function mockHost(string $query)
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')->getMock();
-        $stub->method('getQueryString')->willReturn($query);
-        MockTest::inject(Conf::instance(), 'host', $stub);
+        $stub->method('getQuery')->willReturn($query);
+        return $stub;
     }
 }
