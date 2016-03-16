@@ -4,7 +4,6 @@ use Ignaszak\Router\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Client;
 use Ignaszak\Router\Conf\Host;
-use Ignaszak\Router\Interfaces\IRouteParser;
 
 include __DIR__ . '/autoload.php';
 
