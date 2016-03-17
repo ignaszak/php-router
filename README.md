@@ -229,9 +229,12 @@ $response->getParams();
 // Get concrete param
 $response->getParam('token');
 $attachment();
-// Get link, define route name and tokens array
+
+// Get link
+// Link can be generated for any defined route with name (first parameter)
+// Example for route: $route->get('user', '/user/{name}')->token('name', '@alpha');
 $response->getLink('user', [
-    'user' => 'UserName'
+    'name' => 'UserName'
 ]);
 ```
 Response is also avilable via static methods
