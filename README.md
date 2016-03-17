@@ -234,7 +234,7 @@ $response->getLink('user', [
     'user' => 'UserName'
 ]);
 ```
-Response is lso avilable via static methods
+Response is also avilable via static methods
 ```php
 use Ignaszak\Router\ResponseStatic;
 
