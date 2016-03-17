@@ -229,14 +229,17 @@ $response->getParams();
 // Get concrete param
 $response->getParam('token');
 $attachment();
+```
 
-// Get link
-// Link can be generated for any defined route with name (first parameter)
-// Example for route: $route->get('user', '/user/{name}')->token('name', '@alpha');
+#### Get link
+Link can be generated for any defined route with name. Example: ```$route->get('user', '/user/{name}')->token('name', '@alpha');```
+```php
 $response->getLink('user', [
     'name' => 'UserName'
 ]);
 ```
+Output, if ```Host()``` class is used: ```http://servername/user/UserName```, or for custom request: ```/user/UserName```.
+
 Response is also avilable via static methods
 ```php
 use Ignaszak\Router\ResponseStatic;
