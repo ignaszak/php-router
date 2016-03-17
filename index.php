@@ -11,9 +11,16 @@ include __DIR__ . '/autoload.php';
 $route = Route::start();
 
 // Add new route
-// Name is not required but if is defined it must be unique
-// for each defined routes.
-$route->add('test', '/test/(\w+)/');
+// First parameter: name (is not required but if is defined
+// it must be unique for each defined routes).
+// Second: pattern
+// Third: http method (it is possible to compine all http methods e.g.:
+// 'GET|POST', not required, if is empty - route match for all methods)
+$route->add('test', '/test/(\w+)/', 'GET');
+
+// There are two more add methods:
+$route->get('get', '/match/only/get');
+$route->post('post', '/match/only/post');
 
 // Add token
 $route->add(null, '/post/{slug}/')->token('slug', '(\w+)');
@@ -92,7 +99,7 @@ $route->add(null, '/@year/@month/@day/');
 
 // Start parsing by
 // Router::run([Host $host [, string $baseQuery [, string HttpMethod]])
-$response = $router->run(new Host('/~tomek/Eclipse/PHP/router'));
+$response = $router->run(new Host());
 // Class Ignaszak\Router\Host([string $baseQuery])
 // provides current request and http method
 // $baseQuery argument defines folder via site is avilable:

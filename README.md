@@ -39,8 +39,8 @@ php phpunit.phar
 ```php
 use Ignaszak\Router\Route;
 use Ignaszak\Router\Router;
-use Ignaszak\Router\Client;
 use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\ResponseStatic;
 
 include __DIR__ . '/autoload.php';
 
@@ -48,9 +48,16 @@ include __DIR__ . '/autoload.php';
 $route = Route::start();
 
 // Add new route
-// Name is not required but if is defined it must be unique
-// for each defined routes.
-$route->add('test', '/test/(\w+)/');
+// First parameter: name (is not required but if is defined
+// it must be unique for each defined routes).
+// Second: pattern
+// Third: http method (it is possible to compine all http methods e.g.:
+// 'GET|POST', not required, if is empty - route match for all methods)
+$route->add('test', '/test/(\w+)/', 'GET');
+
+// There are two more add methods:
+$route->get('get', '/match/only/get');
+$route->post('post', '/match/only/post');
 
 // Add token
 $route->add(null, '/post/{slug}/')->token('slug', '(\w+)');
@@ -129,7 +136,7 @@ $route->add(null, '/@year/@month/@day/');
 
 // Start parsing by
 // Router::run([Host $host [, string $baseQuery [, string HttpMethod]])
-$router->run(new Host());
+$response = $router->run(new Host());
 // Class Ignaszak\Router\Host([string $baseQuery])
 // provides current request and http method
 // $baseQuery argument defines folder via site is avilable:
@@ -137,37 +144,46 @@ $router->run(new Host());
 // It is possible to define custom request and http method:
 // $router->run(null, '/customRequest', 'GET');
 
-// Display response
-// Display matched routes
+// Display response (also avilable via static methods)
+// Display matched params
 echo 'Routes:<pre>';
-print_r(Client::getRoutes());
+print_r($response->getParams());
+ResponseStatic::getParams();
 echo '</pre>';
 
-// Get concrete route
-echo Client::getRoute('token');
+// Get concrete param
+echo $response->getParam('token');
+ResponseStatic::getParam('token');
 
 // Get route name
 echo 'Route name: ';
-echo Client::getName();
+echo $response->getName();
+ResponseStatic::getName();
 echo '<br />';
 
 // Get route group
 echo 'Route group: ';
-echo Client::getGroup();
+echo $response->getGroup();
+ResponseStatic::getGroup();
 echo '<br />';
 
 // Get route controller
 echo 'Controller: ';
-echo Client::getController();
+echo $response->getController();
+ResponseStatic::getController();
 echo '<br />';
 
 // Get attachment
-$attachment = Client::getAttachment();
+$attachment = $response->getAttachment();
 $attachment();
+ResponseStatic::getAttachment();
 
 // Get link
 echo 'Link: ';
-echo Client::getLink('user', [
+echo $response->getLink('user', [
+    'user' => 'UserName'
+]);
+ResponseStatic::getLink('user', [
     'user' => 'UserName'
 ]);
 ```
