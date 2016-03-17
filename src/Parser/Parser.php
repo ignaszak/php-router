@@ -54,26 +54,49 @@ class Parser
                 $query,
                 $m,
                 PREG_OFFSET_CAPTURE
-            )) {
-                $controller = $route['controller'] ?? '';
-                $attachment = $route['attachment'] ?? '';
-                $callAttachment = $route['callAttachment'] ?? false;
-                $routes = $this->formatArray($m);
+            )
+            ) {
 
-                $request = [
-                    'name' => $name,
-                    'controller' => $controller,
-                    'callAttachment' => $callAttachment,
-                    'attachment' => $attachment,
-                    'params' => $routes,
-                    'group' => $route['group']
-                ];
+                if ($this->httpMethod($route['method'] ?? '', $httpMethod)) {
+                    $controller = $route['controller'] ?? '';
+                    $attachment = $route['attachment'] ?? '';
+                    $callAttachment = $route['callAttachment'] ?? false;
+                    $routes = $this->formatArray($m);
 
-                $this->callAttachment($request);
-                return $request;
+                    $request = [
+                        'name' => $name,
+                        'controller' => $controller,
+                        'callAttachment' => $callAttachment,
+                        'attachment' => $attachment,
+                        'params' => $routes,
+                        'group' => $route['group']
+                    ];
+
+                    $this->callAttachment($request);
+                    return $request;
+                }
+
             }
         }
         return [];
+    }
+
+    /**
+     *
+     * @param string $routeMethod
+     * @param string $currentMethod
+     * @return boolean
+     */
+    private function httpMethod(
+        string $routeMethod,
+        string $currentMethod
+    ): bool {
+        if (empty($routeMethod) ||
+            strpos($routeMethod, $currentMethod) !== false
+        ) {
+            return true;
+        }
+        return false;
     }
 
     /**

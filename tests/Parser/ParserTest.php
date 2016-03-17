@@ -18,7 +18,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->parser = new Parser($this->mockRouteFormatter());
     }
 
-    public function testRun()
+    public function testRunWithAnyHttpMethod()
     {
         $formatedRoute = [
             'name' => [
@@ -43,6 +43,20 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             ],
             $response
         );
+    }
+
+    public function testRunWithIncorrectHttpMethod()
+    {
+        $formatedRoute = [
+            'name' => [
+                'pattern' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
+                'group' => '',
+                'method' => 'POST'
+            ]
+        ];
+        $this->parser = new Parser($this->mockRouteFormatter($formatedRoute));
+        $response = $this->parser->run(null, '/firstRoute/anyPattern/', 'GET');
+        $this->assertEmpty($response);
     }
 
     public function testCallAttachment()
@@ -114,6 +128,31 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             '\\Namespace\\AnyController::anyAction',
             $result
         );
+    }
+
+    public function testNoDefinedHttpMethodInRoute()
+    {
+        $this->assertTrue($this->httpMethod('', 'anyHttpMethod'));
+    }
+
+    public function testCorrectHttpMethod()
+    {
+        $this->assertTrue($this->httpMethod('GET|POST', 'GET'));
+    }
+
+    public function testIncorrectHttpMethod()
+    {
+        $this->assertFalse($this->httpMethod('GET|POST', 'DELETE'));
+    }
+
+    private function httpMethod(string $route, string $current): bool
+    {
+        $result = MockTest::callMockMethod(
+            $this->parser,
+            'httpMethod',
+            [$route, $current]
+        );
+        return $result;
     }
 
     private function mockRouteFormatter(array $route = [])

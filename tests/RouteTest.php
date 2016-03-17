@@ -19,7 +19,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAddWithName()
     {
-        $this->route->add('name1', '/pattern/subpattern');
+        $this->route->add('name1', '/pattern/subpattern', 'AnyHttpMethod');
         $this->assertEquals(
             'name1',
             \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
@@ -34,11 +34,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 'name1' => [
                     'pattern' => '/pattern/subpattern',
-                    'group' => ''
+                    'group' => '',
+                    'method' => 'AnyHttpMethod'
                 ],
                 'name2' => [
                     'pattern' => '/pattern',
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ]
             ],
             $this->route->getRouteArray()
@@ -62,15 +64,29 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 0 => [
                     'pattern' => '/pattern/subpattern',
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ],
                 1 => [
                     'pattern' => '/pattern',
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ]
             ],
             $this->route->getRouteArray()
         );
+    }
+
+    public function testGet()
+    {
+        $this->route->get(null, '/pattern/subpattern');
+        $this->assertEquals('GET', $this->route->getRouteArray()[0]['method']);
+    }
+
+    public function testPost()
+    {
+        $this->route->post(null, '/pattern/subpattern');
+        $this->assertEquals('POST', $this->route->getRouteArray()[0]['method']);
     }
 
     /**
@@ -90,7 +106,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                 'anyName' => [
                     'pattern' => '/anyPattern',
                     'controller' => 'anyController',
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -108,7 +125,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'token' => [
                         'anyTokenName' => 'anyPattern'
                     ],
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -131,7 +149,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                         'tokenName2' => 'pattern2',
                         'tokenName3' => 'pattern3'
                     ],
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -149,7 +168,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'pattern' => '/anyPattern',
                     'callAttachment' => true,
                     'attachment' => $anyAttachment,
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -168,7 +188,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'pattern' => '/anyPattern',
                     'callAttachment' => false,
                     'attachment' => $anyAttachment,
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ],
             ],
             $this->route->getRouteArray()
@@ -184,11 +205,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'pattern' => '/anyPattern',
-                    'group' => 'anyGroupName'
+                    'group' => 'anyGroupName',
+                    'method' => ''
                 ],
                 [
                     'pattern' => '/anyPattern',
-                    'group' => 'anyGroupName'
+                    'group' => 'anyGroupName',
+                    'method' => ''
                 ]
             ],
             $this->route->getRouteArray()
@@ -205,11 +228,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 [
                     'pattern' => '/anyPattern',
-                    'group' => 'anyGroupName'
+                    'group' => 'anyGroupName',
+                    'method' => ''
                 ],
                 [
                     'pattern' => '/anyPattern',
-                    'group' => ''
+                    'group' => '',
+                    'method' => ''
                 ]
             ],
             $this->route->getRouteArray()

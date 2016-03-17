@@ -20,7 +20,27 @@ interface IRouteStart
      * @param string $pattern
      * @return \Ignaszak\Router\Interfaces\IRouteAdd
      */
-    public function add(string $name = null, string $pattern): IRouteAdd;
+    public function add(
+        string $name = null,
+        string $pattern,
+        string $method = ''
+    ): IRouteAdd;
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     */
+    public function get(string $name = null, string $pattern): IRouteAdd;
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     */
+    public function post(string $name = null, string $pattern): IRouteAdd;
 
     /**
      *

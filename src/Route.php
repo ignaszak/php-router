@@ -63,8 +63,11 @@ class Route implements IRouteStart, IRouteAdd
      * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouteStart::add($name, $pattern)
      */
-    public function add(string $name = null, string $pattern): IRouteAdd
-    {
+    public function add(
+        string $name = null,
+        string $pattern,
+        string $method = ''
+    ): IRouteAdd {
         if (is_null($name)) {
             $this->routeArray[] = ['pattern' => $pattern];
             // Last array key
@@ -78,7 +81,32 @@ class Route implements IRouteStart, IRouteAdd
             $this->routeArray[$name] = ['pattern' => $pattern];
         }
         $this->routeArray[$name]['group'] = $this->group;
+        $this->routeArray[$name]['method'] = $method;
         $this->lastName = $name;
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteStart::get($name, $pattern)
+     */
+    public function get(string $name = null, string $pattern): IRouteAdd
+    {
+        $this->add($name, $pattern, 'GET');
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRouteStart::post($name, $pattern)
+     */
+    public function post(string $name = null, string $pattern): IRouteAdd
+    {
+        $this->add($name, $pattern, 'POST');
 
         return $this;
     }
