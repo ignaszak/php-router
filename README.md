@@ -209,8 +209,8 @@ $response = $router->run(null, '/custom/request', 'GET');
 ```php
 new Host([string $baseQuery]);
 ```
-Class provides current request and http method. Argument *$baseQuery* defines folder via site is avilable:
-```http://fullSite.com/Adress => $baseQuery = /Adress``` (without slash on end).
+Class provides current request and http method. Argument *$baseQuery* defines folder via site is avilable e.g.:
+```http://localhost/~user/ => $baseQuery = /~user``` (without slash on end).
 
 #### Get response
 ```php
