@@ -1,6 +1,10 @@
 # ignaszak/router
 
-Router based on mod_rewrite module
+[![Build Status](https://travis-ci.org/ignaszak/php-router.svg?branch=master)](https://travis-ci.org/ignaszak/php-router)
+
+[![Coverage](https://coveralls.io/repos/github/ignaszak/php-router/badge.svg?branch=master)](https://coveralls.io/repos/github/ignaszak/php-router/badge.svg?branch=master)
+
+Simple object oriented PHP Router
 
 ## Installing
 
