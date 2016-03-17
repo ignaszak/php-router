@@ -48,7 +48,7 @@ class Response implements IResponse
      */
     public function getAttachment(): \Closure
     {
-        return $this->response['attachment'] instanceof \Closure ?
+        return @$this->response['attachment'] instanceof \Closure ?
             $this->response['attachment'] : function () {
             };
     }
