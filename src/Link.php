@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Interfaces\IFormatterLink;
 use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\Parser\RouteFormatter;
 
 class Link
 {
@@ -56,7 +56,7 @@ class Link
      *
      * @param IFormatterLink $formatter
      */
-    public function set(IFormatterLink $formatter, Host $host = null)
+    public function set(RouteFormatter $formatter, Host $host = null)
     {
         $this->formatter = $formatter;
         $this->baseURL = ! is_null($host) ? $host->getBaseURL() : '';

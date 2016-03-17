@@ -11,21 +11,8 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Interfaces;
 
-interface IClient
+interface IResponseStatic
 {
-
-    /**
-     *
-     * @param string $route
-     * @return string
-     */
-    public static function getRoute(string $route): string;
-
-    /**
-     *
-     * @return array
-     */
-    public static function getRoutes(): array;
 
     /**
      *
@@ -41,20 +28,33 @@ interface IClient
 
     /**
      *
-     * @return string
-     */
-    public static function getGroup(): string;
-
-    /**
-     *
      * @return \Closure
      */
     public static function getAttachment(): \Closure;
 
     /**
      *
+     * @return string[]
+     */
+    public static function getParams(): array;
+
+    /**
+     *
+     * @param string $route
+     * @return string
+     */
+    public static function getParam(string $route): string;
+
+    /**
+     *
+     * @return string
+     */
+    public static function getGroup(): string;
+
+    /**
+     *
      * @param string $name
-     * @param array $replacement
+     * @param string[] $replacement
      * @return string
      */
     public static function getLink(string $name, array $replacement): string;

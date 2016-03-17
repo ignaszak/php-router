@@ -3,7 +3,6 @@ namespace Test\Parser;
 
 use Ignaszak\Router\Parser\Parser;
 use Test\Mock\MockTest;
-use Ignaszak\Router\Interfaces\IRouteParser;
 
 class ParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +15,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->parser = new Parser($this->mockRoute());
+        $this->parser = new Parser($this->mockRouteFormatter());
     }
 
     public function testRun()
@@ -27,20 +26,22 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'group' => ''
             ]
         ];
-        $this->parser = new Parser($this->mockRoute($formatedRoute));
-        $this->parser->run($this->mockHost('/firstRoute/anyPattern/'));
+        $this->parser = new Parser($this->mockRouteFormatter($formatedRoute));
+        $response = $this->parser->run(
+            $this->mockHost('/firstRoute/anyPattern/')
+        );
         $this->assertEquals(
             [
                 'name' => 'name',
                 'controller' => '',
                 'callAttachment' => '',
                 'attachment' => '',
-                'routes' => [
+                'params' => [
                     'token' => 'anyPattern'
                 ],
                 'group' => ''
             ],
-            IRouteParser::$request
+            $response
         );
     }
 
@@ -53,7 +54,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             'attachment' => function ($name) {
                 define('NAME', $name);
             },
-            'routes' => [
+            'params' => [
                 'name' => 'Tomek'
             ]
         ];
@@ -66,8 +67,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testRunWithNoMatchedRouts()
     {
-        $this->parser->run();
-        $this->assertEmpty(IRouteParser::$request);
+        $this->assertEmpty($this->parser->run());
     }
 
     public function testFormatArray()
@@ -116,9 +116,10 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function mockRoute(array $route = [])
+    private function mockRouteFormatter(array $route = [])
     {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Interfaces\IRouteParser')
+        $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
+            ->disableOriginalConstructor()
             ->getMock();
         $stub->method('getRouteArray')->willReturn($route);
         return $stub;

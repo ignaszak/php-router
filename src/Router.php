@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Interfaces\IRouter;
+use Ignaszak\Router\Interfaces\IResponse;
 use Ignaszak\Router\Parser\Parser;
 use Ignaszak\Router\Parser\RouteFormatter;
 use Ignaszak\Router\Conf\Host;
@@ -43,6 +44,10 @@ class Router implements Interfaces\IRouter
      */
     private $link;
 
+    /**
+     *
+     * @param Route $route
+     */
     public function __construct(Route $route)
     {
         $this->formatter = new RouteFormatter($route);
@@ -107,10 +112,14 @@ class Router implements Interfaces\IRouter
         Host $host = null,
         string $query = '',
         string $httpMethod = ''
-    ) {
+    ): IResponse {
         $this->link->set($this->formatter, $host);
         $this->formatter->format();
         $this->formatter->sort();
-        $this->parser->run($host, $query, $httpMethod);
+        $response =  new Response(
+            $this->parser->run($host, $query, $httpMethod)
+        );
+        ResponseStatic::$response = $response;
+        return $response;
     }
 }

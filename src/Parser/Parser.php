@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Parser;
 
-use Ignaszak\Router\Interfaces\IRouteParser;
 use Ignaszak\Router\Conf\Host;
 
 class Parser
@@ -19,17 +18,17 @@ class Parser
 
     /**
      *
-     * @var IRouteParser
+     * @var RouteFormatter
      */
-    private $route;
+    private $formatter;
 
     /**
      *
-     * @param IRouteParser $route
+     * @param IRouteParser $formatter
      */
-    public function __construct(IRouteParser $route)
+    public function __construct(RouteFormatter $formatter)
     {
-        $this->route = $route;
+        $this->formatter = $formatter;
     }
 
     /**
@@ -42,14 +41,14 @@ class Parser
         Host $host = null,
         string $query = '',
         string $httpMethod = ''
-    ) {
+    ): array {
         $m = [];
         if (! is_null($host)) {
             $query = $host->getQuery();
             $httpMethod = $host->getHttpMethod();
         }
 
-        foreach ($this->route->getRouteArray() as $name => $route) {
+        foreach ($this->formatter->getRouteArray() as $name => $route) {
             if (preg_match(
                 $route['pattern'],
                 $query,
@@ -66,17 +65,15 @@ class Parser
                     'controller' => $controller,
                     'callAttachment' => $callAttachment,
                     'attachment' => $attachment,
-                    'routes' => $routes,
+                    'params' => $routes,
                     'group' => $route['group']
                 ];
 
-                IRouteParser::$request = $request;
                 $this->callAttachment($request);
-                return;
+                return $request;
             }
         }
-
-        IRouteParser::$request = [];
+        return [];
     }
 
     /**
@@ -124,7 +121,7 @@ class Parser
     private function callAttachment(array $request)
     {
         if ($request['callAttachment']) {
-            call_user_func_array($request['attachment'], $request['routes']);
+            call_user_func_array($request['attachment'], $request['params']);
         }
     }
 }

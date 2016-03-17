@@ -56,5 +56,5 @@ interface IRouter
         Host $host = null,
         string $query = '',
         string $httpMethod = ''
-    );
+    ): IResponse;
 }

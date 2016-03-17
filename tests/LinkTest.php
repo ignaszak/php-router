@@ -28,7 +28,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     {
         $this->link->set($this->mockFormatter());
         $this->assertInstanceOf(
-            'Ignaszak\Router\Interfaces\IFormatterLink',
+            'Ignaszak\Router\Parser\RouteFormatter',
             \PHPUnit_Framework_Assert::readAttribute($this->link, 'formatter')
         );
     }
@@ -138,7 +138,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $route->method('getRouteArray')->willReturn($routeArray);
 
         $formatter = $this->getMockBuilder(
-            'Ignaszak\Router\Interfaces\IFormatterLink'
+            'Ignaszak\Router\Parser\RouteFormatter'
         )->disableOriginalConstructor()
             ->setMethods(['getRoute', 'getTokenArray', 'getPatternArray'])
             ->getMock();

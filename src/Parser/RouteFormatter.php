@@ -11,14 +11,9 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Parser;
 
-use Ignaszak\Router\Interfaces\IRouteParser;
-use Ignaszak\Router\Interfaces\IFormatterLink;
-use Ignaszak\Router\Interfaces\IFormatterStart;
 use Ignaszak\Router\Route;
 
-class RouteFormatter extends IRouteParser implements
-    IFormatterStart,
-    IFormatterLink
+class RouteFormatter
 {
 
     /**
@@ -70,9 +65,106 @@ class RouteFormatter extends IRouteParser implements
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterStart::format()
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Parser\RouteFormatter
      */
+    public function addToken(string $name, string $pattern): RouteFormatter
+    {
+        $this->tokenArray[$name] = $pattern;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param string[] $tokens
+     * @return \Ignaszak\Router\Parser\RouteFormatter
+     */
+    public function addTokens(array $tokens): RouteFormatter
+    {
+        $this->tokenArray = array_merge(
+            $this->tokenArray,
+            $tokens
+        );
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param string $name
+     * @param string $pattern
+     * @return \Ignaszak\Router\Parser\RouteFormatter
+     */
+    public function addPattern(string $name, string $pattern): RouteFormatter
+    {
+        $this->patternArray[$name] = $pattern;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param string[] $patterns
+     * @return \Ignaszak\Router\Parser\RouteFormatter
+     */
+    public function addPatterns(array $patterns): RouteFormatter
+    {
+        $this->patternArray = array_merge(
+            $this->patternArray,
+            $patterns
+        );
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return \Ignaszak\Router\Route
+     */
+    public function getRoute(): Route
+    {
+        return $this->route;
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getRouteArray(): array
+    {
+        return $this->routeArray;
+    }
+
+    /**
+     *
+     * @return string[]
+     */
+    public function getTokenArray(): array
+    {
+        return $this->tokenArray;
+    }
+
+    /**
+     *
+     * @return string[]
+     */
+    public function getPatternArray(): array
+    {
+        return $this->patternArray;
+    }
+
+    public function sort()
+    {
+        uasort(
+            $this->routeArray,
+            function ($a, $b) {
+                return strlen($b['pattern']) <=> strlen($a['pattern']);
+            }
+        );
+    }
+
     public function format()
     {
         $routeArray = $this->route->getRouteArray();
@@ -92,120 +184,10 @@ class RouteFormatter extends IRouteParser implements
             );
             $pattern = $this->preparePattern($pattern);
 
-            //$this->validRoute($pattern, (string)$name);
+            $this->validRoute($pattern, (string)$name);
             $routeArray[$name]['pattern'] = $pattern;
         }
         $this->routeArray = $routeArray;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterStart::sort()
-     */
-    public function sort()
-    {
-        uasort(
-            $this->routeArray,
-            function ($a, $b) {
-                return strlen($b['pattern']) <=> strlen($a['pattern']);
-            }
-        );
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addToken($name, $pattern)
-     */
-    public function addToken(string $name, string $pattern): IFormatterStart
-    {
-        $this->tokenArray[$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addTokens($tokens)
-     */
-    public function addTokens(array $tokens): IFormatterStart
-    {
-        $this->tokenArray = array_merge(
-            $this->tokenArray,
-            $tokens
-        );
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addPattern($name, $pattern)
-     */
-    public function addPattern(string $name, string $pattern): IFormatterStart
-    {
-        $this->patternArray[$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterStart::addPatterns($patterns)
-     */
-    public function addPatterns(array $patterns): IFormatterStart
-    {
-        $this->patternArray = array_merge(
-            $this->patternArray,
-            $patterns
-        );
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getRoute()
-     */
-    public function getRoute(): Route
-    {
-        return $this->route;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteParser::getRouteArray()
-     */
-    public function getRouteArray(): array
-    {
-        return $this->routeArray;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getTokenArray()
-     */
-    public function getTokenArray(): array
-    {
-//var_dump($this->tokenArray);
-        return $this->tokenArray;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IFormatterLink::getPatternArray()
-     */
-    public function getPatternArray(): array
-    {
-        return $this->patternArray;
     }
 
     /**

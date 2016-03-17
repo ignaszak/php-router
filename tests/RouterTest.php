@@ -36,7 +36,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
             'link'
         );
         $this->assertInstanceOf(
-            'Ignaszak\Router\Interfaces\IFormatterStart',
+            'Ignaszak\Router\Parser\RouteFormatter',
             $formatter
         );
         $this->assertInstanceOf(
@@ -86,10 +86,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $stub->expects($this->once())->method('sort');
         MockTest::inject($this->router, 'formatter', $stub);
 
-        $stub = $this->getMockBuilder('Parser')
+        $stub = $this->getMockBuilder('Ignaszak\Router\Parser\Parser')
+            ->disableOriginalConstructor()
             ->setMethods(['run'])
             ->getMock();
-        $stub->expects($this->once())->method('run');
+        $stub->expects($this->once())->method('run')->willReturn([]);
         MockTest::inject($this->router, 'parser', $stub);
 
         $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')->getMock();
