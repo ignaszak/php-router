@@ -240,6 +240,8 @@ $response->getLink('user', [
 ```
 Output, if ```Host()``` class is used: ```http://servername/user/UserName```, or for custom request: ```/user/UserName```.
 
+#### ResponseStatic
+
 Response is also avilable via static methods
 ```php
 use Ignaszak\Router\ResponseStatic;
@@ -253,6 +255,6 @@ ResponseStatic::getGroup();
 ResponseStatic::getParams();
 ResponseStatic::getParam('token');
 ResponseStatic::getLink('user', [
-    'user' => 'UserName'
+    'name' => 'UserName'
 ]);
 ```
