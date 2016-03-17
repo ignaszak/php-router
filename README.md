@@ -34,41 +34,70 @@ Just run phpunit from the working directory
 php phpunit.phar
 ```
 
-## Example
+## Usage
 
+### Demo
 ```php
 use Ignaszak\Router\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Conf\Host;
-use Ignaszak\Router\ResponseStatic;
 
 include __DIR__ . '/autoload.php';
 
-// Create Router instance to collect routes
+// Define routes
+$route = Route::start();
+$route->add('name', '/test/{test}/{id}/{globlToken}', 'GET|POST')
+    ->tokens([
+        'test' => '(\w+)',
+        'id' => '(\d+)'
+    ]);
+$route->get('get', '/get/test')->controller('AnyController');
+$route->post('post', '/post/{name}')
+    ->token('name', '([a-z]+)')
+    ->attach(function ($name) {
+        echo $name;
+    });
+
+// Match routes
+$router = new Router($route);
+$router->addToken('globalToken', '([0-9]+)');
+$response = $router->run(new Host());
+$response->getParams();
+```
+
+### Create routes
+
+#### Add routes
+```php
+use Ignaszak\Router\Route;
+
+include __DIR__ . '/autoload.php';
+
 $route = Route::start();
 
-// Add new route
-// First parameter: name (is not required but if is defined
-// it must be unique for each defined routes).
-// Second: pattern
-// Third: http method (it is possible to compine all http methods e.g.:
-// 'GET|POST', not required, if is empty - route match for all methods)
-$route->add('test', '/test/(\w+)/', 'GET');
+// Define name (is not required but if is defined it must be unique for each defined routes),
+// pattern and http method (it is possible to combine all http methods e.g.:
+// 'GET|POST', not required, if is empty - route match for all methods).
+$route->add('name', '/test/(\w+)/', 'GET');
 
 // There are two more add methods:
-$route->get('get', '/match/only/get');
-$route->post('post', '/match/only/post');
+$route->get(null, '/match/only/get');
+$route->post(null, '/match/only/post');
+```
 
-// Add token
-$route->add(null, '/post/{slug}/')->token('slug', '(\w+)');
-// Add many tokens in array
-$route->add(null, '/tokens/{token1}/{token2}/')->tokens([
-    'token1' => '(\w+)',
-    'token2' => '(\d+)'
-]);
+#### Add tokens
+```php
+$route->add(null, '/test/{test}/{name}/{id}')
+    ->token('test', '(\w+)') // Add one token or
+    ->tokens([ // Add many tokens in array
+        'name' => '(\w+)',
+        'id' => '(\d+)'
+    ]);
+```
 
-// Add controller
-$route->add('user', '/user/{user}/')->controller('UserController');
+#### Add controller
+```php
+$route->add('user', '/user')->controller('UserController');
 
 // Define controller from route
 $route->add(null, '/test/{controller}/{action}')
@@ -77,34 +106,40 @@ $route->add(null, '/test/{controller}/{action}')
         'controller' => '([a-zA-Z]+)',
         'action' => '([a-zA-Z]+)'
     ]);
+```
 
-// Add attachment
+#### Add attachment
+```php
 $route->add('attach', '/attach/{name}/(\w+)/{id}/')
     ->tokens([
         'name' => '(\w+)',
         'id' => '(\d+)'
-    ])
-    ->attach(function ($name, $string, $id) {
+    ])->attach(function ($name, $string, $id) {
         echo "{$name}, {$string}, {$id}";
     });
+
 // Disable auto calling
 $route->add(null, '/attach/test/')->attach(function () {
     /* Do something */
 }, false);
+```
 
-// Group routes
+#### Group routes
+```php
 // Every added route after this method will be in the same group
 $route->group('groupName');
 // Disable group
 $route->group();
+```
 
-// Add defined regular expressions
-// Router provides some defined regular expressions such as:
-//   @base     - use to define default route
-//   @notfound - not found
-//   @digit    - digits [0-9]
-//   @alpha    - alphabetic characters [A-Za-z_-]
-//   @alnum    - alphanumeric characters [A-Za-z0-9_-]
+#### Add defined patterns
+Router provides some defined regular expressions such as:
+* *@base* - use to define default route
+* *@notfound* - not found
+* *@digit* - digits [0-9]
+* *@alpha* - alphabetic characters [A-Za-z_-]
+* *@alnum* - alphanumeric characters [A-Za-z0-9_-]
+```php
 $route->add('defined', '/regex/@alpha/{id}')->token('id', '@digit');
 
 // Add default route
@@ -114,75 +149,103 @@ $route->add('default', '/@base')->controller('DefaultController');
 $route->add('error', '/@notfound')->attach(function () {
     throw new Exception('404 Not found');
 });
+```
 
-// Get response
+### Create router
+```php
+use Ignaszak\Router\Route;
+use Ignaszak\Router\Router;
+
+include __DIR__ . '/autoload.php';
+
+$route = Route::start();
+/* Define routes */
+
+// Add defined routes to router
 $router = new Router($route);
 
-// It is possible to define global token avilable for all routes.
+```
+
+#### Add global tokens and patterns
+Global tokens and patterns are avilable for all routes
+```php
+// Global tokens
 $router->addToken('slug', '(\w+)/');
-// Add many tokens in array
 $router->addTokens([
     'user' => '(\w+)',
     'page' => '(\d+)'
 ]);
 
-// Define custom regular expression. It will be avilable for all routes
+// Create new patterns
 $router->addPattern('day', '([0-9]{2})');
 $router->addPatterns([
     'month' => '([0-9]{2})',
     'year' => '([0-9]{4})'
 ]);
-$route->add(null, '/@year/@month/@day/');
+// Example: $route->add(null, '/@year/@month/@day/');
+```
 
-// Start parsing by
-// Router::run([Host $host [, string $baseQuery [, string HttpMethod]])
+#### Parse
+```php
+use Ignaszak\Router\Route;
+use Ignaszak\Router\Router;
+use Ignaszak\Router\Conf\Host;
+
+include __DIR__ . '/autoload.php';
+
+$route = Route::start();
+/* Define routes */
+$router = new Router($route);
+/* Define global tokens */
+
+// Parse routes and get response
 $response = $router->run(new Host());
-// Class Ignaszak\Router\Host([string $baseQuery])
-// provides current request and http method
-// $baseQuery argument defines folder via site is avilable:
-// http://fullSite.com/Adress => $baseQuery = /Adress (without slash on end)
-// It is possible to define custom request and http method:
-// $router->run(null, '/customRequest', 'GET');
 
-// Display response (also avilable via static methods)
-// Display matched params
-echo 'Routes:<pre>';
-print_r($response->getParams());
-ResponseStatic::getParams();
-echo '</pre>';
+// Or define custom request and http method
+$response = $router->run(null, '/custom/request', 'GET');
 
-// Get concrete param
-echo $response->getParam('token');
-ResponseStatic::getParam('token');
+```
+##### Host class
+```php
+new Host([string $baseQuery]);
+```
+Class provides current request and http method. Argument *$baseQuery* defines folder via site is avilable:
+```http://fullSite.com/Adress => $baseQuery = /Adress``` (without slash on end).
+
+#### Get response
+```php
+$response = $router->run(new Host());
 
 // Get route name
-echo 'Route name: ';
-echo $response->getName();
-ResponseStatic::getName();
-echo '<br />';
-
-// Get route group
-echo 'Route group: ';
-echo $response->getGroup();
-ResponseStatic::getGroup();
-echo '<br />';
-
+$response->getName();
 // Get route controller
-echo 'Controller: ';
-echo $response->getController();
-ResponseStatic::getController();
-echo '<br />';
-
+$response->getController();
 // Get attachment
 $attachment = $response->getAttachment();
+// Get route group
+$response->getGroup();
+// Get matched params in array
+$response->getParams();
+// Get concrete param
+$response->getParam('token');
 $attachment();
-ResponseStatic::getAttachment();
-
-// Get link
-echo 'Link: ';
-echo $response->getLink('user', [
+// Get link, define route name and tokens array
+$response->getLink('user', [
     'user' => 'UserName'
 ]);
+```
+Response is lso avilable via static methods
+```php
+use Ignaszak\Router\ResponseStatic;
+
+include __DIR__ . '/autoload.php';
+
+ResponseStatic::getName();
+ResponseStatic::getController();
+ResponseStatic::getAttachment();
+ResponseStatic::getGroup();
+ResponseStatic::getParams();
+ResponseStatic::getParam('token');
 ResponseStatic::getLink('user', [
     'user' => 'UserName'
 ]);
