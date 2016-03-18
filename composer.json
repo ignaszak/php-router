@@ -1,9 +1,13 @@
 {
 	"name" : "ignaszak/router",
 	"type" : "library",
-	"description" : "Router",
+	"description" : "Simple object oriented PHP Router",
 	"keywords" : [
-		"router"
+		"router",
+		"route",
+		"routing",
+		"http",
+		"library"
 	],
 	"license" : "MIT",
 	"authors" : [{
