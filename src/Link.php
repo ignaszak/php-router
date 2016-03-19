@@ -25,7 +25,7 @@ class Link
 
     /**
      *
-     * @var IFormatterLink
+     * @var RouteFormatter
      */
     private $formatter;
 
@@ -54,7 +54,8 @@ class Link
 
     /**
      *
-     * @param IFormatterLink $formatter
+     * @param RouteFormatter $formatter
+     * @param Host $host
      */
     public function set(RouteFormatter $formatter, Host $host = null)
     {
