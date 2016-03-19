@@ -238,8 +238,7 @@ class RouteFormatter
             "/@?:?\\b(?<=:|@)[\\w@,.{|}()*+=?<>\\\\]+/",
             $route,
             $m
-        )
-            ) {
+        )) {
             throw new \RuntimeException(
                 "Detect unadded elements: " .
                 preg_replace('/[^\w:@\s,.]+/', '', implode(', ', $m[0])) .
