@@ -54,28 +54,24 @@ class Parser
                 $query,
                 $m,
                 PREG_OFFSET_CAPTURE
-            )
+            ) &&
+                $this->httpMethod($route['method'] ?? '', $httpMethod)
             ) {
-
-                if ($this->httpMethod($route['method'] ?? '', $httpMethod)) {
-                    $controller = $route['controller'] ?? '';
-                    $attachment = $route['attachment'] ?? '';
-                    $callAttachment = $route['callAttachment'] ?? false;
-                    $routes = $this->formatArray($m);
-
-                    $request = [
-                        'name' => $name,
-                        'controller' => $controller,
-                        'callAttachment' => $callAttachment,
-                        'attachment' => $attachment,
-                        'params' => $routes,
-                        'group' => $route['group']
-                    ];
-
-                    $this->callAttachment($request);
-                    return $request;
-                }
-
+                $controller = $route['controller'] ?? '';
+                $routes = $this->formatArray($m);
+                $request = [
+                    'name' => $name,
+                    'controller' => $this->matchController(
+                        $controller,
+                        $routes
+                    ),
+                    'callAttachment' => $route['callAttachment'] ?? false,
+                    'attachment' => $route['attachment'] ?? '',
+                    'params' => $routes,
+                    'group' => $route['group']
+                ];
+                $this->callAttachment($request);
+                return $request;
             }
         }
         return [];
