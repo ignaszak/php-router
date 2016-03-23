@@ -52,16 +52,17 @@ class Host
      */
     public function getQuery(): string
     {
+        $requestURI = $_SERVER['REQUEST_URI'];
         if (empty($this->baseQuery)) {
 
-            return $_SERVER['REQUEST_URI'];
+            return $requestURI;
 
         } else {
 
-            return $_SERVER['REQUEST_URI'] != $this->baseQuery ?
+            return $requestURI != $this->baseQuery ?
                 substr(
-                    $_SERVER['REQUEST_URI'],
-                    strlen($this->baseQuery) - strlen($_SERVER['REQUEST_URI'])
+                    $requestURI,
+                    strlen($this->baseQuery) - strlen($requestURI)
                 ) : '';
 
         }
