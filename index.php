@@ -75,7 +75,7 @@ $route->add('default', '/@base')->controller('DefaultController');
 
 // Not found
 $route->add('error', '/@notfound')->attach(function () {
-    throw new Exception('404 Not found');
+    throw new Exception('404 Not Found');
 });
 
 // Get response

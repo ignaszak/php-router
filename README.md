@@ -149,7 +149,7 @@ $route->add('default', '/@base')->controller('DefaultController');
 
 // Not found
 $route->add('error', '/@notfound')->attach(function () {
-    throw new Exception('404 Not found');
+    throw new Exception('404 Not Found');
 });
 ```
 
@@ -224,13 +224,13 @@ $response->getName();
 $response->getController();
 // Get attachment
 $attachment = $response->getAttachment();
+$attachment();
 // Get route group
 $response->getGroup();
 // Get matched params in array
 $response->getParams();
 // Get concrete param
 $response->getParam('token');
-$attachment();
 ```
 
 #### Get link
