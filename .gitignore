@@ -2,6 +2,8 @@ $ cat .gitignore
 doc/
 vendor/
 composer.lock
+sonar-project.properties
+.sonar
 .htaccess
 .git
 .project
