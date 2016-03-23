@@ -74,7 +74,7 @@ class Route implements IRouteStart, IRouteAdd
             $name = key(array_slice($this->routeArray, -1, 1, true));
         } else {
             if (array_key_exists($name, $this->routeArray)) {
-                throw new \RuntimeException(
+                throw new RouterException(
                     "Route name '{$name}' alredy exists"
                 );
             }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Ignaszak\Router\Parser;
 
 use Ignaszak\Router\Route;
+use Ignaszak\Router\RouterException;
 
 class RouteFormatter
 {
@@ -21,12 +22,6 @@ class RouteFormatter
      * @var Route
      */
     private $route;
-
-    /**
-     *
-     * @var integer
-     */
-    private static $counter = 0;
 
     /**
      *
@@ -228,7 +223,7 @@ class RouteFormatter
     /**
      *
      * @param string $route
-     * @throws \RuntimeException
+     * @throws RouterException
      * @return boolean
      */
     private function validRoute(string $route, string $name = ''): bool
@@ -239,7 +234,7 @@ class RouteFormatter
             $route,
             $m
         )) {
-            throw new \RuntimeException(
+            throw new RouterException(
                 "Detect unadded elements: " .
                 preg_replace('/[^\w:@\s,.]+/', '', implode(', ', $m[0])) .
                 " in route '{$name}'"

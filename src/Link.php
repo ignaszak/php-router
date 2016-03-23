@@ -83,7 +83,7 @@ class Link
                 $regEx = $this->replacePattern($pattern);
 
                 if (! preg_match("/^{$regEx}$/", (string)$value)) {
-                    throw new \RuntimeException(
+                    throw new RouterException(
                         "Value '{$value}' don't match token '{$token}' ({$pattern}) in route '{$name}'"
                     );
                 }
@@ -122,14 +122,14 @@ class Link
      *
      * @param string $route
      * @param string $name
-     * @throws \RuntimeException
+     * @throws RouterException
      * @return boolean
      */
     private function validLink(string $route, string $name): bool
     {
         $m = [];
         if (preg_match_all("/{[a-z]+}/", $route, $m)) {
-            throw new \RuntimeException(
+            throw new RouterException(
                 "Detect unadded tokens: " .
                 implode(', ', $m[0]) . " in route '{$name}'"
             );

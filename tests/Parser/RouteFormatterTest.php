@@ -130,7 +130,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \Ignaszak\Router\RouterException
      */
     public function testValidRouteWithBrokenRoute()
     {
