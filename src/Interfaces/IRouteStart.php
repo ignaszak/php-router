@@ -18,6 +18,7 @@ interface IRouteStart
      *
      * @param string $name
      * @param string $pattern
+     * @throws Ignaszak\Router\RouterException
      * @return \Ignaszak\Router\Interfaces\IRouteAdd
      */
     public function add(

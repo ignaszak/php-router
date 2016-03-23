@@ -67,6 +67,7 @@ class Link
      *
      * @param string $name
      * @param string[] $replacement
+     * @throws RouterException
      * @return string
      */
     public function getLink(string $name, array $replacement): string
