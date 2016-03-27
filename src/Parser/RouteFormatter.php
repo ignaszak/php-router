@@ -28,12 +28,12 @@ class RouteFormatter
      * @var string[]
      */
     private $patternArray = [
-        'base'      => '',
-        'notfound' => '.+',
-        'dot'       => '\.',
-        'digit'     => '(\d+)',
-        'alpha'     => '([A-Za-z_-]+)',
-        'alnum'     => '([\w-]+)'
+        '@base'      => '',
+        '@notfound' => '.+',
+        '@dot'       => '\.',
+        '@digit'     => '(\d+)',
+        '@alpha'     => '([A-Za-z_-]+)',
+        '@alnum'     => '([\w-]+)'
     ];
 
     /**
@@ -94,7 +94,7 @@ class RouteFormatter
      */
     public function addPattern(string $name, string $pattern): RouteFormatter
     {
-        $this->patternArray[$name] = $pattern;
+        $this->patternArray["@{$name}"] = $pattern;
 
         return $this;
     }
@@ -106,21 +106,11 @@ class RouteFormatter
      */
     public function addPatterns(array $patterns): RouteFormatter
     {
-        $this->patternArray = array_merge(
-            $this->patternArray,
-            $patterns
-        );
+        foreach ($patterns as $name => $pattern) {
+            $this->addPattern($name, $pattern);
+        }
 
         return $this;
-    }
-
-    /**
-     *
-     * @return \Ignaszak\Router\Route
-     */
-    public function getRoute(): Route
-    {
-        return $this->route;
     }
 
     /**
@@ -130,24 +120,6 @@ class RouteFormatter
     public function getRouteArray(): array
     {
         return $this->routeArray;
-    }
-
-    /**
-     *
-     * @return string[]
-     */
-    public function getTokenArray(): array
-    {
-        return $this->tokenArray;
-    }
-
-    /**
-     *
-     * @return string[]
-     */
-    public function getPatternArray(): array
-    {
-        return $this->patternArray;
     }
 
     public function sort()
@@ -162,62 +134,40 @@ class RouteFormatter
 
     public function format()
     {
-        $routeArray = $this->route->getRouteArray();
-        foreach ($routeArray as $name => $route) {
-            $pattern = $this->addTokensToRoute(
-                $route['token'] ?? [],
+        foreach ($this->route->getRouteArray() as $name => $route) {
+            $patternKey = array_keys($this->patternArray);
+            $tokens = [];
+            $subpatterns = [];
+            $search = [];
+            $m = [];
+
+            if (preg_match_all('/{(\w+)}/', $route['pattern'], $m)) {
+                foreach ($m[1] as $token) {
+                    $search[] = "{{$token}}";
+                    $tokens[$token] = str_replace(
+                        $patternKey,
+                        $this->patternArray,
+                        $route['token'][$token] ?? $this->tokenArray[$token]
+                    );
+                    $subpatterns[$token] = "(?P<{$token}>{$tokens[$token]})";
+                }
+            }
+
+            $route['token'] = $tokens;
+            $route['route'] = $route['pattern'];
+            $route['pattern'] = str_replace(
+                $search,
+                $subpatterns,
                 $route['pattern']
             );
-            $pattern = $this->addTokensToRoute(
-                $this->tokenArray ?? [],
-                $pattern
-            );
-            $pattern = $this->addTokensToRoute(
+            $route['pattern'] = $this->preparePattern(str_replace(
+                $patternKey,
                 $this->patternArray,
-                $pattern,
-                '@'
-            );
-            $pattern = $this->preparePattern($pattern);
-
-            $this->validRoute($pattern, (string)$name);
-            $routeArray[$name]['pattern'] = $pattern;
+                $route['pattern']
+            ));
+            $this->validPattern($route['pattern'], (string)$name);
+            $this->routeArray[$name] = $route;
         }
-        $this->routeArray = $routeArray;
-    }
-
-    /**
-     *
-     * @param array $token
-     * @param string $pattern
-     * @param string $symbol
-     * @return string
-     */
-    private function addTokensToRoute(
-        array $token,
-        string $pattern,
-        string $symbol = ''
-    ): string {
-        if (empty($token)) {
-            return $pattern;
-        }
-
-        $p = [];
-        $r = [];
-
-        if (empty($symbol)) {
-            $open = '{';
-            $close = '}';
-        } else {
-            $open = '';
-            $close = '';
-        }
-
-        foreach ($token as $key => $value) {
-            $p[] = "/{$open}{$symbol}{$key}{$close}/";
-            $r[] = $symbol == "@" ? $value : "(?P<{$key}>{$value})";
-        }
-
-        return preg_replace($p, $r, $pattern);
     }
 
     /**
@@ -226,7 +176,7 @@ class RouteFormatter
      * @throws RouterException
      * @return boolean
      */
-    private function validRoute(string $route, string $name = ''): bool
+    private function validPattern(string $route, string $name = ''): bool
     {
         $m = [];
         if (preg_match_all(

@@ -23,6 +23,9 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $formatedRoute = [
             'name' => [
                 'pattern' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
+                'token' => [
+                    'token' => 'anyPattern'
+                ],
                 'group' => ''
             ]
         ];
@@ -84,30 +87,26 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($this->parser->run());
     }
 
-    public function testFormatArray()
+    public function testCreateParamsArray()
     {
-        $array = [
-            0 => ['/attach/name/string/post/1234/', 0],
-            'name' => ['name', 7],
-            1 => ['name', 7],
-            2 => ['name', 7],
-            3 => ['string', 12],
-            'post' => ['post', 19],
-            4 => ['post', 19],
-            5 => ['post', 19],
-            6 => [1234, 24]
+        $matches = [
+            0 => '/firstRoute/anyPattern/',
+            'token' => 'anyPattern',
+            1 => 'anyPattern'
+        ];
+        $tokens = [
+            'token' => 'anyPattern',
+            'format' => '(html|xml|json)'
         ];
         $result = MockTest::callMockMethod(
             $this->parser,
-            'formatArray',
-            [$array]
+            'createParamsArray',
+            [$matches, $tokens]
         );
         $this->assertEquals(
             [
-                'name' => 'name',
-                0 => 'string',
-                'post' => 'post',
-                1 => 1234
+                'token' => 'anyPattern',
+                'format' => ''
             ],
             $result
         );

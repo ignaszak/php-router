@@ -24,39 +24,9 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertInstanceOf(
             'Ignaszak\Router\Route',
-            $this->routeFormatter->getRoute()
-        );
-    }
-
-    public function testAddRouteTokens()
-    {
-        $route = [
-            'pattern' => '/{token1}(anyPattern)/{token2}.{format}',
-            'token' => [
-                'token1' => 'pattern1',
-                'token2' => 'pattern2',
-                'format' => 'pattern3'
-            ]
-        ];
-        $result = MockTest::callMockMethod(
-            $this->routeFormatter,
-            'addTokensToRoute',
-            [$route['token'], $route['pattern']]
-        );
-        $this->assertEquals(
-            '/(?P<token1>pattern1)(anyPattern)/(?P<token2>pattern2).(?P<format>pattern3)',
-            $result
-        );
-    }
-
-    public function testAddEmptyTokenArray()
-    {
-        $this->assertEquals(
-            '/anyPattern{token}',
-            MockTest::callMockMethod(
+            \PHPUnit_Framework_Assert::readAttribute(
                 $this->routeFormatter,
-                'addTokensToRoute',
-                [[], '/anyPattern{token}']
+                'route'
             )
         );
     }
@@ -84,7 +54,10 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
                 'name1' => 'token1',
                 'name2' => 'token2'
             ],
-            $this->routeFormatter->getTokenArray()
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->routeFormatter,
+                'tokenArray'
+            )
         );
     }
 
@@ -98,7 +71,10 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->routeFormatter->addTokens($tokens);
         $this->assertEquals(
             $tokens,
-            $this->routeFormatter->getTokenArray()
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->routeFormatter,
+                'tokenArray'
+            )
         );
     }
 
@@ -108,7 +84,10 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             in_array(
                 'testPattern',
-                $this->routeFormatter->getPatternArray()
+                \PHPUnit_Framework_Assert::readAttribute(
+                    $this->routeFormatter,
+                    'patternArray'
+                )
             )
         );
     }
@@ -121,7 +100,10 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
             'name3' => 'testPattern3',
         ];
         $this->routeFormatter->addPatterns($patterns);
-        $patternArray = $this->routeFormatter->getPatternArray();
+        $patternArray = \PHPUnit_Framework_Assert::readAttribute(
+            $this->routeFormatter,
+            'patternArray'
+        );
         $this->assertTrue(
             in_array('testPattern1', $patternArray) &&
             in_array('testPattern2', $patternArray) &&
@@ -137,7 +119,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $route = '/route/@pattern/{token}/';
         MockTest::callMockMethod(
             $this->routeFormatter,
-            'validRoute',
+            'validPattern',
             [$route]
         );
     }
@@ -148,7 +130,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(
             MockTest::callMockMethod(
                 $this->routeFormatter,
-                'validRoute',
+                'validPattern',
                 [$route]
             )
         );
@@ -156,42 +138,38 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
 
     public function testFormat()
     {
-        $route = [
-            'name1' => [
-                'pattern' => '/route/@digit/{globalToken}/'
-            ],
-            'name2' => [
-                'pattern' => '/route2/{localToken}/{globalToken}/',
+        $routeArray = [
+            'name' => [
+                'pattern' => '/test/{token1}/@digit/{globaltoken}',
                 'token' => [
-                    'localToken' => 'anyPattern',
-                    'globalToken' => 'overrideGlobalToken'
+                    'token1' => '(\w+)'
                 ]
             ]
         ];
-        $token = [
-            'globalToken' => 'globalPattern'
+        $tokenArray = [
+            'token1' => '([a-z]+)',
+            'globaltoken' => '@alnum'
         ];
         $this->routeFormatter = new RouteFormatter(
-            $this->mockRoute($route)
+            $this->mockRoute($routeArray)
         );
-        MockTest::inject($this->routeFormatter, 'tokenArray', $token);
-
+        MockTest::inject($this->routeFormatter, 'tokenArray', $tokenArray);
         $this->routeFormatter->format();
-
         $this->assertEquals(
             [
-                'name1' => [
-                    'pattern' => '/^\/route\/(\d+)\/(?P<globalToken>globalPattern)\/$/'
-                ],
-                'name2' => [
-                    'pattern' => '/^\/route2\/(?P<localToken>anyPattern)\/(?P<globalToken>overrideGlobalToken)\/$/',
+                'name' => [
+                    'pattern' => '/^\/test\/(?P<token1>(\w+))\/(\d+)\/(?P<globaltoken>([\w-]+))$/',
                     'token' => [
-                        'localToken' => 'anyPattern',
-                        'globalToken' => 'overrideGlobalToken'
-                    ]
+                        'token1' => '(\w+)',
+                        'globaltoken' => '([\w-]+)'
+                    ],
+                    'route' => '/test/{token1}/@digit/{globaltoken}'
                 ]
             ],
-            $this->routeFormatter->getRouteArray()
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->routeFormatter,
+                'routeArray'
+            )
         );
     }
 

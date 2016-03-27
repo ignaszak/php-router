@@ -52,22 +52,21 @@ class Parser
             if (preg_match(
                 $route['pattern'],
                 $query,
-                $m,
-                PREG_OFFSET_CAPTURE
+                $m
             ) &&
                 $this->httpMethod($route['method'] ?? '', $httpMethod)
             ) {
                 $controller = $route['controller'] ?? '';
-                $routes = $this->formatArray($m);
+                $params = $this->createParamsArray($m, $route['token']);
                 $request = [
                     'name' => $name,
                     'controller' => $this->matchController(
                         $controller,
-                        $routes
+                        $params
                     ),
                     'callAttachment' => $route['callAttachment'] ?? false,
                     'attachment' => $route['attachment'] ?? '',
-                    'params' => $routes,
+                    'params' => $params,
                     'group' => $route['group']
                 ];
                 $this->callAttachment($request);
@@ -97,23 +96,15 @@ class Parser
 
     /**
      *
-     * @param array $array
+     * @param string[] $matches
+     * @param string[] $tokens
      * @return string[]
      */
-    private function formatArray(array $array): array
+    private function createParamsArray(array $matches, array $tokens): array
     {
-        unset($array[0]);
-        $multi = array_map(
-            'unserialize',
-            array_unique(array_map('serialize', $array))
-        );
         $return = [];
-        foreach ($multi as $key => $value) {
-            if (is_int($key)) {
-                $return[] = $value[0];
-            } else {
-                $return[$key] = $value[0];
-            }
+        foreach ($tokens as $token => $value) {
+            $return[$token] = $matches[$token] ?? '';
         }
         return $return;
     }
