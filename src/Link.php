@@ -72,67 +72,42 @@ class Link
      */
     public function getLink(string $name, array $replacement): string
     {
-        $route = $this->formatter->getRoute()->getRouteArray()[$name];
-        $localTokens = $route['token'] ?? [];
-        $globalTokens = $this->formatter->getTokenArray() ?? [];
-        $tokenPattern = [];
-
-        foreach ($replacement as $token => $value) {
-            $pattern = @$localTokens[$token] ?? @$globalTokens[$token];
-
-            if (! empty($pattern)) {
-                $regEx = $this->replacePattern($pattern);
-
-                if (! preg_match("/^{$regEx}$/", (string)$value)) {
-                    throw new RouterException(
-                        "Value '{$value}' don't match token '{$token}' ({$pattern}) in route '{$name}'"
-                    );
-                }
-
-                $tokenPattern[] = "{{$token}}";
+        $route = $this->formatter->getRouteArray()[$name];
+        $search = [];
+        $replace = [];
+        foreach ($route['token'] as $token => $pattern) {
+            $value = (string)$replacement[$token];
+            if (! preg_match("/^{$pattern}$/", $value)) {
+                throw new RouterException(
+                    "Value '{$value}' don't match token {{$token}} `{$pattern}` in route '{$name}'"
+                );
             }
+            $search[] = "{{$token}}";
+            $replace[] = $value;
         }
-
-        $link = $this->baseURL . str_replace(
-            $tokenPattern,
-            $replacement,
-            $route['pattern']
+        $link = str_replace(
+            ['\\', '?', '(', ')'],
+            '',
+            str_replace($search, $replace, $route['route'])
         );
-
         $this->validLink($link, $name);
-
         return $link;
     }
 
     /**
      *
-     * @param string $pattern
-     * @return string
-     */
-    private function replacePattern(string $pattern): string
-    {
-        $name = [];
-        $patternArray = $this->formatter->getPatternArray();
-        foreach ($patternArray as $key => $value) {
-            $name[] = "@{$key}";
-        }
-        return str_replace($name, $patternArray, $pattern);
-    }
-
-    /**
-     *
-     * @param string $route
+     * @param string $link
      * @param string $name
      * @throws RouterException
      * @return boolean
      */
-    private function validLink(string $route, string $name): bool
+    private function validLink(string $link, string $name): bool
     {
         $m = [];
-        if (preg_match_all("/{[a-z]+}/", $route, $m)) {
+        if (preg_match_all("/\(\?P<(\w+)>/", $link, $m)) {
             throw new RouterException(
-                "Detect unadded tokens: " .
-                implode(', ', $m[0]) . " in route '{$name}'"
+                "Detect unadded tokens: {" .
+                implode('}, {', $m[1]) . "} in route '{$name}'"
             );
         } else {
             return true;

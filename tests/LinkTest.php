@@ -35,21 +35,19 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
     public function testGetLink()
     {
-        $routeArray = [
+        $formattedRouteArray = [
             'name' => [
-                'pattern' => '/route/{alias}.{format}',
+                'route' => '/test/{alias}.{format}',
+                'pattern' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
                 'token' => [
-                    'alias' => '[a-z]+'
+                    'alias' => '(\w+)',
+                    'format' => '(html|xml|json)'
                 ]
             ]
         ];
-        $tokenArray = [
-            'alias' => '[A-Z]+',
-            'format' => '(html|xml)'
-        ];
-        $this->link->set($this->mockFormatter($routeArray, $tokenArray));
+        $this->link->set($this->mockFormatter($formattedRouteArray));
         $this->assertEquals(
-            '/route/anyalias.html',
+            '/test/anyalias.html',
             $this->link->getLink('name', [
                 'alias' => 'anyalias',
                 'format' => 'html'
@@ -62,22 +60,20 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLinkWithInvalidValue()
     {
-        $routeArray = [
+        $formattedRouteArray = [
             'name' => [
-                'pattern' => '/route/{alias}.{format}',
+                'route' => '/test/{alias}.{format}',
+                'pattern' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
                 'token' => [
-                    'alias' => '[a-z]+'
+                    'alias' => '(\w+)',
+                    'format' => '(html|xml|json)'
                 ]
             ]
         ];
-        $tokenArray = [
-            'alias' => '[A-Z]+',
-            'format' => '(html|xml)'
-        ];
-        $this->link->set($this->mockFormatter($routeArray, $tokenArray));
+        $this->link->set($this->mockFormatter($formattedRouteArray));
         $this->link->getLink('name', [
                 'alias' => 'ANYALIAS',
-                'format' => 'html'
+                'format' => 'doc'
         ]);
     }
 
@@ -87,7 +83,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     public function testInvalidLink()
     {
         MockTest::callMockMethod($this->link, 'validLink', [
-            '/anyLink/with/unreplaced/{token}/', 'routName'
+            '/anyLink/with/unreplaced/(?P<token>([a-z]+))/', 'routName'
         ]);
     }
 
@@ -100,52 +96,14 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testReplacePattern()
+    private function mockFormatter(array $formattedRouteArray = [])
     {
-        $routeArray = [
-            'name' => [
-                'pattern' => '/{alias}',
-                'token' => [
-                    'alias' => '@alnum'
-                ]
-            ]
-        ];
-        $this->link->set($this->mockFormatter(
-            $routeArray,
-            [],
-            ['alnum' => '[a-z0-9]+']
-        ));
-        $result = MockTest::callMockMethod(
-            $this->link,
-            'replacePattern',
-            ['@alnum']
-        );
-        $this->assertEquals(
-            '[a-z0-9]+',
-            $result
-        );
-    }
-
-    private function mockFormatter(
-        array $routeArray = [],
-        array $tokenArray = [],
-        array $patternArray = []
-    ) {
-        $route = $this->getMockBuilder('Ignaszak\Router\Route')
-            ->disableOriginalConstructor()
-            ->setMethods(['getRouteArray'])
-            ->getMock();
-        $route->method('getRouteArray')->willReturn($routeArray);
-
         $formatter = $this->getMockBuilder(
             'Ignaszak\Router\Parser\RouteFormatter'
         )->disableOriginalConstructor()
-            ->setMethods(['getRoute', 'getTokenArray', 'getPatternArray'])
+            ->setMethods(['getRouteArray'])
             ->getMock();
-        $formatter->method('getRoute')->willReturn($route);
-        $formatter->method('getTokenArray')->willReturn($tokenArray);
-        $formatter->method('getPatternArray')->willReturn($patternArray);
-
+        $formatter->method('getRouteArray')->willReturn($formattedRouteArray);
         return $formatter;
     }
 }
