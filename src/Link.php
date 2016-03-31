@@ -91,7 +91,7 @@ class Link
             str_replace($search, $replace, $route['route'])
         );
         $this->validLink($link, $name);
-        return $link;
+        return $this->baseURL . $link;
     }
 
     /**
