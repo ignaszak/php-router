@@ -72,6 +72,9 @@ class Link
      */
     public function getLink(string $name, array $replacement): string
     {
+        if (! array_key_exists($name, $this->formatter->getRouteArray())) {
+            throw new RouterException("Route '{$name}' does not exist");
+        }
         $route = $this->formatter->getRouteArray()[$name];
         $search = [];
         $replace = [];

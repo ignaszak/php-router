@@ -80,6 +80,15 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \Ignaszak\Router\RouterException
      */
+    public function testInvalidRouteName()
+    {
+        $this->link->set($this->mockFormatter());
+        $this->link->getLink('name', []);
+    }
+
+    /**
+     * @expectedException \Ignaszak\Router\RouterException
+     */
     public function testInvalidLink()
     {
         MockTest::callMockMethod($this->link, 'validLink', [
