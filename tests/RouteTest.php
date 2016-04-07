@@ -114,25 +114,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddTokenToRoute()
-    {
-        $this->route->add('anyName', '/anyPattern')
-            ->token('anyTokenName', 'anyPattern');
-        $this->assertEquals(
-            [
-                'anyName' => [
-                    'path' => '/anyPattern',
-                    'tokens' => [
-                        'anyTokenName' => 'anyPattern'
-                    ],
-                    'group' => '',
-                    'method' => ''
-                ],
-            ],
-            $this->route->getRouteArray()
-        );
-    }
-
     public function testAddTokensToRoute()
     {
         $this->route->add('anyName', '/anyPattern')->tokens([

@@ -46,31 +46,27 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Ignaszak\Router\Link', $link);
     }
 
-    public function testAddTokenAndAddTokens()
+    public function testAddTokens()
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
             ->disableOriginalConstructor()
             ->setMethods(['addToken', 'addTokens'])
             ->getMock();
-        $stub->expects($this->once())->method('addToken');
         $stub->expects($this->once())->method('addTokens');
         MockTest::inject($this->router, 'formatter', $stub);
-        $this->router->addToken('name', 'pattern');
         $this->router->addTokens([
             'token' => 'pattern'
         ]);
     }
 
-    public function testAddPatternAndAddPatterns()
+    public function testAddPatterns()
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
             ->disableOriginalConstructor()
             ->setMethods(['addPattern', 'addPatterns'])
             ->getMock();
-        $stub->expects($this->once())->method('addPattern');
         $stub->expects($this->once())->method('addPatterns');
         MockTest::inject($this->router, 'formatter', $stub);
-        $this->router->addPattern('name', 'pattern');
         $this->router->addPatterns([
             'name' => 'pattern'
         ]);

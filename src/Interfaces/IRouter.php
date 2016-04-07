@@ -18,26 +18,10 @@ interface IRouter
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouter
-     */
-    public function addToken(string $name, string $pattern): IRouter;
-
-    /**
-     *
      * @param array $patterns
      * @return \Ignaszak\Router\Interfaces\IRouter
      */
     public function addTokens(array $patterns): IRouter;
-
-    /**
-     *
-     * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouter
-     */
-    public function addPattern(string $name, string $pattern): IRouter;
 
     /**
      *

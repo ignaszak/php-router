@@ -60,19 +60,6 @@ class RouteFormatter
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Parser\RouteFormatter
-     */
-    public function addToken(string $name, string $pattern): RouteFormatter
-    {
-        $this->tokenArray[$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     *
      * @param string[] $tokens
      * @return \Ignaszak\Router\Parser\RouteFormatter
      */
@@ -88,26 +75,13 @@ class RouteFormatter
 
     /**
      *
-     * @param string $name
-     * @param string $pattern
-     * @return \Ignaszak\Router\Parser\RouteFormatter
-     */
-    public function addPattern(string $name, string $pattern): RouteFormatter
-    {
-        $this->patternArray["@{$name}"] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     *
      * @param string[] $patterns
      * @return \Ignaszak\Router\Parser\RouteFormatter
      */
     public function addPatterns(array $patterns): RouteFormatter
     {
         foreach ($patterns as $name => $pattern) {
-            $this->addPattern($name, $pattern);
+            $this->patternArray["@{$name}"] = $pattern;
         }
 
         return $this;

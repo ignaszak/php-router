@@ -58,35 +58,11 @@ class Router implements Interfaces\IRouter
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouter::addToken($name, $pattern)
-     */
-    public function addToken(string $name, string $pattern): IRouter
-    {
-        $this->formatter->addToken($name, $pattern);
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouter::addTokens($patterns)
      */
     public function addTokens(array $patterns): IRouter
     {
         $this->formatter->addTokens($patterns);
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouter::addPattern($name, $pattern)
-     */
-    public function addPattern(string $name, string $pattern): IRouter
-    {
-        $this->formatter->addPattern($name, $pattern);
 
         return $this;
     }

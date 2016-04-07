@@ -45,22 +45,6 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testAddToken()
-    {
-        $this->routeFormatter->addToken('name1', 'token1');
-        $this->routeFormatter->addToken('name2', 'token2');
-        $this->assertEquals(
-            [
-                'name1' => 'token1',
-                'name2' => 'token2'
-            ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'tokenArray'
-            )
-        );
-    }
-
     public function testAddTokens()
     {
         $tokens = [
@@ -74,20 +58,6 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
             \PHPUnit_Framework_Assert::readAttribute(
                 $this->routeFormatter,
                 'tokenArray'
-            )
-        );
-    }
-
-    public function testAddPattern()
-    {
-        $this->routeFormatter->addPattern('name', 'testPattern');
-        $this->assertTrue(
-            in_array(
-                'testPattern',
-                \PHPUnit_Framework_Assert::readAttribute(
-                    $this->routeFormatter,
-                    'patternArray'
-                )
             )
         );
     }

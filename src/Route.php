@@ -128,18 +128,6 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     /**
      *
      * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteAdd::token($token)
-     */
-    public function token(string $name, string $pattern): IRouteAdd
-    {
-        $this->routeArray[$this->lastName]['tokens'][$name] = $pattern;
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouteAdd::tokens($tokens)
      */
     public function tokens(array $tokens): IRouteAdd
