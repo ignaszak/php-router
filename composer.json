@@ -1,28 +1,30 @@
 {
-    "name" : "ignaszak/router",
-    "type" : "library",
-    "description" : "Simple object oriented PHP Router",
-    "keywords" : [
-        "router",
-        "route",
-        "routing",
-        "http",
-        "library"
-    ],
-    "license" : "MIT",
-    "authors" : [{
-            "name" : "Tomasz Ignaszak",
-            "email" : "tomek.ignaszak@gmail.com"
-        }
-    ],
-    "require" : {
-        "php" : ">=7.0",
-        "symfony/yaml" : "3.0.*"
-    },
-    "autoload" : {
-        "psr-4" : {
-            "Ignaszak\\Router\\" : "src/",
-            "Test\\" : "tests"
-        }
-    }
+	"name" : "ignaszak/router",
+	"type" : "library",
+	"description" : "Simple object oriented PHP Router",
+	"keywords" : [
+		"router",
+		"route",
+		"routing",
+		"http",
+		"library"
+	],
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Tomasz Ignaszak",
+			"email" : "tomek.ignaszak@gmail.com"
+		}
+	],
+	"require" : {
+		"php" : ">=7.0",
+		"symfony/yaml" : "3.0.*",
+		"phpunit/phpunit" : "*",
+		"mikey179/vfsStream" : "*"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Ignaszak\\Router\\" : "src/",
+			"Test\\" : "tests"
+		}
+	}
 }
