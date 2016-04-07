@@ -147,13 +147,13 @@ class RouteFormatter
                     $tokens[$token] = str_replace(
                         $patternKey,
                         $this->patternArray,
-                        $route['token'][$token] ?? $this->tokenArray[$token]
+                        $route['tokens'][$token] ?? $this->tokenArray[$token]
                     );
                     $subpatterns[$token] = "(?P<{$token}>{$tokens[$token]})";
                 }
             }
 
-            $route['token'] = $tokens;
+            $route['tokens'] = $tokens;
             $route['route'] = $route['pattern'];
             $route['pattern'] = str_replace(
                 $search,

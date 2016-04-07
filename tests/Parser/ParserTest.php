@@ -23,7 +23,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $formatedRoute = [
             'name' => [
                 'pattern' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
-                'token' => [
+                'tokens' => [
                     'token' => 'anyPattern'
                 ],
                 'group' => ''

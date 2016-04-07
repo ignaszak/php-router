@@ -39,7 +39,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
             'name' => [
                 'route' => '/test/{alias}.{format}',
                 'pattern' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
-                'token' => [
+                'tokens' => [
                     'alias' => '(\w+)',
                     'format' => '(html|xml|json)'
                 ]
@@ -64,7 +64,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
             'name' => [
                 'route' => '/test/{alias}.{format}',
                 'pattern' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
-                'token' => [
+                'tokens' => [
                     'alias' => '(\w+)',
                     'format' => '(html|xml|json)'
                 ]

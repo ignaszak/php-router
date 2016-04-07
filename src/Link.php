@@ -78,7 +78,7 @@ class Link
         $route = $this->formatter->getRouteArray()[$name];
         $search = [];
         $replace = [];
-        foreach ($route['token'] as $token => $pattern) {
+        foreach ($route['tokens'] as $token => $pattern) {
             $value = (string)$replacement[$token];
             if (! preg_match("/^{$pattern}$/", $value)) {
                 throw new RouterException(

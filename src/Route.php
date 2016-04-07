@@ -130,7 +130,7 @@ class Route implements IRouteStart, IRouteAdd
      */
     public function token(string $name, string $pattern): IRouteAdd
     {
-        $this->routeArray[$this->lastName]['token'][$name] = $pattern;
+        $this->routeArray[$this->lastName]['tokens'][$name] = $pattern;
 
         return $this;
     }
@@ -142,8 +142,8 @@ class Route implements IRouteStart, IRouteAdd
      */
     public function tokens(array $tokens): IRouteAdd
     {
-        $this->routeArray[$this->lastName]['token'] = array_merge(
-            $this->routeArray[$this->lastName]['token'] ?? [],
+        $this->routeArray[$this->lastName]['tokens'] = array_merge(
+            $this->routeArray[$this->lastName]['tokens'] ?? [],
             $tokens
         );
 

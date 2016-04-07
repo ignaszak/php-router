@@ -122,7 +122,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 'anyName' => [
                     'pattern' => '/anyPattern',
-                    'token' => [
+                    'tokens' => [
                         'anyTokenName' => 'anyPattern'
                     ],
                     'group' => '',
@@ -144,7 +144,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             [
                 'anyName' => [
                     'pattern' => '/anyPattern',
-                    'token' => [
+                    'tokens' => [
                         'tokenName1' => 'pattern1',
                         'tokenName2' => 'pattern2',
                         'tokenName3' => 'pattern3'

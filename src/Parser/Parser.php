@@ -57,7 +57,7 @@ class Parser
                 $this->httpMethod($route['method'] ?? '', $httpMethod)
             ) {
                 $controller = $route['controller'] ?? '';
-                $params = $this->createParamsArray($m, $route['token']);
+                $params = $this->createParamsArray($m, $route['tokens']);
                 $request = [
                     'name' => $name,
                     'controller' => $this->matchController(

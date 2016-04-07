@@ -141,7 +141,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $routeArray = [
             'name' => [
                 'pattern' => '/test/{token1}/@digit/{globaltoken}',
-                'token' => [
+                'tokens' => [
                     'token1' => '(\w+)'
                 ]
             ]
@@ -159,7 +159,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => [
                     'pattern' => '/^\/test\/(?P<token1>(\w+))\/(\d+)\/(?P<globaltoken>([\w-]+))$/',
-                    'token' => [
+                    'tokens' => [
                         'token1' => '(\w+)',
                         'globaltoken' => '([\w-]+)'
                     ],
