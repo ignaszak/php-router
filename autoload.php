@@ -4,6 +4,7 @@ spl_autoload_register(function ($class) {
 
     $psr4_dir = array(
         'Ignaszak\\Router\\' => __DIR__ . '/src/',
+        'Symfony\\Component\\Yaml\\' => __DIR__ . '/vendor/symfony/yaml/',
         'Test\\' => __DIR__ . '/tests/'
     );
 
