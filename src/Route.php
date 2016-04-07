@@ -13,8 +13,9 @@ namespace Ignaszak\Router;
 
 use Ignaszak\Router\Interfaces\IRouteAdd;
 use Ignaszak\Router\Interfaces\IRouteStart;
+use Ignaszak\Router\Interfaces\IRoute;
 
-class Route implements IRouteStart, IRouteAdd
+class Route implements IRouteStart, IRouteAdd, IRoute
 {
 
     /**
@@ -51,7 +52,8 @@ class Route implements IRouteStart, IRouteAdd
 
     /**
      *
-     * @return array
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Interfaces\IRoute::getRouteArray()
      */
     public function getRouteArray(): array
     {
@@ -69,7 +71,7 @@ class Route implements IRouteStart, IRouteAdd
         string $method = ''
     ): IRouteAdd {
         if (is_null($name)) {
-            $this->routeArray[] = ['pattern' => $pattern];
+            $this->routeArray[] = ['path' => $pattern];
             // Last array key
             $name = key(array_slice($this->routeArray, -1, 1, true));
         } else {
@@ -78,7 +80,7 @@ class Route implements IRouteStart, IRouteAdd
                     "Route name '{$name}' alredy exists"
                 );
             }
-            $this->routeArray[$name] = ['pattern' => $pattern];
+            $this->routeArray[$name] = ['path' => $pattern];
         }
         $this->routeArray[$name]['group'] = $this->group;
         $this->routeArray[$name]['method'] = $method;

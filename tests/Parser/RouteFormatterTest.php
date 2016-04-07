@@ -23,7 +23,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $this->assertInstanceOf(
-            'Ignaszak\Router\Route',
+            'Ignaszak\Router\Interfaces\IRoute',
             \PHPUnit_Framework_Assert::readAttribute(
                 $this->routeFormatter,
                 'route'
@@ -140,7 +140,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $routeArray = [
             'name' => [
-                'pattern' => '/test/{token1}/@digit/{globaltoken}',
+                'path' => '/test/{token1}/@digit/{globaltoken}',
                 'tokens' => [
                     'token1' => '(\w+)'
                 ]
@@ -158,7 +158,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name' => [
-                    'pattern' => '/^\/test\/(?P<token1>(\w+))\/(\d+)\/(?P<globaltoken>([\w-]+))$/',
+                    'path' => '/^\/test\/(?P<token1>(\w+))\/(\d+)\/(?P<globaltoken>([\w-]+))$/',
                     'tokens' => [
                         'token1' => '(\w+)',
                         'globaltoken' => '([\w-]+)'
@@ -177,11 +177,11 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     {
         MockTest::inject($this->routeFormatter, 'routeArray', [
             'name2' => [
-                'pattern' => '/pattern',
+                'path' => '/pattern',
                 'group' => ''
             ],
             'name1' => [
-                'pattern' => '/pattern/subpattern',
+                'path' => '/pattern/subpattern',
                 'group' => ''
             ]
         ]);
@@ -189,11 +189,11 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name1' => [
-                    'pattern' => '/pattern/subpattern',
+                    'path' => '/pattern/subpattern',
                     'group' => ''
                 ],
                 'name2' => [
-                    'pattern' => '/pattern',
+                    'path' => '/pattern',
                     'group' => ''
                 ]
             ],

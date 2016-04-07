@@ -50,7 +50,7 @@ class Parser
 
         foreach ($this->formatter->getRouteArray() as $name => $route) {
             if (preg_match(
-                $route['pattern'],
+                $route['path'],
                 $query,
                 $m
             ) &&

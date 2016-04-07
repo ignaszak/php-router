@@ -33,12 +33,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'name1' => [
-                    'pattern' => '/pattern/subpattern',
+                    'path' => '/pattern/subpattern',
                     'group' => '',
                     'method' => 'AnyHttpMethod'
                 ],
                 'name2' => [
-                    'pattern' => '/pattern',
+                    'path' => '/pattern',
                     'group' => '',
                     'method' => ''
                 ]
@@ -63,12 +63,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 0 => [
-                    'pattern' => '/pattern/subpattern',
+                    'path' => '/pattern/subpattern',
                     'group' => '',
                     'method' => ''
                 ],
                 1 => [
-                    'pattern' => '/pattern',
+                    'path' => '/pattern',
                     'group' => '',
                     'method' => ''
                 ]
@@ -104,7 +104,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'controller' => 'anyController',
                     'group' => '',
                     'method' => ''
@@ -121,7 +121,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'tokens' => [
                         'anyTokenName' => 'anyPattern'
                     ],
@@ -143,7 +143,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'tokens' => [
                         'tokenName1' => 'pattern1',
                         'tokenName2' => 'pattern2',
@@ -165,7 +165,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'callAttachment' => true,
                     'attachment' => $anyAttachment,
                     'group' => '',
@@ -185,7 +185,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'anyName' => [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'callAttachment' => false,
                     'attachment' => $anyAttachment,
                     'group' => '',
@@ -204,12 +204,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'group' => 'anyGroupName',
                     'method' => ''
                 ],
                 [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'group' => 'anyGroupName',
                     'method' => ''
                 ]
@@ -227,12 +227,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'group' => 'anyGroupName',
                     'method' => ''
                 ],
                 [
-                    'pattern' => '/anyPattern',
+                    'path' => '/anyPattern',
                     'group' => '',
                     'method' => ''
                 ]

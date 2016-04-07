@@ -38,7 +38,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $formattedRouteArray = [
             'name' => [
                 'route' => '/test/{alias}.{format}',
-                'pattern' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
+                'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
                 'tokens' => [
                     'alias' => '(\w+)',
                     'format' => '(html|xml|json)'
@@ -63,7 +63,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
         $formattedRouteArray = [
             'name' => [
                 'route' => '/test/{alias}.{format}',
-                'pattern' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
+                'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
                 'tokens' => [
                     'alias' => '(\w+)',
                     'format' => '(html|xml|json)'

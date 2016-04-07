@@ -11,15 +11,15 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Parser;
 
-use Ignaszak\Router\Route;
 use Ignaszak\Router\RouterException;
+use Ignaszak\Router\Interfaces\IRoute;
 
 class RouteFormatter
 {
 
     /**
      *
-     * @var Route
+     * @var IRoute
      */
     private $route;
 
@@ -53,7 +53,7 @@ class RouteFormatter
      *
      * @param Route $route
      */
-    public function __construct(Route $route)
+    public function __construct(IRoute $route)
     {
         $this->route = $route;
     }
@@ -127,7 +127,7 @@ class RouteFormatter
         uasort(
             $this->routeArray,
             function ($a, $b) {
-                return strlen($b['pattern']) <=> strlen($a['pattern']);
+                return strlen($b['path']) <=> strlen($a['path']);
             }
         );
     }
@@ -141,7 +141,7 @@ class RouteFormatter
             $search = [];
             $m = [];
 
-            if (preg_match_all('/{(\w+)}/', $route['pattern'], $m)) {
+            if (preg_match_all('/{(\w+)}/', $route['path'], $m)) {
                 foreach ($m[1] as $token) {
                     $search[] = "{{$token}}";
                     $tokens[$token] = str_replace(
@@ -154,18 +154,18 @@ class RouteFormatter
             }
 
             $route['tokens'] = $tokens;
-            $route['route'] = $route['pattern'];
-            $route['pattern'] = str_replace(
+            $route['route'] = $route['path'];
+            $route['path'] = str_replace(
                 $search,
                 $subpatterns,
-                $route['pattern']
+                $route['path']
             );
-            $route['pattern'] = $this->preparePattern(str_replace(
+            $route['path'] = $this->preparePattern(str_replace(
                 $patternKey,
                 $this->patternArray,
-                $route['pattern']
+                $route['path']
             ));
-            $this->validPattern($route['pattern'], (string)$name);
+            $this->validPattern($route['path'], (string)$name);
             $this->routeArray[$name] = $route;
         }
     }
