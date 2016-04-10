@@ -18,6 +18,17 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->parser = new Parser($this->mockRouteFormatter());
     }
 
+    public function testConstructor()
+    {
+        $this->assertInstanceOf(
+            'Ignaszak\Router\Collection\IRoute',
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->parser,
+                'route'
+            )
+        );
+    }
+
     public function testRunWithAnyHttpMethod()
     {
         $formatedRoute = [
@@ -58,7 +69,11 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             ]
         ];
         $this->parser = new Parser($this->mockRouteFormatter($formatedRoute));
-        $response = $this->parser->run(null, '/firstRoute/anyPattern/', 'GET');
+        $response = $this->parser->run(
+            null,
+            '/firstRoute/anyPattern/',
+            'GET'
+        );
         $this->assertEmpty($response);
     }
 
@@ -154,19 +169,19 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
+    private function mockHost(string $query)
+    {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')->getMock();
+        $stub->method('getQuery')->willReturn($query);
+        return $stub;
+    }
+
     private function mockRouteFormatter(array $route = [])
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
             ->disableOriginalConstructor()
             ->getMock();
         $stub->method('getRouteArray')->willReturn($route);
-        return $stub;
-    }
-
-    private function mockHost(string $query)
-    {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')->getMock();
-        $stub->method('getQuery')->willReturn($query);
         return $stub;
     }
 }

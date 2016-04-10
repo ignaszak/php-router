@@ -12,27 +12,29 @@ declare(strict_types=1);
 namespace Ignaszak\Router\Parser;
 
 use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\Collection\IRoute;
 
 class Parser
 {
 
     /**
      *
-     * @var RouteFormatter
+     * @var IRoute
      */
-    private $formatter;
+    private $route = null;
 
     /**
      *
-     * @param IRouteParser $formatter
+     * @param IRoute $route
      */
-    public function __construct(RouteFormatter $formatter)
+    public function __construct(IRoute $route)
     {
-        $this->formatter = $formatter;
+        $this->route = $route;
     }
 
     /**
      *
+     * @param array $formatedRouteArray
      * @param Host $host
      * @param string $query
      * @param string $httpMethod
@@ -48,7 +50,7 @@ class Parser
             $httpMethod = $host->getHttpMethod();
         }
 
-        foreach ($this->formatter->getRouteArray() as $name => $route) {
+        foreach ($this->route->getRouteArray() as $name => $route) {
             if (preg_match(
                 $route['path'],
                 $query,
@@ -67,7 +69,7 @@ class Parser
                     'callAttachment' => $route['callAttachment'] ?? false,
                     'attachment' => $route['attachment'] ?? '',
                     'params' => $params,
-                    'group' => $route['group']
+                    'group' => $route['group'] ?? ''
                 ];
                 $this->callAttachment($request);
                 return $request;
