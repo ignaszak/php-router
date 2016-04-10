@@ -54,17 +54,13 @@ class Host
     {
         $requestURI = $_SERVER['REQUEST_URI'];
         if (empty($this->baseQuery)) {
-
             return $requestURI;
-
         } else {
-
             return $requestURI != $this->baseQuery ?
                 substr(
                     $requestURI,
                     strlen($this->baseQuery) - strlen($requestURI)
                 ) : '';
-
         }
     }
 
