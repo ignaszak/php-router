@@ -269,6 +269,7 @@ You can define routes, global tokens and patterns. Attachment is not available i
 routes:
     test:
         path: '/test/{controller}/{action}'
+        method: GET
         controller: '\Namespace\{controller}::{action}'
         group: groupName
         tokens:
