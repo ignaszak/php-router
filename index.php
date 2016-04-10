@@ -1,9 +1,10 @@
 <?php
 
-use Ignaszak\Router\Route;
+use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Conf\Host;
 use Ignaszak\Router\ResponseStatic;
+use Ignaszak\Router\Collection\Cache;
 
 include __DIR__ . '/autoload.php';
 
@@ -22,12 +23,17 @@ $route->add('test', '/test/(\w+)/', 'GET');
 $route->get('get', '/match/only/get');
 $route->post('post', '/match/only/post');
 
-// Add token
-$route->add(null, '/post/{slug}/')->token('slug', '(\w+)');
-// Add many tokens in array
+// Add tokens
 $route->add(null, '/tokens/{token1}/{token2}/')->tokens([
     'token1' => '(\w+)',
     'token2' => '(\d+)'
+]);
+
+// It is possible to define global token avilable for all routes.
+$route->addTokens([
+    'slug' => '(\w+)',
+    'user' => '(\w+)',
+    'page' => '(\d+)'
 ]);
 
 // Add controller
@@ -68,7 +74,7 @@ $route->group();
 //   @digit    - digits [0-9]
 //   @alpha    - alphabetic characters [A-Za-z_-]
 //   @alnum    - alphanumeric characters [A-Za-z0-9_-]
-$route->add('defined', '/regex/@alpha/{id}')->token('id', '@digit');
+$route->add('defined', '/regex/@alpha/{id}')->tokens(['id' => '@digit']);
 
 // Add default route
 $route->add('default', '/@base')->controller('DefaultController');
@@ -78,26 +84,22 @@ $route->add('error', '/@notfound')->attach(function () {
     throw new Exception('404 Not Found');
 });
 
-// Get response
-$router = new Router($route);
-
-// It is possible to define global token avilable for all routes.
-$router->addToken('slug', '(\w+)/');
-// Add many tokens in array
-$router->addTokens([
-    'user' => '(\w+)',
-    'page' => '(\d+)'
-]);
-
 // Define custom regular expression. It will be avilable for all routes
-$router->addPattern('day', '([0-9]{2})');
-$router->addPatterns([
+$route->addPatterns([
+    'day' => '([0-9]{2})',
     'month' => '([0-9]{2})',
     'year' => '([0-9]{4})'
 ]);
 $route->add(null, '/@year/@month/@day/');
 
-// Start parsing by
+// Generate cache
+$cache = new Cache($route);
+$cache->tmpDir = __DIR__; // optional, default dir: ./src/Collection
+
+// Get response
+$router = new Router($cache);
+
+// Start parsing
 // Router::run([Host $host [, string $baseQuery [, string HttpMethod]])
 $response = $router->run(new Host());
 // Class Ignaszak\Router\Host([string $baseQuery])
