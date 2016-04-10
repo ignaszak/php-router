@@ -17,9 +17,9 @@
 	],
 	"require" : {
 		"php" : ">=7.0",
-		"symfony/yaml" : "3.0.*",
 		"phpunit/phpunit" : "*",
-		"mikey179/vfsStream" : "*"
+		"mikey179/vfsStream" : "*",
+		"symfony/yaml" : "*"
 	},
 	"autoload" : {
 		"psr-4" : {

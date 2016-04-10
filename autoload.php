@@ -9,7 +9,6 @@ spl_autoload_register(function ($class) {
     );
 
     foreach ($psr4_dir as $key => $dir) {
-
         $isFound = @strpos($class, $key);
 
         if ($isFound !== false || $key == '') {
@@ -18,7 +17,6 @@ spl_autoload_register(function ($class) {
 
             require_once $classDir;
         }
-
     }
 
 });
