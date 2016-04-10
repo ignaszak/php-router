@@ -40,7 +40,7 @@ php phpunit.phar
 
 ### Demo
 ```php
-use Ignaszak\Router\Route;
+use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Conf\Host;
 
@@ -55,14 +55,14 @@ $route->add('name', '/test/{test}/{id}/{globlToken}', 'GET|POST')
     ]);
 $route->get('get', '/get/test')->controller('AnyController');
 $route->post('post', '/post/{name}')
-    ->token('name', '([a-z]+)')
+    ->tokens(['name' => '([a-z]+)'])
     ->attach(function ($name) {
         echo $name;
     });
+$route->addTokens(['globalToken' => '([0-9]+)']);
 
 // Match routes
 $router = new Router($route);
-$router->addToken('globalToken', '([0-9]+)');
 $response = $router->run(new Host());
 $response->getParams();
 ```
@@ -71,7 +71,7 @@ $response->getParams();
 
 #### Add routes
 ```php
-use Ignaszak\Router\Route;
+use Ignaszak\Router\Collection\Route;
 
 include __DIR__ . '/autoload.php';
 
@@ -89,12 +89,11 @@ $route->post(null, '/match/only/post');
 
 #### Add tokens
 ```php
-$route->add(null, '/test/{test}/{name}/{id}')
-    ->token('test', '(\w+)') // Add one token or
-    ->tokens([ // Add many tokens in array
-        'name' => '(\w+)',
-        'id' => '(\d+)'
-    ]);
+$route->add(null, '/test/{test}/{name}/{id}')->tokens([
+    'test' => '(\w+)',
+    'name' => '(\w+)',
+    'id' => '(\d+)'
+]);
 ```
 
 #### Add controller
@@ -142,7 +141,7 @@ Router provides some defined regular expressions such as:
 * *@alpha* - alphabetic characters [A-Za-z_-]
 * *@alnum* - alphanumeric characters [A-Za-z0-9_-]
 ```php
-$route->add('defined', '/regex/@alpha/{id}')->token('id', '@digit');
+$route->add('defined', '/regex/@alpha/{id}')->tokens(['id' => '@digit']);
 
 // Add default route
 $route->add('default', '/@base')->controller('DefaultController');
@@ -153,9 +152,28 @@ $route->add('error', '/@notfound')->attach(function () {
 });
 ```
 
+#### Add global tokens and patterns
+Global tokens and patterns are avilable for all routes
+```php
+// Global tokens
+$route->addTokens([
+    'slug' => '(\w+)',
+    'user' => '(\w+)',
+    'page' => '(\d+)'
+]);
+
+// Create new patterns
+$route->addPatterns([
+    'day' => '([0-9]{2})',
+    'month' => '([0-9]{2})',
+    'year' => '([0-9]{4})'
+]);
+// Example: $route->add(null, '/@year/@month/@day/');
+```
+
 ### Create router
 ```php
-use Ignaszak\Router\Route;
+use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Router;
 
 include __DIR__ . '/autoload.php';
@@ -168,28 +186,9 @@ $router = new Router($route);
 
 ```
 
-#### Add global tokens and patterns
-Global tokens and patterns are avilable for all routes
-```php
-// Global tokens
-$router->addToken('slug', '(\w+)/');
-$router->addTokens([
-    'user' => '(\w+)',
-    'page' => '(\d+)'
-]);
-
-// Create new patterns
-$router->addPattern('day', '([0-9]{2})');
-$router->addPatterns([
-    'month' => '([0-9]{2})',
-    'year' => '([0-9]{4})'
-]);
-// Example: $route->add(null, '/@year/@month/@day/');
-```
-
 #### Parse
 ```php
-use Ignaszak\Router\Route;
+use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Conf\Host;
 
@@ -198,7 +197,6 @@ include __DIR__ . '/autoload.php';
 $route = Route::start();
 /* Define routes */
 $router = new Router($route);
-/* Define global tokens */
 
 // Parse routes and get response
 $response = $router->run(new Host());
@@ -259,4 +257,66 @@ ResponseStatic::getParam('token');
 ResponseStatic::getLink('user', [
     'name' => 'UserName'
 ]);
+```
+
+### Load routes from Yaml
+
+#### Yaml file example
+
+You can define routes, global tokens and patterns. Attachment is not available in yaml file.
+**example.yml:**
+```yaml
+routes:
+    test:
+        path: '/test/{controller}/{action}'
+        controller: '\Namespace\{controller}::{action}'
+        group: groupName
+        tokens:
+            controller: '@custom'
+    default:
+        path: /@base
+        controller: DefaultController
+    error:
+        path: /@notfound
+        controller: ErrorController
+
+tokens:
+    action: '@alnum'
+
+patterns:
+    custom: ([a-zA-Z]+)
+```
+
+#### Yaml class
+
+```php
+use Ignaszak\Router\Collection\Yaml;
+use Ignaszak\Router\Router;
+
+$yaml = new Yaml();
+// Add yaml files
+$yaml->add('example.yml');
+$yaml->add('anotherExample.yml');
+
+$router = new Router($yaml);
+/* Run router and get response */
+```
+
+### Cache
+
+It is possible to generate cache of routes defined in yaml file or Route class. Cache stores converted routes to regex, so it is no need to read yaml file and convert routes at every request.
+
+```php
+use Ignaszak\Router\Collection\Yaml;
+use Ignaszak\Router\Collection\Cache;
+use Ignaszak\Router\Router;
+
+$yaml = new Yaml();
+$yaml->add('example.yml');
+
+$cache = new Cache($yaml);
+$cache->tmpDir = __DIR__; // Define custom tmp dir - optional
+
+$router = new Router($cache);
+/* Run router and get response */
 ```
