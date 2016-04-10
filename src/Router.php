@@ -16,6 +16,7 @@ use Ignaszak\Router\Interfaces\IResponse;
 use Ignaszak\Router\Parser\Parser;
 use Ignaszak\Router\Parser\RouteFormatter;
 use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\Collection\IRoute;
 
 /**
  * Initializes router
@@ -28,55 +29,35 @@ class Router implements Interfaces\IRouter
 
     /**
      *
-     * @var RouteFormatter
+     * @var IRoute
      */
-    private $formatter;
+    private $route = null;
 
     /**
      *
      * @var Parser
      */
-    private $parser;
+    private $parser = null;
 
     /**
      *
      * @var Link
      */
-    private $link;
+    private $link = null;
 
     /**
      *
      * @param Route $route
      */
-    public function __construct(Route $route)
+    public function __construct(IRoute $route)
     {
-        $this->formatter = new RouteFormatter($route);
-        $this->parser = new Parser($this->formatter);
+        if (empty($route->getChecksum())) {
+            $this->route = $route;
+        } else {
+            $this->route = new RouteFormatter($route);
+        }
+        $this->parser = new Parser($this->route);
         $this->link = Link::instance();
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouter::addTokens($patterns)
-     */
-    public function addTokens(array $patterns): IRouter
-    {
-        $this->formatter->addTokens($patterns);
-
-        return $this;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouter::addPatterns($patterns)
-     */
-    public function addPatterns(array $patterns): IRouter
-    {
-        $this->formatter->addPatterns($patterns);
-
-        return $this;
     }
 
     /**
@@ -89,11 +70,14 @@ class Router implements Interfaces\IRouter
         string $query = '',
         string $httpMethod = ''
     ): IResponse {
-        $this->link->set($this->formatter, $host);
-        $this->formatter->format();
-        $this->formatter->sort();
+        $formattedRouteArray = $this->route->getRouteArray();
+        $this->link->set($formattedRouteArray, $host);
         $response =  new Response(
-            $this->parser->run($host, $query, $httpMethod)
+            $this->parser->run(
+                $host,
+                $query,
+                $httpMethod
+            )
         );
         ResponseStatic::$response = $response;
         return $response;
