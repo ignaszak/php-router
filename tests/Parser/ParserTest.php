@@ -31,7 +31,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testRunWithAnyHttpMethod()
     {
-        $formatedRoute = [
+        $formattedRoute = [
             'name' => [
                 'path' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
                 'tokens' => [
@@ -40,7 +40,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'group' => ''
             ]
         ];
-        $this->parser = new Parser($this->mockRouteFormatter($formatedRoute));
+        $this->parser = new Parser($this->mockRouteFormatter($formattedRoute));
         $response = $this->parser->run(
             $this->mockHost('/firstRoute/anyPattern/')
         );
@@ -61,14 +61,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     public function testRunWithIncorrectHttpMethod()
     {
-        $formatedRoute = [
+        $formattedRoute = [
             'name' => [
                 'path' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
                 'group' => '',
                 'method' => 'POST'
             ]
         ];
-        $this->parser = new Parser($this->mockRouteFormatter($formatedRoute));
+        $this->parser = new Parser($this->mockRouteFormatter($formattedRoute));
         $response = $this->parser->run(
             null,
             '/firstRoute/anyPattern/',

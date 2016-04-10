@@ -34,7 +34,7 @@ class Parser
 
     /**
      *
-     * @param array $formatedRouteArray
+     * @param array $formattedRouteArray
      * @param Host $host
      * @param string $query
      * @param string $httpMethod

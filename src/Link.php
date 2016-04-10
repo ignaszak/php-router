@@ -26,7 +26,7 @@ class Link
      *
      * @var array
      */
-    private $formatedRouteArray = [];
+    private $formattedRouteArray = [];
 
     /**
      *
@@ -56,9 +56,9 @@ class Link
      * @param RouteFormatter $formatter
      * @param Host $host
      */
-    public function set(array $formatedRouteArray, Host $host = null)
+    public function set(array $formattedRouteArray, Host $host = null)
     {
-        $this->formatedRouteArray = $formatedRouteArray;
+        $this->formattedRouteArray = $formattedRouteArray;
         $this->baseURL = ! is_null($host) ? $host->getBaseURL() : '';
     }
 
@@ -71,10 +71,10 @@ class Link
      */
     public function getLink(string $name, array $replacement): string
     {
-        if (! array_key_exists($name, $this->formatedRouteArray)) {
+        if (! array_key_exists($name, $this->formattedRouteArray)) {
             throw new RouterException("Route '{$name}' does not exist");
         }
-        $route = $this->formatedRouteArray[$name];
+        $route = $this->formattedRouteArray[$name];
         $search = [];
         $replace = [];
         foreach ($route['tokens'] as $token => $pattern) {

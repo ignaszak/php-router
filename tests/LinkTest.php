@@ -26,12 +26,12 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
     public function testSet()
     {
-        $this->link->set(['formatedRouteArray']);
+        $this->link->set(['formattedRouteArray']);
         $this->assertEquals(
-            ['formatedRouteArray'],
+            ['formattedRouteArray'],
             \PHPUnit_Framework_Assert::readAttribute(
                 $this->link,
-                'formatedRouteArray'
+                'formattedRouteArray'
             )
         );
     }
