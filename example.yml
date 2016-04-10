@@ -1,0 +1,19 @@
+routes:
+    test:
+        path: '/test/{controller}/{action}'
+        controller: '\Namespace\{controller}::{action}'
+        group: groupName
+        tokens:
+            controller: '@custom'
+    default:
+        path: /@base
+        controller: DefaultController
+    error:
+        path: /@notfound
+        controller: ErrorController
+
+tokens:
+    action: '@alnum'
+
+patterns:
+    custom: ([a-zA-Z]+)
