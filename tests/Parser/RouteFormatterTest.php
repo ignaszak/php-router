@@ -3,7 +3,6 @@ namespace Test\Parser;
 
 use Ignaszak\Router\Parser\Parser;
 use Test\Mock\MockTest;
-use Ignaszak\Router\Route;
 use Ignaszak\Router\Parser\RouteFormatter;
 
 class RouteFormatterTest extends \PHPUnit_Framework_TestCase
@@ -23,12 +22,17 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $this->assertInstanceOf(
-            'Ignaszak\Router\Interfaces\IRoute',
+            'Ignaszak\Router\Collection\IRoute',
             \PHPUnit_Framework_Assert::readAttribute(
                 $this->routeFormatter,
                 'route'
             )
         );
+    }
+
+    public function testGetChecksum()
+    {
+        $this->assertEmpty($this->routeFormatter->getChecksum());
     }
 
     public function testPreparePattern()
@@ -42,42 +46,6 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             '/^\/noNamed1\/(?P<token>(noNamed2))\.html$/',
             $result
-        );
-    }
-
-    public function testAddTokens()
-    {
-        $tokens = [
-            'tokenName1' => 'pattern1',
-            'tokenName2' => 'pattern2',
-            'tokenName3' => 'pattern3'
-        ];
-        $this->routeFormatter->addTokens($tokens);
-        $this->assertEquals(
-            $tokens,
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'tokenArray'
-            )
-        );
-    }
-
-    public function testAddPatterns()
-    {
-        $patterns = [
-            'name1' => 'testPattern1',
-            'name2' => 'testPattern2',
-            'name3' => 'testPattern3',
-        ];
-        $this->routeFormatter->addPatterns($patterns);
-        $patternArray = \PHPUnit_Framework_Assert::readAttribute(
-            $this->routeFormatter,
-            'patternArray'
-        );
-        $this->assertTrue(
-            in_array('testPattern1', $patternArray) &&
-            in_array('testPattern2', $patternArray) &&
-            in_array('testPattern3', $patternArray)
         );
     }
 
@@ -109,22 +77,26 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     public function testFormat()
     {
         $routeArray = [
-            'name' => [
-                'path' => '/test/{token1}/@digit/{globaltoken}',
-                'tokens' => [
-                    'token1' => '(\w+)'
+            'routes' => [
+                'name' => [
+                    'path' => '/test/{token1}/@digit/{globaltoken}',
+                    'tokens' => [
+                        'token1' => '(\w+)'
+                    ]
                 ]
+            ],
+            'tokens' => [
+                'token1' => '([a-z]+)',
+                'globaltoken' => '@alnum'
             ]
-        ];
-        $tokenArray = [
-            'token1' => '([a-z]+)',
-            'globaltoken' => '@alnum'
         ];
         $this->routeFormatter = new RouteFormatter(
             $this->mockRoute($routeArray)
         );
-        MockTest::inject($this->routeFormatter, 'tokenArray', $tokenArray);
-        $this->routeFormatter->format();
+        MockTest::callMockMethod(
+            $this->routeFormatter,
+            'format'
+        );
         $this->assertEquals(
             [
                 'name' => [
@@ -155,7 +127,10 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
                 'group' => ''
             ]
         ]);
-        $this->routeFormatter->sort();
+        MockTest::callMockMethod(
+            $this->routeFormatter,
+            'sort'
+        );
         $this->assertEquals(
             [
                 'name1' => [
@@ -171,9 +146,30 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    private function mockRoute(array $route = [])
+    public function testGetPatterns()
     {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Route')
+        $this->routeFormatter = new RouteFormatter(
+            $this->mockRoute([
+                'patterns' => [
+                    'pattern' => 'regex'
+                ]
+            ])
+        );
+        $this->assertTrue(
+            array_key_exists(
+                '@pattern',
+                MockTest::callMockMethod(
+                    $this->routeFormatter,
+                    'getPatterns'
+                )
+            )
+        );
+    }
+
+    private function mockRoute(
+        array $route = []
+    ) {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Collection\IRoute')
             ->disableOriginalConstructor()->getMock();
         $stub->method('getRouteArray')->willReturn($route);
         return $stub;

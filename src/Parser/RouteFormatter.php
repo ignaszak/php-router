@@ -12,28 +12,28 @@ declare(strict_types=1);
 namespace Ignaszak\Router\Parser;
 
 use Ignaszak\Router\RouterException;
-use Ignaszak\Router\Interfaces\IRoute;
+use Ignaszak\Router\Collection\IRoute;
 
-class RouteFormatter
+class RouteFormatter implements IRoute
 {
 
     /**
      *
      * @var IRoute
      */
-    private $route;
+    private $route = null;
 
     /**
      *
      * @var string[]
      */
     private $patternArray = [
-        '@base'      => '',
+        '@base'     => '',
         '@notfound' => '.+',
-        '@dot'       => '\.',
-        '@digit'     => '(\d+)',
-        '@alpha'     => '([A-Za-z_-]+)',
-        '@alnum'     => '([\w-]+)'
+        '@dot'      => '\.',
+        '@digit'    => '(\d+)',
+        '@alpha'    => '([A-Za-z_-]+)',
+        '@alnum'    => '([\w-]+)'
     ];
 
     /**
@@ -41,13 +41,6 @@ class RouteFormatter
      * @var array
      */
     private $routeArray = [];
-
-    /**
-     * Stores added tokens name as key and token pattern as value
-     *
-     * @var string[]
-     */
-    private $tokenArray = [];
 
     /**
      *
@@ -60,43 +53,26 @@ class RouteFormatter
 
     /**
      *
-     * @param string[] $tokens
-     * @return \Ignaszak\Router\Parser\RouteFormatter
-     */
-    public function addTokens(array $tokens): RouteFormatter
-    {
-        $this->tokenArray = array_merge(
-            $this->tokenArray,
-            $tokens
-        );
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param string[] $patterns
-     * @return \Ignaszak\Router\Parser\RouteFormatter
-     */
-    public function addPatterns(array $patterns): RouteFormatter
-    {
-        foreach ($patterns as $name => $pattern) {
-            $this->patternArray["@{$name}"] = $pattern;
-        }
-
-        return $this;
-    }
-
-    /**
-     *
      * @return array
      */
     public function getRouteArray(): array
     {
+        $this->format();
+        $this->sort();
         return $this->routeArray;
     }
 
-    public function sort()
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Collection\IRoute::getChecksum()
+     */
+    public function getChecksum(): string
+    {
+        return '';
+    }
+
+    private function sort()
     {
         uasort(
             $this->routeArray,
@@ -106,10 +82,14 @@ class RouteFormatter
         );
     }
 
-    public function format()
+    private function format()
     {
-        foreach ($this->route->getRouteArray() as $name => $route) {
-            $patternKey = array_keys($this->patternArray);
+        $patternArray = $this->getPatterns();
+        $tokenArray = $this->route->getRouteArray()['tokens'] ?? [];
+        $routeArray = $this->route->getRouteArray()['routes'] ?? [];
+
+        foreach ($routeArray as $name => $route) {
+            $patternKey = array_keys($patternArray);
             $tokens = [];
             $subpatterns = [];
             $search = [];
@@ -120,8 +100,8 @@ class RouteFormatter
                     $search[] = "{{$token}}";
                     $tokens[$token] = str_replace(
                         $patternKey,
-                        $this->patternArray,
-                        $route['tokens'][$token] ?? $this->tokenArray[$token]
+                        $patternArray,
+                        $route['tokens'][$token] ?? $tokenArray[$token]
                     );
                     $subpatterns[$token] = "(?P<{$token}>{$tokens[$token]})";
                 }
@@ -136,7 +116,7 @@ class RouteFormatter
             );
             $route['path'] = $this->preparePattern(str_replace(
                 $patternKey,
-                $this->patternArray,
+                $patternArray,
                 $route['path']
             ));
             $this->validPattern($route['path'], (string)$name);
@@ -176,5 +156,19 @@ class RouteFormatter
     private function preparePattern(string $pattern): string
     {
         return '/^' . str_replace('/', '\/', $pattern) . '$/';
+    }
+
+    /**
+     *
+     * @return string[]
+     */
+    private function getPatterns(): array
+    {
+        $result = [];
+        $patternArray = $this->route->getRouteArray()['patterns'] ?? [];
+        foreach ($patternArray as $key => $value) {
+            $result["@{$key}"] = $value;
+        }
+        return array_merge($this->patternArray, $result);
     }
 }
