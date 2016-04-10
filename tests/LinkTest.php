@@ -26,10 +26,13 @@ class LinkTest extends \PHPUnit_Framework_TestCase
 
     public function testSet()
     {
-        $this->link->set($this->mockFormatter());
-        $this->assertInstanceOf(
-            'Ignaszak\Router\Parser\RouteFormatter',
-            \PHPUnit_Framework_Assert::readAttribute($this->link, 'formatter')
+        $this->link->set(['formatedRouteArray']);
+        $this->assertEquals(
+            ['formatedRouteArray'],
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->link,
+                'formatedRouteArray'
+            )
         );
     }
 
@@ -45,7 +48,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $this->link->set($this->mockFormatter($formattedRouteArray));
+        $this->link->set($formattedRouteArray);
         $this->assertEquals(
             '/test/anyalias.html',
             $this->link->getLink('name', [
@@ -70,7 +73,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $this->link->set($this->mockFormatter($formattedRouteArray));
+        $this->link->set($formattedRouteArray);
         $this->link->getLink('name', [
                 'alias' => 'ANYALIAS',
                 'format' => 'doc'
@@ -82,7 +85,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRouteName()
     {
-        $this->link->set($this->mockFormatter());
+        $this->link->set([]);
         $this->link->getLink('name', []);
     }
 
@@ -103,16 +106,5 @@ class LinkTest extends \PHPUnit_Framework_TestCase
                 '/anyLink/with/replaced/token/', 'routName'
             ])
         );
-    }
-
-    private function mockFormatter(array $formattedRouteArray = [])
-    {
-        $formatter = $this->getMockBuilder(
-            'Ignaszak\Router\Parser\RouteFormatter'
-        )->disableOriginalConstructor()
-            ->setMethods(['getRouteArray'])
-            ->getMock();
-        $formatter->method('getRouteArray')->willReturn($formattedRouteArray);
-        return $formatter;
     }
 }

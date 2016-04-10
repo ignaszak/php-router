@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Ignaszak\Router;
 
 use Ignaszak\Router\Conf\Host;
-use Ignaszak\Router\Parser\RouteFormatter;
 
 class Link
 {
@@ -25,9 +24,9 @@ class Link
 
     /**
      *
-     * @var RouteFormatter
+     * @var array
      */
-    private $formatter;
+    private $formatedRouteArray = [];
 
     /**
      *
@@ -57,9 +56,9 @@ class Link
      * @param RouteFormatter $formatter
      * @param Host $host
      */
-    public function set(RouteFormatter $formatter, Host $host = null)
+    public function set(array $formatedRouteArray, Host $host = null)
     {
-        $this->formatter = $formatter;
+        $this->formatedRouteArray = $formatedRouteArray;
         $this->baseURL = ! is_null($host) ? $host->getBaseURL() : '';
     }
 
@@ -72,10 +71,10 @@ class Link
      */
     public function getLink(string $name, array $replacement): string
     {
-        if (! array_key_exists($name, $this->formatter->getRouteArray())) {
+        if (! array_key_exists($name, $this->formatedRouteArray)) {
             throw new RouterException("Route '{$name}' does not exist");
         }
-        $route = $this->formatter->getRouteArray()[$name];
+        $route = $this->formatedRouteArray[$name];
         $search = [];
         $replace = [];
         foreach ($route['tokens'] as $token => $pattern) {
