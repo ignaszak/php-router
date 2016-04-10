@@ -1,8 +1,8 @@
 <?php
 namespace Test\Mock;
 
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamWrapper;
+use \org\bovigo\vfs\vfsStream;
+use \org\bovigo\vfs\vfsStreamWrapper;
 
 class MockTest
 {
@@ -88,15 +88,5 @@ class MockTest
         $reflection = new \ReflectionProperty($class, $property);
         $reflection->setAccessible(true);
         $reflection->setValue(null, $value);
-    }
-
-    /**
-     *
-     * @param string $property
-     * @param mixed $value
-     */
-    public static function mockConf(string $property, $value)
-    {
-        self::inject(\Ignaszak\Exception\Conf::instance(), $property, $value);
     }
 }
