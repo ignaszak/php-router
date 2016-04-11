@@ -1,44 +1,68 @@
 <?php
 namespace Test;
 
-use Ignaszak\Router\Link;
+use Ignaszak\Router\UrlGenerator;
 use Test\Mock\MockTest;
 
-class LinkTest extends \PHPUnit_Framework_TestCase
+class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      *
      * @var Link
      */
-    private $link;
+    private $urlGenerator;
 
     public function setUp()
     {
-        MockTest::injectStatic('Ignaszak\Router\Link', 'link');
-        $this->link = Link::instance();
+        $this->urlGenerator = new UrlGenerator($this->mockRoute());
     }
 
-    public function testInstance()
+    public function testConstructorSetRouteArray()
     {
-        $this->assertInstanceOf('Ignaszak\Router\Link', Link::instance());
-    }
-
-    public function testSet()
-    {
-        $this->link->set(['formattedRouteArray']);
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute(['anyRouteArray'])
+        );
         $this->assertEquals(
-            ['formattedRouteArray'],
+            ['anyRouteArray'],
             \PHPUnit_Framework_Assert::readAttribute(
-                $this->link,
-                'formattedRouteArray'
+                $this->urlGenerator,
+                'convertedRouteArray'
             )
         );
     }
 
-    public function testGetLink()
+    public function testConstructorSetHost()
     {
-        $formattedRouteArray = [
+        $host = $this->getMockBuilder('Ignaszak\Router\Host')
+            ->disableOriginalConstructor()->getMock();
+        $host->method('getBaseUrl')->willReturn('anyBaseUrl');
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute(),
+            $host
+        );
+        $this->assertEquals(
+            'anyBaseUrl',
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->urlGenerator,
+                'baseUrl'
+            )
+        );
+    }
+
+    public function testConstructorSetEmptyHost()
+    {
+        $this->assertEmpty(
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->urlGenerator,
+                'baseUrl'
+            )
+        );
+    }
+
+    public function testUrl()
+    {
+        $convertedRouteArray = [
             'name' => [
                 'route' => '/test/{alias}.{format}',
                 'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
@@ -48,10 +72,12 @@ class LinkTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $this->link->set($formattedRouteArray);
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute($convertedRouteArray)
+        );
         $this->assertEquals(
             '/test/anyalias.html',
-            $this->link->getLink('name', [
+            $this->urlGenerator->url('name', [
                 'alias' => 'anyalias',
                 'format' => 'html'
             ])
@@ -63,7 +89,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLinkWithInvalidValue()
     {
-        $formattedRouteArray = [
+        $convertedRouteArray = [
             'name' => [
                 'route' => '/test/{alias}.{format}',
                 'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
@@ -73,8 +99,10 @@ class LinkTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $this->link->set($formattedRouteArray);
-        $this->link->getLink('name', [
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute($convertedRouteArray)
+        );
+        $this->urlGenerator->url('name', [
                 'alias' => 'ANYALIAS',
                 'format' => 'doc'
         ]);
@@ -85,8 +113,8 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRouteName()
     {
-        $this->link->set([]);
-        $this->link->getLink('name', []);
+        $this->urlGenerator = new UrlGenerator($this->mockRoute());
+        $this->urlGenerator->url('name', []);
     }
 
     /**
@@ -94,7 +122,7 @@ class LinkTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidLink()
     {
-        MockTest::callMockMethod($this->link, 'validLink', [
+        MockTest::callMockMethod($this->urlGenerator, 'validLink', [
             '/anyLink/with/unreplaced/(?P<token>([a-z]+))/', 'routName'
         ]);
     }
@@ -102,9 +130,17 @@ class LinkTest extends \PHPUnit_Framework_TestCase
     public function testValidLink()
     {
         $this->assertTrue(
-            MockTest::callMockMethod($this->link, 'validLink', [
+            MockTest::callMockMethod($this->urlGenerator, 'validLink', [
                 '/anyLink/with/replaced/token/', 'routName'
             ])
         );
+    }
+
+    private function mockRoute(array $route = [])
+    {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Collection\IRoute')
+            ->disableOriginalConstructor()->getMock();
+        $stub->method('getRouteArray')->willReturn($route);
+        return $stub;
     }
 }

@@ -11,55 +11,32 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\Host;
 
-class Link
+class UrlGenerator
 {
-
-    /**
-     *
-     * @var Link
-     */
-    private static $link;
 
     /**
      *
      * @var array
      */
-    private $formattedRouteArray = [];
+    private $convertedRouteArray = [];
 
     /**
      *
      * @var string
      */
-    private $baseURL = '';
-
-    private function __construct()
-    {
-    }
+    private $baseUrl = '';
 
     /**
      *
-     * @return Link
-     */
-    public static function instance(): Link
-    {
-        if (empty(self::$link)) {
-            self::$link = new self();
-        }
-
-        return self::$link;
-    }
-
-    /**
-     *
-     * @param RouteFormatter $formatter
+     * @param IRoute $route
      * @param Host $host
      */
-    public function set(array $formattedRouteArray, Host $host = null)
+    public function __construct(Collection\IRoute $route, Host $host = null)
     {
-        $this->formattedRouteArray = $formattedRouteArray;
-        $this->baseURL = ! is_null($host) ? $host->getBaseURL() : '';
+        $this->convertedRouteArray = $route->getRouteArray();
+        $this->baseUrl = ! is_null($host) ? $host->getBaseURL() : '';
     }
 
     /**
@@ -69,12 +46,12 @@ class Link
      * @throws RouterException
      * @return string
      */
-    public function getLink(string $name, array $replacement): string
+    public function url(string $name, array $replacement): string
     {
-        if (! array_key_exists($name, $this->formattedRouteArray)) {
+        if (! array_key_exists($name, $this->convertedRouteArray)) {
             throw new RouterException("Route '{$name}' does not exist");
         }
-        $route = $this->formattedRouteArray[$name];
+        $route = $this->convertedRouteArray[$name];
         $search = [];
         $replace = [];
         foreach ($route['tokens'] as $token => $pattern) {
@@ -93,7 +70,7 @@ class Link
             str_replace($search, $replace, $route['route'])
         );
         $this->validLink($link, $name);
-        return $this->baseURL . $link;
+        return $this->baseUrl . $link;
     }
 
     /**
