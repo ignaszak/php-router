@@ -3,7 +3,6 @@
 use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Router;
 use Ignaszak\Router\Conf\Host;
-use Ignaszak\Router\ResponseStatic;
 use Ignaszak\Router\Collection\Cache;
 
 include __DIR__ . '/autoload.php';
@@ -113,41 +112,32 @@ $response = $router->run(new Host());
 // Display matched params
 echo 'Routes:<pre>';
 print_r($response->getParams());
-ResponseStatic::getParams();
 echo '</pre>';
 
 // Get concrete param
 echo $response->getParam('token');
-ResponseStatic::getParam('token');
 
 // Get route name
 echo 'Route name: ';
 echo $response->getName();
-ResponseStatic::getName();
 echo '<br />';
 
 // Get route group
 echo 'Route group: ';
 echo $response->getGroup();
-ResponseStatic::getGroup();
 echo '<br />';
 
 // Get route controller
 echo 'Controller: ';
 echo $response->getController();
-ResponseStatic::getController();
 echo '<br />';
 
 // Get attachment
 $attachment = $response->getAttachment();
 $attachment();
-ResponseStatic::getAttachment();
 
 // Get link
 echo 'Link: ';
 echo $response->getLink('user', [
-    'user' => 'UserName'
-]);
-ResponseStatic::getLink('user', [
     'user' => 'UserName'
 ]);

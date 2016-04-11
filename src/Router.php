@@ -79,7 +79,6 @@ class Router implements Interfaces\IRouter
                 $httpMethod
             )
         );
-        ResponseStatic::$response = $response;
         return $response;
     }
 }

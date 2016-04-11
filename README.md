@@ -240,25 +240,6 @@ $response->getLink('user', [
 ```
 Output, if ```Host()``` class is used: ```http://servername/user/UserName```, or for custom request: ```/user/UserName```.
 
-#### ResponseStatic
-
-Response is also avilable via static methods
-```php
-use Ignaszak\Router\ResponseStatic;
-
-include __DIR__ . '/autoload.php';
-
-ResponseStatic::getName();
-ResponseStatic::getController();
-ResponseStatic::getAttachment();
-ResponseStatic::getGroup();
-ResponseStatic::getParams();
-ResponseStatic::getParam('token');
-ResponseStatic::getLink('user', [
-    'name' => 'UserName'
-]);
-```
-
 ### Load routes from Yaml
 
 #### Yaml file example
