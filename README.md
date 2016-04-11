@@ -197,7 +197,7 @@ $matcher->match(null, '/custom/request', 'GET');
 new Host([string $baseQuery]);
 ```
 Class provides current request and http method. Argument *$baseQuery* defines folder via site is avilable e.g.:
-```http://localhost/~user/ => $baseQuery = /~user``` (without slash on end).
+```http://localhost/~user/ => $baseQuery = /~user``` (without trailing slash).
 
 #### Get response
 ```php
@@ -242,11 +242,9 @@ use Ignaszak\Router\UrlGenerator;
 $route = Route::start();
 /* Define routes */
 
-$matcher = new Matcher($route);
-/* Match routes */
-
 $host = new Host();
 
+$matcher = new Matcher($route);
 $response = new Response($matcher->match($host));
 
 // UrlGenerator
