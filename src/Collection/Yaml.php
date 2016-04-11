@@ -13,9 +13,16 @@ namespace Ignaszak\Router\Collection;
 
 use Symfony\Component\Yaml\Parser;
 use Ignaszak\Router\RouterException;
+use Ignaszak\Router\Matcher\Converter;
 
 class Yaml implements IRoute
 {
+
+    /**
+     *
+     * @var Converter
+     */
+    private $converter = null;
 
     /**
      *
@@ -37,6 +44,7 @@ class Yaml implements IRoute
 
     public function __construct()
     {
+        $this->converter = new Converter();
         $this->parser = new Parser();
     }
 
@@ -70,7 +78,7 @@ class Yaml implements IRoute
                 $this->parser->parse(file_get_contents($file))
             );
         }
-        return $result;
+        return $this->converter->convert($result);
     }
 
     /**

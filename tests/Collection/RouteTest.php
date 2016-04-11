@@ -2,6 +2,7 @@
 namespace Test\Collection;
 
 use Ignaszak\Router\Collection\Route;
+use Test\Mock\MockTest;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,12 +23,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->add('name1', '/pattern/subpattern', 'AnyHttpMethod');
         $this->assertEquals(
             'name1',
-            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
+            $this->get('lastName')
         );
         $this->route->add('name2', '/pattern');
         $this->assertEquals(
             'name2',
-            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
+            $this->get('lastName')
         );
 
         $this->assertEquals(
@@ -43,25 +44,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ]
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routeArray')
         );
     }
 
     public function testAddWithoutNAme()
     {
         $this->route->add(null, '/pattern/subpattern');
-        $this->assertEquals(
-            0,
-            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
-        );
+        $this->assertEquals(0, $this->get('lastName'));
         $this->route->add(null, '/pattern');
-        $this->assertEquals(
-            1,
-            \PHPUnit_Framework_Assert::readAttribute($this->route, 'lastName')
-        );
+        $this->assertEquals(1, $this->get('lastName'));
 
         $this->assertEquals(
             [
@@ -76,10 +68,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ]
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routeArray')
         );
     }
 
@@ -88,7 +77,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->get(null, '/pattern/subpattern');
         $this->assertEquals(
             'GET',
-            $this->route->getRouteArray()['routes'][0]['method']
+            $this->get('routeArray')[0]['method']
         );
     }
 
@@ -97,7 +86,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->post(null, '/pattern/subpattern');
         $this->assertEquals(
             'POST',
-            $this->route->getRouteArray()['routes'][0]['method']
+            $this->get('routeArray')[0]['method']
         );
     }
 
@@ -288,6 +277,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetRouteArray()
+    {
+        $stub = $this->getMockBuilder('Ignaszak\Router\Matcher\Converter')
+            ->disableOriginalConstructor()->getMock();
+        $stub->expects($this->once())->method('convert')->willReturn([]);
+        MockTest::inject($this->route, 'converter', $stub);
+        $this->route->getRouteArray();
+    }
+
     public function testGetChecksum()
     {
         $this->route->add(null, 'anypattern')->tokens(['token' => 'pattern']);
@@ -295,24 +293,32 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->addPatterns(['pattern' => 'regex']);
         $this->assertEquals(
             md5(json_encode([
-            'routes' => [
-            0 => [
-            'path' => 'anypattern',
-            'group' => '',
-            'method' => '',
-            'tokens' => [
-            'token' => 'pattern'
-            ]
+                'routes' => [
+                    0 => [
+                        'path' => 'anypattern',
+                        'group' => '',
+                        'method' => '',
+                        'tokens' => [
+                            'token' => 'pattern'
+                        ]
                     ]
-            ],
-            'tokens' => [
-            'token' => 'pattern'
-            ],
-            'patterns' => [
-            'pattern' => 'regex'
-            ]
+                ],
+                'tokens' => [
+                    'token' => 'pattern'
+                ],
+                'patterns' => [
+                    'pattern' => 'regex'
+                ]
             ])),
             $this->route->getChecksum()
+        );
+    }
+
+    private function get(string $property)
+    {
+        return \PHPUnit_Framework_Assert::readAttribute(
+            $this->route,
+            $property
         );
     }
 }

@@ -12,9 +12,16 @@ declare(strict_types=1);
 namespace Ignaszak\Router\Collection;
 
 use Ignaszak\Router\RouterException;
+use Ignaszak\Router\Matcher\Converter;
 
 class Route implements IRouteStart, IRouteAdd, IRoute
 {
+
+    /**
+     *
+     * @var Converter
+     */
+    private $converter = null;
 
     /**
      * Stores added routes
@@ -51,6 +58,7 @@ class Route implements IRouteStart, IRouteAdd, IRoute
 
     private function __construct()
     {
+        $this->converter = new Converter();
     }
 
     /**
@@ -69,12 +77,12 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      */
     public function getRouteArray(): array
     {
-        return [
+        return $this->converter->convert([
             'routes' => $this->routeArray,
             'tokens' => $this->tokenArray,
             'patterns' => $this->patternArray,
             'checksum' => $this->getChecksum()
-        ];
+        ]);
     }
 
     /**

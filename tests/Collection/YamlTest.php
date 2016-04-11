@@ -53,62 +53,20 @@ class YamlTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRouteArray()
     {
-        $route = <<<EOT
-routes:
-    test:
-        path: '/test/{controller}/{action}'
-        group: ''
-        method: ''
-        controller: '\Namespace\{controller}::{action}'
-        tokens:
-            controller: '([a-zA-Z]+)'
-tokens:
-    action: '([a-zA-Z]+)'
-patterns:
-    patternName: '(.+)'
-EOT;
-        $yaml = MockTest::mockFile('route.yml', 0644, $route);
-        $this->yaml->add($yaml);
-        $this->assertEquals(
-            [
-                'test' => [
-                    'path' => '/test/{controller}/{action}',
-                    'group' => '',
-                    'method' => '',
-                    'controller' => '\Namespace\{controller}::{action}',
-                    'tokens' => [
-                        'controller' => '([a-zA-Z]+)'
-                    ]
-                ]
-            ],
-            $this->yaml->getRouteArray()['routes']
-        );
-        $this->assertEquals(
-            [
-                'action' => '([a-zA-Z]+)'
-            ],
-            $this->yaml->getRouteArray()['tokens']
-        );
-        $this->assertEquals(
-            [
-                'patternName' => '(.+)'
-            ],
-            $this->yaml->getRouteArray()['patterns']
-        );
-    }
+        MockTest::inject($this->yaml, 'fileArray', [
+            MockTest::mockFile('file.yml')
+        ]);
 
-    public function testAddWithSameKeys()
-    {
-        $this->yaml->add(MockTest::mockFile('route.yml', 0644, <<<EOT
-test:
-    path: '/test/{controller}/{action}'
-EOT
-        ));
-        $this->yaml->add(MockTest::mockFile('route.yml', 0644, <<<EOT
-test:
-    path: '/test/{controller}/{action}'
-EOT
-        ));
+        $yamlParser = $this->getMockBuilder('Symfony\Component\Yaml\Parser')
+            ->disableOriginalConstructor()->getMock();
+        $yamlParser->expects($this->once())->method('parse')->willReturn([]);
+        MockTest::inject($this->yaml, 'parser', $yamlParser);
+
+        $stub = $this->getMockBuilder('Ignaszak\Router\Matcher\Converter')
+            ->disableOriginalConstructor()->getMock();
+        $stub->expects($this->once())->method('convert')->willReturn([]);
+        MockTest::inject($this->yaml, 'converter', $stub);
+
         $this->yaml->getRouteArray();
     }
 
