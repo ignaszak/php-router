@@ -9,12 +9,12 @@
  */
 declare(strict_types=1);
 
-namespace Ignaszak\Router\Parser;
+namespace Ignaszak\Router\Matcher;
 
-use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\Host;
 use Ignaszak\Router\Collection\IRoute;
 
-class Parser
+class Matcher
 {
 
     /**
@@ -34,12 +34,11 @@ class Parser
 
     /**
      *
-     * @param array $formattedRouteArray
      * @param Host $host
      * @param string $query
      * @param string $httpMethod
      */
-    public function run(
+    public function match(
         Host $host = null,
         string $query = '',
         string $httpMethod = ''

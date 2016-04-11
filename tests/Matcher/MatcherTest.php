@@ -1,21 +1,21 @@
 <?php
-namespace Test\Parser;
+namespace Test\Matcher;
 
-use Ignaszak\Router\Parser\Parser;
+use Ignaszak\Router\Matcher\Matcher;
 use Test\Mock\MockTest;
 
-class ParserTest extends \PHPUnit_Framework_TestCase
+class MatcherTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      *
-     * @var Parser
+     * @var Matcher
      */
-    private $parser;
+    private $matcher;
 
     public function setUp()
     {
-        $this->parser = new Parser($this->mockRouteFormatter());
+        $this->matcher = new Matcher($this->mockRoute());
     }
 
     public function testConstructor()
@@ -23,15 +23,15 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(
             'Ignaszak\Router\Collection\IRoute',
             \PHPUnit_Framework_Assert::readAttribute(
-                $this->parser,
+                $this->matcher,
                 'route'
             )
         );
     }
 
-    public function testRunWithAnyHttpMethod()
+    public function testMatchWithAnyHttpMethod()
     {
-        $formattedRoute = [
+        $convertedRouteArray = [
             'name' => [
                 'path' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
                 'tokens' => [
@@ -40,8 +40,8 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'group' => ''
             ]
         ];
-        $this->parser = new Parser($this->mockRouteFormatter($formattedRoute));
-        $response = $this->parser->run(
+        $this->matcher = new Matcher($this->mockRoute($convertedRouteArray));
+        $response = $this->matcher->match(
             $this->mockHost('/firstRoute/anyPattern/')
         );
         $this->assertEquals(
@@ -59,17 +59,17 @@ class ParserTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testRunWithIncorrectHttpMethod()
+    public function testMatchWithIncorrectHttpMethod()
     {
-        $formattedRoute = [
+        $convertedRouteArray = [
             'name' => [
                 'path' => '/^\/firstRoute\/(?P<token>anyPattern)\/$/',
                 'group' => '',
                 'method' => 'POST'
             ]
         ];
-        $this->parser = new Parser($this->mockRouteFormatter($formattedRoute));
-        $response = $this->parser->run(
+        $this->matcher = new Matcher($this->mockRoute($convertedRouteArray));
+        $response = $this->matcher->match(
             null,
             '/firstRoute/anyPattern/',
             'GET'
@@ -90,16 +90,16 @@ class ParserTest extends \PHPUnit_Framework_TestCase
                 'name' => 'Tomek'
             ]
         ];
-        MockTest::callMockMethod($this->parser, 'callAttachment', [$request]);
+        MockTest::callMockMethod($this->matcher, 'callAttachment', [$request]);
         $this->assertEquals(
             'Tomek',
             @NAME
         );
     }
 
-    public function testRunWithNoMatchedRouts()
+    public function testMatchWithNoMatchedRouts()
     {
-        $this->assertEmpty($this->parser->run());
+        $this->assertEmpty($this->matcher->match());
     }
 
     public function testCreateParamsArray()
@@ -114,7 +114,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             'format' => '(html|xml|json)'
         ];
         $result = MockTest::callMockMethod(
-            $this->parser,
+            $this->matcher,
             'createParamsArray',
             [$matches, $tokens]
         );
@@ -134,7 +134,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
             'controller' => 'AnyController',
             'action' => 'anyAction'
         ];
-        $result = MockTest::callMockMethod($this->parser, 'matchController', [
+        $result = MockTest::callMockMethod($this->matcher, 'matchController', [
             $controller,
             $routes
         ]);
@@ -162,7 +162,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     private function httpMethod(string $route, string $current): bool
     {
         $result = MockTest::callMockMethod(
-            $this->parser,
+            $this->matcher,
             'httpMethod',
             [$route, $current]
         );
@@ -171,14 +171,14 @@ class ParserTest extends \PHPUnit_Framework_TestCase
 
     private function mockHost(string $query)
     {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Conf\Host')->getMock();
+        $stub = $this->getMockBuilder('Ignaszak\Router\Host')->getMock();
         $stub->method('getQuery')->willReturn($query);
         return $stub;
     }
 
-    private function mockRouteFormatter(array $route = [])
+    private function mockRoute(array $route = [])
     {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
+        $stub = $this->getMockBuilder('Ignaszak\Router\Collection\IRoute')
             ->disableOriginalConstructor()
             ->getMock();
         $stub->method('getRouteArray')->willReturn($route);
