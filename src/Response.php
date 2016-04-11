@@ -1,9 +1,7 @@
 <?php
 namespace Ignaszak\Router;
 
-use Ignaszak\Router\Interfaces\IResponse;
-
-class Response implements IResponse
+class Response
 {
 
     /**
@@ -23,8 +21,7 @@ class Response implements IResponse
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getName()
+     * @return string
      */
     public function getName(): string
     {
@@ -33,8 +30,7 @@ class Response implements IResponse
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getController()
+     * @return string
      */
     public function getController(): string
     {
@@ -43,8 +39,7 @@ class Response implements IResponse
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getAttachment()
+     * @return \Closure
      */
     public function getAttachment(): \Closure
     {
@@ -55,8 +50,7 @@ class Response implements IResponse
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getParams()
+     * @return string[]
      */
     public function getParams(): array
     {
@@ -65,8 +59,8 @@ class Response implements IResponse
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getParam()
+     * @param string $route
+     * @return string
      */
     public function getParam(string $token): string
     {
@@ -75,21 +69,10 @@ class Response implements IResponse
 
     /**
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getGroup()
+     * @return string
      */
     public function getGroup(): string
     {
         return $this->response['group'] ?? '';
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IResponse::getLink()
-     */
-    public function getLink(string $name, array $replacement): string
-    {
-        return Link::instance()->getLink($name, $replacement);
     }
 }

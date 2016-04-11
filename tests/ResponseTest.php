@@ -3,7 +3,7 @@ namespace Test;
 
 use Ignaszak\Router\Response;
 use Test\Mock\MockTest;
-use Ignaszak\Router\Link;
+use Ignaszak\Router\UrlGenerator;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
@@ -82,14 +82,5 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testGetGroup()
     {
         $this->assertEquals('anyGroup', $this->response->getGroup());
-    }
-
-    public function testGetLink()
-    {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Link')
-        ->disableOriginalConstructor()->setMethods(['getLink'])->getMock();
-        $stub->expects($this->once())->method('getLink');
-        MockTest::inject(Link::instance(), 'link', $stub);
-        $this->response->getLink('name', []);
     }
 }
