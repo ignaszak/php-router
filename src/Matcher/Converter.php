@@ -9,19 +9,18 @@
  */
 declare(strict_types=1);
 
-namespace Ignaszak\Router\Parser;
+namespace Ignaszak\Router\Matcher;
 
 use Ignaszak\Router\RouterException;
-use Ignaszak\Router\Collection\IRoute;
 
-class RouteFormatter implements IRoute
+class Converter
 {
 
     /**
      *
-     * @var IRoute
+     * @var array
      */
-    private $route = null;
+    private $routeArray = [];
 
     /**
      *
@@ -40,53 +39,36 @@ class RouteFormatter implements IRoute
      *
      * @var array
      */
-    private $routeArray = [];
+    private $convertedRouteArray = [];
 
     /**
      *
-     * @param Route $route
-     */
-    public function __construct(IRoute $route)
-    {
-        $this->route = $route;
-    }
-
-    /**
-     *
+     * @param array $routeArray
      * @return array
      */
-    public function getRouteArray(): array
+    public function convert(array $routeArray): array
     {
-        $this->format();
+        $this->routeArray = $routeArray;
+        $this->transformToRegex();
         $this->sort();
-        return $this->routeArray;
-    }
-
-    /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Collection\IRoute::getChecksum()
-     */
-    public function getChecksum(): string
-    {
-        return '';
+        return $this->convertedRouteArray;
     }
 
     private function sort()
     {
         uasort(
-            $this->routeArray,
+            $this->convertedRouteArray,
             function ($a, $b) {
                 return strlen($b['path']) <=> strlen($a['path']);
             }
         );
     }
 
-    private function format()
+    private function transformToRegex()
     {
         $patternArray = $this->getPatterns();
-        $tokenArray = $this->route->getRouteArray()['tokens'] ?? [];
-        $routeArray = $this->route->getRouteArray()['routes'] ?? [];
+        $tokenArray = $this->routeArray['tokens'] ?? [];
+        $routeArray = $this->routeArray['routes'] ?? [];
 
         foreach ($routeArray as $name => $route) {
             $patternKey = array_keys($patternArray);
@@ -120,7 +102,7 @@ class RouteFormatter implements IRoute
                 $route['path']
             ));
             $this->validPattern($route['path'], (string)$name);
-            $this->routeArray[$name] = $route;
+            $this->convertedRouteArray[$name] = $route;
         }
     }
 
@@ -165,7 +147,7 @@ class RouteFormatter implements IRoute
     private function getPatterns(): array
     {
         $result = [];
-        $patternArray = $this->route->getRouteArray()['patterns'] ?? [];
+        $patternArray = $this->routeArray['patterns'] ?? [];
         foreach ($patternArray as $key => $value) {
             $result["@{$key}"] = $value;
         }

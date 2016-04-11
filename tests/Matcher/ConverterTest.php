@@ -1,45 +1,45 @@
 <?php
-namespace Test\Parser;
+namespace Test\Matcher;
 
-use Ignaszak\Router\Parser\Parser;
+use Ignaszak\Router\Matcher\Converter;
+use Ignaszak\Router\Matcher\Matcher;
 use Test\Mock\MockTest;
-use Ignaszak\Router\Parser\RouteFormatter;
 
-class RouteFormatterTest extends \PHPUnit_Framework_TestCase
+class ConverterTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
      *
-     * @var Parser
+     * @var Converter
      */
-    private $routeFormatter;
+    private $converter;
 
     public function setUp()
     {
-        $this->routeFormatter = new RouteFormatter($this->mockRoute());
+        $this->converter = new Converter();
     }
 
     public function testConstructor()
     {
-        $this->assertInstanceOf(
-            'Ignaszak\Router\Collection\IRoute',
+        MockTest::inject(
+            $this->converter,
+            'routeArray',
+            ['anyRouteArray']
+        );
+        $this->assertEquals(
+            ['anyRouteArray'],
             \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'route'
+                $this->converter,
+                'routeArray'
             )
         );
-    }
-
-    public function testGetChecksum()
-    {
-        $this->assertEmpty($this->routeFormatter->getChecksum());
     }
 
     public function testPreparePattern()
     {
         $pattern = '/noNamed1/(?P<token>(noNamed2))\.html';
         $result = MockTest::callMockMethod(
-            $this->routeFormatter,
+            $this->converter,
             'preparePattern',
             [$pattern]
         );
@@ -56,7 +56,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
     {
         $route = '/route/@pattern/{token}/';
         MockTest::callMockMethod(
-            $this->routeFormatter,
+            $this->converter,
             'validPattern',
             [$route]
         );
@@ -67,14 +67,14 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
         $route = '/route/route2/';
         $this->assertTrue(
             MockTest::callMockMethod(
-                $this->routeFormatter,
+                $this->converter,
                 'validPattern',
                 [$route]
             )
         );
     }
 
-    public function testFormat()
+    public function testTransformToRegex()
     {
         $routeArray = [
             'routes' => [
@@ -90,12 +90,14 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
                 'globaltoken' => '@alnum'
             ]
         ];
-        $this->routeFormatter = new RouteFormatter(
-            $this->mockRoute($routeArray)
+        MockTest::inject(
+            $this->converter,
+            'routeArray',
+            $routeArray
         );
         MockTest::callMockMethod(
-            $this->routeFormatter,
-            'format'
+            $this->converter,
+            'transformToRegex'
         );
         $this->assertEquals(
             [
@@ -109,15 +111,15 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
             \PHPUnit_Framework_Assert::readAttribute(
-                $this->routeFormatter,
-                'routeArray'
+                $this->converter,
+                'convertedRouteArray'
             )
         );
     }
 
     public function testSort()
     {
-        MockTest::inject($this->routeFormatter, 'routeArray', [
+        MockTest::inject($this->converter, 'convertedRouteArray', [
             'name2' => [
                 'path' => '/pattern',
                 'group' => ''
@@ -128,7 +130,7 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
         MockTest::callMockMethod(
-            $this->routeFormatter,
+            $this->converter,
             'sort'
         );
         $this->assertEquals(
@@ -142,36 +144,64 @@ class RouteFormatterTest extends \PHPUnit_Framework_TestCase
                     'group' => ''
                 ]
             ],
-            $this->routeFormatter->getRouteArray()
+            \PHPUnit_Framework_Assert::readAttribute(
+                $this->converter,
+                'convertedRouteArray'
+            )
         );
     }
 
     public function testGetPatterns()
     {
-        $this->routeFormatter = new RouteFormatter(
-            $this->mockRoute([
+        MockTest::inject(
+            $this->converter,
+            'routeArray',
+            [
                 'patterns' => [
                     'pattern' => 'regex'
                 ]
-            ])
+            ]
         );
         $this->assertTrue(
             array_key_exists(
                 '@pattern',
                 MockTest::callMockMethod(
-                    $this->routeFormatter,
+                    $this->converter,
                     'getPatterns'
                 )
             )
         );
     }
 
-    private function mockRoute(
-        array $route = []
-    ) {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Collection\IRoute')
-            ->disableOriginalConstructor()->getMock();
-        $stub->method('getRouteArray')->willReturn($route);
-        return $stub;
+    public function testConvert()
+    {
+        $this->assertEquals(
+            [
+                'name' => [
+                    'path' => '/^\/(?P<token>test1)\/(?P<globalToken>test2)\/test3$/',
+                    'tokens' => [
+                        'token' => 'test1',
+                        'globalToken' => 'test2'
+                    ],
+                    'route' => '/{token}/{globalToken}/@pattern'
+                ]
+            ],
+            $this->converter->convert([
+                'routes' => [
+                    'name' => [
+                        'path' => '/{token}/{globalToken}/@pattern',
+                        'tokens' => [
+                            'token' => 'test1'
+                        ]
+                    ]
+                ],
+                'tokens' => [
+                    'globalToken' => 'test2'
+                ],
+                'patterns' => [
+                    'pattern' => 'test3'
+                ]
+            ])
+        );
     }
 }
