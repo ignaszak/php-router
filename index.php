@@ -1,11 +1,12 @@
 <?php
 
 use Ignaszak\Router\Collection\Route;
-use Ignaszak\Router\Router;
-use Ignaszak\Router\Conf\Host;
-use Ignaszak\Router\Collection\Cache;
+use Ignaszak\Router\Host;
+use Ignaszak\Router\UrlGenerator;
+use Ignaszak\Router\Matcher\Matcher;
+use Ignaszak\Router\Response;
 
-include __DIR__ . '/autoload.php';
+include __DIR__ . '/vendor/autoload.php';
 
 // Create Router instance to collect routes
 $route = Route::start();
@@ -91,24 +92,21 @@ $route->addPatterns([
 ]);
 $route->add(null, '/@year/@month/@day/');
 
-// Generate cache
-$cache = new Cache($route);
-$cache->tmpDir = __DIR__; // optional, default dir: ./src/Collection
-
 // Get response
-$router = new Router($cache);
+$matcher = new Matcher($route);
 
 // Start parsing
-// Router::run([Host $host [, string $baseQuery [, string HttpMethod]])
-$response = $router->run(new Host());
+// Matcher::match([Host $host [, string $baseQuery [, string HttpMethod]])
+$host = new Host('/~tomek/Eclipse/PHP/router');
+$response = new Response($matcher->match($host));
 // Class Ignaszak\Router\Host([string $baseQuery])
 // provides current request and http method
 // $baseQuery argument defines folder via site is avilable:
 // http://fullSite.com/Adress => $baseQuery = /Adress (without slash on end)
 // It is possible to define custom request and http method:
-// $router->run(null, '/customRequest', 'GET');
+// $matcher->match(null, '/customRequest', 'GET');
 
-// Display response (also avilable via static methods)
+// Display response
 // Display matched params
 echo 'Routes:<pre>';
 print_r($response->getParams());
@@ -136,8 +134,9 @@ echo '<br />';
 $attachment = $response->getAttachment();
 $attachment();
 
-// Get link
+// Reverse Routing
+$url = new UrlGenerator($route, $host);
 echo 'Link: ';
-echo $response->getLink('user', [
+echo $url->url('user', [
     'user' => 'UserName'
 ]);

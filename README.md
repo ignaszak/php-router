@@ -41,10 +41,11 @@ php phpunit.phar
 ### Demo
 ```php
 use Ignaszak\Router\Collection\Route;
-use Ignaszak\Router\Router;
-use Ignaszak\Router\Conf\Host;
+use Ignaszak\Router\Matcher\Matcher;
+use Ignaszak\Router\Host;
+use Ignaszak\Router\Response;
 
-include __DIR__ . '/autoload.php';
+include __DIR__ . '/vendor/autoload.php';
 
 // Define routes
 $route = Route::start();
@@ -62,8 +63,8 @@ $route->post('post', '/post/{name}')
 $route->addTokens(['globalToken' => '([0-9]+)']);
 
 // Match routes
-$router = new Router($route);
-$response = $router->run(new Host());
+$matcher = new Matcher($route);
+$response = new Response($matcher->match(new Host()));
 $response->getParams();
 ```
 
@@ -73,7 +74,7 @@ $response->getParams();
 ```php
 use Ignaszak\Router\Collection\Route;
 
-include __DIR__ . '/autoload.php';
+include __DIR__ . '/vendor/autoload.php';
 
 $route = Route::start();
 
@@ -171,40 +172,26 @@ $route->addPatterns([
 // Example: $route->add(null, '/@year/@month/@day/');
 ```
 
-### Create router
+### Match routes
 ```php
 use Ignaszak\Router\Collection\Route;
-use Ignaszak\Router\Router;
+use Ignaszak\Router\Matcher\Matcher;
+use Ignaszak\Router\Host;
 
 include __DIR__ . '/autoload.php';
 
 $route = Route::start();
 /* Define routes */
 
-// Add defined routes to router
-$router = new Router($route);
-
-```
-
-#### Parse
-```php
-use Ignaszak\Router\Collection\Route;
-use Ignaszak\Router\Router;
-use Ignaszak\Router\Conf\Host;
-
-include __DIR__ . '/autoload.php';
-
-$route = Route::start();
-/* Define routes */
-$router = new Router($route);
-
-// Parse routes and get response
-$response = $router->run(new Host());
-
+// Add defined routes to matcher
+$matcher = new Matcher($route);
+// Match routes with Host class
+$matcher->match(new Host());
 // Or define custom request and http method
-$response = $router->run(null, '/custom/request', 'GET');
+$matcher->match(null, '/custom/request', 'GET');
 
 ```
+
 ##### Host class
 ```php
 new Host([string $baseQuery]);
@@ -214,7 +201,19 @@ Class provides current request and http method. Argument *$baseQuery* defines fo
 
 #### Get response
 ```php
-$response = $router->run(new Host());
+use Ignaszak\Router\Collection\Route;
+use Ignaszak\Router\Matcher\Matcher;
+use Ignaszak\Router\Host;
+use Ignaszak\Router\Response;
+
+$route = Route::start();
+/* Define routes */
+
+$matcher = new Matcher($route);
+/* Match routes */
+
+// Get response
+$response = new Response($matcher->match(new Host()));
 
 // Get route name
 $response->getName();
@@ -231,14 +230,33 @@ $response->getParams();
 $response->getParam('token');
 ```
 
-#### Get link
-Link can be generated for any defined route with name. Example: ```$route->get('user', '/user/{name}')->token('name', '@alpha');```
+#### Reverse Routing
+Url can be generated for any defined route with name.
 ```php
-$response->getLink('user', [
-    'name' => 'UserName'
-]);
+use Ignaszak\Router\Collection\Route;
+use Ignaszak\Router\Matcher\Matcher;
+use Ignaszak\Router\Host;
+use Ignaszak\Router\Response;
+use Ignaszak\Router\UrlGenerator;
+
+$route = Route::start();
+/* Define routes */
+
+$matcher = new Matcher($route);
+/* Match routes */
+
+$host = new Host();
+
+$response = new Response($matcher->match($host));
+
+// UrlGenerator
+$url = new UrlGenerator($route, $host);
+// Example route: $route->get('user', '/user/{user})->tokens(['user' => '@alnum']);
+$url->url('user', ['user' => 'UserName']);
 ```
-Output, if ```Host()``` class is used: ```http://servername/user/UserName```, or for custom request: ```/user/UserName```.
+```UrlGenerator::url(IRoute $route [, Host $host])``` method will return:
+* if ```Host``` class is used: ```http://servername/user/UserName```
+* if ```Host``` class is not defined: ```/user/UserName```
 
 ### Load routes from Yaml
 
@@ -273,15 +291,15 @@ patterns:
 
 ```php
 use Ignaszak\Router\Collection\Yaml;
-use Ignaszak\Router\Router;
+use Ignaszak\Router\Matcher\Matcher;
 
 $yaml = new Yaml();
 // Add yaml files
 $yaml->add('example.yml');
 $yaml->add('anotherExample.yml');
 
-$router = new Router($yaml);
-/* Run router and get response */
+$matcher = new Matcher($yaml);
+/* Match routes and get response */
 ```
 
 ### Cache
@@ -291,7 +309,7 @@ It is possible to generate cache of routes defined in yaml file or Route class. 
 ```php
 use Ignaszak\Router\Collection\Yaml;
 use Ignaszak\Router\Collection\Cache;
-use Ignaszak\Router\Router;
+use Ignaszak\Router\Matcher\Matcher;
 
 $yaml = new Yaml();
 $yaml->add('example.yml');
@@ -299,6 +317,6 @@ $yaml->add('example.yml');
 $cache = new Cache($yaml);
 $cache->tmpDir = __DIR__; // Define custom tmp dir - optional
 
-$router = new Router($cache);
-/* Run router and get response */
+$matcher = new Matcher($cache);
+/* Match routes and get response */
 ```
