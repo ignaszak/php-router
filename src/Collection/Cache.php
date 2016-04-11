@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Ignaszak\Router\Collection;
 
 use Ignaszak\Router\RouterException;
-use Ignaszak\Router\Parser\RouteFormatter;
 
 class Cache implements IRoute
 {
@@ -22,12 +21,6 @@ class Cache implements IRoute
      * @var IRoute
      */
     private $route = null;
-
-    /**
-     *
-     * @var RouteFormatter
-     */
-    private $formatter = null;
 
     /**
      *
@@ -42,7 +35,6 @@ class Cache implements IRoute
     public function __construct(IRoute $route)
     {
         $this->route = $route;
-        $this->formatter = new RouteFormatter($this->route);
     }
 
     /**
@@ -80,7 +72,7 @@ class Cache implements IRoute
         $file = "{$this->tmpDir}/Ignaszak_Router_Tmp_Route.php";
         $tmpRoute = $this->loadTmpRoute($file);
         if (empty($tmpRoute)) {
-            $routeArray = $this->formatter->getRouteArray();
+            $routeArray = $this->route->getRouteArray();
             $this->saveTmpRoute($file, $routeArray);
             return $routeArray;
         } else {

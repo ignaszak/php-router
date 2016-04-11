@@ -20,13 +20,6 @@ class CacheTest extends \PHPUnit_Framework_TestCase
             'Ignaszak\Router\Collection\IRoute',
             \PHPUnit_Framework_Assert::readAttribute($this->cache, 'route')
         );
-        $this->assertInstanceOf(
-            'Ignaszak\Router\Parser\RouteFormatter',
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->cache,
-                'formatter'
-            )
-        );
     }
 
     public function testSetTmpDir()
@@ -152,12 +145,9 @@ EOT;
 
     public function testGetRouteArray()
     {
-        // Read from formatter
-        $this->cache = new Cache($this->mockIRoute('anyChecksum'));
-        MockTest::inject(
-            $this->cache,
-            'formatter',
-            $this->mockRouteFormatter(['anyRouteArray'])
+        // Read from converter
+        $this->cache = new Cache(
+            $this->mockIRoute('anyChecksum', ['anyRouteArray'])
         );
         $tmpDir = MockTest::mockDir('anyDir');
         MockTest::inject($this->cache, 'tmpDir', $tmpDir);
@@ -169,8 +159,8 @@ EOT;
         // Read from cache
         MockTest::inject(
             $this->cache,
-            'formatter',
-            $this->mockRouteFormatter(['shouldReadFromCache'])
+            'route',
+            $this->mockIRoute('anyChecksum', ['anyRouteArray'])
         );
         $this->assertEquals(
             ['anyRouteArray'],
@@ -178,18 +168,11 @@ EOT;
         );
     }
 
-    private function mockIRoute(string $checksum = '')
+    private function mockIRoute(string $checksum = '', array $route = [])
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Collection\IRoute')
             ->getMock();
         $stub->method('getChecksum')->willReturn($checksum);
-        return $stub;
-    }
-
-    private function mockRouteFormatter(array $route = [])
-    {
-        $stub = $this->getMockBuilder('Ignaszak\Router\Parser\RouteFormatter')
-            ->disableOriginalConstructor()->getMock();
         $stub->method('getRouteArray')->willReturn($route);
         return $stub;
     }
