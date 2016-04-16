@@ -23,7 +23,7 @@ class Response
      *
      * @return string
      */
-    public function getName(): string
+    public function name(): string
     {
         return $this->response['name'] ?? '';
     }
@@ -32,7 +32,7 @@ class Response
      *
      * @return string
      */
-    public function getController(): string
+    public function controller(): string
     {
         return $this->response['controller'] ?? '';
     }
@@ -41,7 +41,7 @@ class Response
      *
      * @return \Closure
      */
-    public function getAttachment(): \Closure
+    public function attachment(): \Closure
     {
         return @$this->response['attachment'] instanceof \Closure ?
             $this->response['attachment'] : function () {
@@ -52,27 +52,47 @@ class Response
      *
      * @return string[]
      */
-    public function getParams(): array
+    public function all(): array
     {
         return $this->response['params'] ?? [];
     }
 
     /**
      *
-     * @param string $route
-     * @return string
+     * @param string $token
+     * @param string $default
+     * @return string|mixed
      */
-    public function getParam(string $token): string
+    public function get(string $token, string $default = ''): string
     {
-        return $this->response['params'][$token] ?? '';
+        return $this->response['params'][$token] ?? $default;
     }
 
     /**
      *
      * @return string
      */
-    public function getGroup(): string
+    public function group(): string
     {
         return $this->response['group'] ?? '';
+    }
+
+    /**
+     *
+     * @param string $token
+     * @return boolean
+     */
+    public function has(string $token): bool
+    {
+        return array_key_exists($token, $this->response['params']);
+    }
+
+    /**
+     *
+     * @return string[]
+     */
+    public function tokens(): array
+    {
+        return array_keys($this->response['params']);
     }
 }
