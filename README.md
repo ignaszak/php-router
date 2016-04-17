@@ -226,7 +226,7 @@ $attachment();
 $response->group();
 // Get matched params in array
 $response->all();
-// Get concrete param by token
+// Get param by token
 $response->get(string $token [, $default = null]);
 // Get tokens array
 $response->tokens();
