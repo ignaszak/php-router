@@ -109,29 +109,29 @@ $response = new Response($matcher->match($host));
 // Display response
 // Display matched params
 echo 'Routes:<pre>';
-print_r($response->getParams());
+print_r($response->all());
 echo '</pre>';
 
 // Get concrete param
-echo $response->getParam('token');
+echo $response->get('token');
 
 // Get route name
 echo 'Route name: ';
-echo $response->getName();
+echo $response->name();
 echo '<br />';
 
 // Get route group
 echo 'Route group: ';
-echo $response->getGroup();
+echo $response->group();
 echo '<br />';
 
 // Get route controller
 echo 'Controller: ';
-echo $response->getController();
+echo $response->controller();
 echo '<br />';
 
 // Get attachment
-$attachment = $response->getAttachment();
+$attachment = $response->attachment();
 $attachment();
 
 // Reverse Routing

@@ -216,18 +216,22 @@ $matcher = new Matcher($route);
 $response = new Response($matcher->match(new Host()));
 
 // Get route name
-$response->getName();
+$response->name();
 // Get route controller
-$response->getController();
+$response->controller();
 // Get attachment
-$attachment = $response->getAttachment();
+$attachment = $response->attachment();
 $attachment();
 // Get route group
-$response->getGroup();
+$response->group();
 // Get matched params in array
-$response->getParams();
-// Get concrete param
-$response->getParam('token');
+$response->all();
+// Get concrete param by token
+$response->get(string $token [, $default = null]);
+// Get tokens array
+$response->tokens();
+// Returns true if the token is defined
+$response->has(string $token);
 ```
 
 #### Reverse Routing
