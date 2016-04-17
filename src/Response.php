@@ -60,10 +60,10 @@ class Response
     /**
      *
      * @param string $token
-     * @param string $default
+     * @param mixed $default
      * @return string|mixed
      */
-    public function get(string $token, string $default = ''): string
+    public function get(string $token, $default = null): string
     {
         return $this->response['params'][$token] ?? $default;
     }
