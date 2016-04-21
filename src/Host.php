@@ -41,8 +41,9 @@ class Host
      */
     public function getBaseURL(): string
     {
+        $serverName = $_SERVER['SERVER_NAME'] ?? '';
         $url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') .
-            "://{$_SERVER['SERVER_NAME']}";
+            "://{$serverName}";
         return !empty($this->baseQuery) ? $url . $this->baseQuery : $url;
     }
 
@@ -52,12 +53,12 @@ class Host
      */
     public function getQuery(): string
     {
-        $requestURI = $_SERVER['REQUEST_URI'];
+        $requestURI = $_SERVER['REQUEST_URI'] ?? '';
         if (empty($this->baseQuery)) {
             return $requestURI;
         } else {
             return $requestURI != $this->baseQuery ?
-                substr(
+                (string)substr(
                     $requestURI,
                     strlen($this->baseQuery) - strlen($requestURI)
                 ) : '';
@@ -70,6 +71,6 @@ class Host
      */
     public function getHttpMethod(): string
     {
-        return $_SERVER['REQUEST_METHOD'];
+        return $_SERVER['REQUEST_METHOD'] ?? '';
     }
 }

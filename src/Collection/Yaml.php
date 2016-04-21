@@ -75,7 +75,7 @@ class Yaml implements IRoute
         foreach ($this->fileArray as $file) {
             $result = array_merge(
                 $result,
-                $this->parser->parse(file_get_contents($file))
+                $this->parser->parse(file_get_contents($file)) ?? []
             );
         }
         return $this->converter->convert($result);
