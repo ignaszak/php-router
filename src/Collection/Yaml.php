@@ -71,12 +71,16 @@ class Yaml implements IRoute
      */
     public function getRouteArray(): array
     {
-        $result = [];
+        $result = [
+            'routes' => [],
+            'tokens' => [],
+            'patterns' => []
+        ];
         foreach ($this->fileArray as $file) {
-            $result = array_merge(
-                $result,
-                $this->parser->parse(file_get_contents($file)) ?? []
-            );
+            $array = $this->parser->parse(file_get_contents($file)) ?? [];
+            $result['routes'] += ($array['routes'] ?? []);
+            $result['tokens'] += ($array['tokens'] ?? []);
+            $result['patterns'] += ($array['patterns'] ?? []);
         }
         return $this->converter->convert($result);
     }
