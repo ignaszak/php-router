@@ -65,7 +65,7 @@ $route->addTokens(['globalToken' => '([0-9]+)']);
 // Match routes
 $matcher = new Matcher($route);
 $response = new Response($matcher->match(new Host()));
-$response->getParams();
+$response->all();
 ```
 
 ### Create routes
