@@ -97,7 +97,7 @@ $matcher = new Matcher($route);
 
 // Start parsing
 // Matcher::match([Host $host [, string $baseQuery [, string HttpMethod]])
-$host = new Host('/~tomek/Eclipse/PHP/router');
+$host = new Host();
 $response = new Response($matcher->match($host));
 // Class Ignaszak\Router\Host([string $baseQuery])
 // provides current request and http method
