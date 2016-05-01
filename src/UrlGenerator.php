@@ -55,14 +55,16 @@ class UrlGenerator
         $search = [];
         $replace = [];
         foreach ($route['tokens'] as $token => $pattern) {
-            $value = (string)$replacement[$token];
-            if (! preg_match("/^{$pattern}$/", $value)) {
-                throw new RouterException(
-                    "Value '{$value}' don't match token {{$token}} `{$pattern}` in route '{$name}'"
-                );
+            if (array_key_exists($token, $replacement)) {
+                $value = (string) $replacement[$token];
+                if (! preg_match($pattern, $value)) {
+                    throw new RouterException(
+                        "Value '{$value}' don't match token {{$token}} `{$pattern}` in route '{$name}'"
+                    );
+                }
+                $search[] = "{{$token}}";
+                $replace[] = $value;
             }
-            $search[] = "{{$token}}";
-            $replace[] = $value;
         }
         $link = str_replace(
             ['\\', '?', '(', ')'],

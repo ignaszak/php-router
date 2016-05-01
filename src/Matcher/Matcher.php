@@ -50,6 +50,7 @@ class Matcher
         }
 
         foreach ($this->route->getRouteArray() as $name => $route) {
+            //echo $route['path'];exit;
             if (preg_match(
                 $route['path'],
                 $query,

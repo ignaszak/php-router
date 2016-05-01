@@ -86,6 +86,7 @@ class Converter
                         $route['tokens'][$token] ?? $tokenArray[$token]
                     );
                     $subpatterns[$token] = "(?P<{$token}>{$tokens[$token]})";
+                    $tokens[$token] = $this->preparePattern($tokens[$token]);
                 }
             }
 

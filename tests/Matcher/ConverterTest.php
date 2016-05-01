@@ -104,8 +104,8 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
                 'name' => [
                     'path' => '/^\/test\/(?P<token1>(\w+))\/(\d+)\/(?P<globaltoken>([\w-]+))$/',
                     'tokens' => [
-                        'token1' => '(\w+)',
-                        'globaltoken' => '([\w-]+)'
+                        'token1' => '/^(\w+)$/',
+                        'globaltoken' => '/^([\w-]+)$/'
                     ],
                     'route' => '/test/{token1}/@digit/{globaltoken}'
                 ]
@@ -180,8 +180,8 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
                 'name' => [
                     'path' => '/^\/(?P<token>test1)\/(?P<globalToken>test2)\/test3$/',
                     'tokens' => [
-                        'token' => 'test1',
-                        'globalToken' => 'test2'
+                        'token' => '/^test1$/',
+                        'globalToken' => '/^test2$/'
                     ],
                     'route' => '/{token}/{globalToken}/@pattern'
                 ]
