@@ -251,7 +251,7 @@ $response->has(string $token);
 ```
 
 #### Reverse Routing
-Url can be generated for any defined route with name.
+Url can be generated for any defined route with name by using ```UrlGenerator(IRoute $route [, Host $host])``` class.
 ```php
 use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Matcher\Matcher;
@@ -272,7 +272,7 @@ $url = new UrlGenerator($route, $host);
 // Example route: $route->get('user', '/user/{user})->tokens(['user' => '@alnum']);
 $url->url('user', ['user' => 'UserName']);
 ```
-```UrlGenerator::url(IRoute $route [, Host $host])``` method will return:
+```UrlGenerator::url(string $name [, array $replacement])``` method will return:
 * if ```Host``` class is used: ```http://servername/user/UserName```
 * if ```Host``` class is not defined: ```/user/UserName```
 
