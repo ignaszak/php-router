@@ -291,6 +291,8 @@ routes:
         group: groupName
         tokens:
             controller: '@custom'
+        defaults:
+            controller: HomePageController
     default:
         path: /@base
         controller: DefaultController
@@ -300,6 +302,9 @@ routes:
 
 tokens:
     action: '@alnum'
+
+defaults:
+    action: index
 
 patterns:
     custom: ([a-zA-Z]+)
