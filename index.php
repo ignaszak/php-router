@@ -36,6 +36,11 @@ $route->addTokens([
     'page' => '(\d+)'
 ]);
 
+// Define default values for global tokens
+$route->addDefaults([
+    'user' => 'Demo'
+]);
+
 // Add controller
 $route->add('user', '/user/{user}/')->controller('UserController');
 
@@ -138,5 +143,5 @@ $attachment();
 $url = new UrlGenerator($route, $host);
 echo 'Link: ';
 echo $url->url('user', [
-    'user' => 'UserName'
+   'user' => 'UserName'
 ]);

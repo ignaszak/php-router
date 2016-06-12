@@ -74,12 +74,14 @@ class Yaml implements IRoute
         $result = [
             'routes' => [],
             'tokens' => [],
+            'defaults' => [],
             'patterns' => []
         ];
         foreach ($this->fileArray as $file) {
             $array = $this->parser->parse(file_get_contents($file)) ?? [];
             $result['routes'] += ($array['routes'] ?? []);
             $result['tokens'] += ($array['tokens'] ?? []);
+            $result['defaults'] += ($array['defaults'] ?? []);
             $result['patterns'] += ($array['patterns'] ?? []);
         }
         return $this->converter->convert($result);

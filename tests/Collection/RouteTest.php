@@ -44,7 +44,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ]
             ],
-            $this->get('routeArray')
+            $this->get('routesArray')
         );
     }
 
@@ -68,7 +68,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ]
             ],
-            $this->get('routeArray')
+            $this->get('routesArray')
         );
     }
 
@@ -77,7 +77,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->get(null, '/pattern/subpattern');
         $this->assertEquals(
             'GET',
-            $this->get('routeArray')[0]['method']
+            $this->get('routesArray')[0]['method']
         );
     }
 
@@ -86,7 +86,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->post(null, '/pattern/subpattern');
         $this->assertEquals(
             'POST',
-            $this->get('routeArray')[0]['method']
+            $this->get('routesArray')[0]['method']
         );
     }
 
@@ -111,10 +111,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ],
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routesArray')
         );
     }
 
@@ -138,10 +135,32 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ],
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routesArray')
+        );
+    }
+
+    public function testDefaultsTokensValues()
+    {
+        $this->route->add('anyName', '/anyPattern')->tokens([
+            'token1' => '\d+'
+        ])->defaults([
+            'token1' => 1
+        ]);
+        $this->assertEquals(
+            [
+                'anyName' => [
+                    'path' => '/anyPattern',
+                    'tokens' => [
+                        'token1' => '\d+'
+                    ],
+                    'defaults' => [
+                        'token1' => 1
+                    ],
+                    'group' => '',
+                    'method' => ''
+                ]
+            ],
+            $this->get('routesArray')
         );
     }
 
@@ -160,10 +179,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ],
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routesArray')
         );
     }
 
@@ -183,10 +199,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ],
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routesArray')
         );
     }
 
@@ -208,10 +221,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ]
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routesArray')
         );
     }
 
@@ -234,10 +244,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
                     'method' => ''
                 ]
             ],
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'routeArray'
-            )
+            $this->get('routesArray')
         );
     }
 
@@ -251,10 +258,21 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->route->addTokens($tokens);
         $this->assertEquals(
             $tokens,
-            \PHPUnit_Framework_Assert::readAttribute(
-                $this->route,
-                'tokenArray'
-            )
+            $this->get('tokensArray')
+        );
+    }
+
+    public function testAddDefaults()
+    {
+        $defaults = [
+            'tokenName1' => 1,
+            'tokenName2' => 2,
+            'tokenName3' => 3
+        ];
+        $this->route->addDefaults($defaults);
+        $this->assertEquals(
+            $defaults,
+            $this->get('defaultsArray')
         );
     }
 
@@ -266,14 +284,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
             'name3' => 'testPattern3',
         ];
         $this->route->addPatterns($patterns);
-        $patternArray = \PHPUnit_Framework_Assert::readAttribute(
-            $this->route,
-            'patternArray'
-        );
         $this->assertTrue(
-            in_array('testPattern1', $patternArray) &&
-            in_array('testPattern2', $patternArray) &&
-            in_array('testPattern3', $patternArray)
+            in_array('testPattern1', $this->get('patternsArray')) &&
+            in_array('testPattern2', $this->get('patternsArray')) &&
+            in_array('testPattern3', $this->get('patternsArray'))
         );
     }
 

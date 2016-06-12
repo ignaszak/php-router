@@ -69,10 +69,12 @@ class Converter
         $patternArray = $this->getPatterns();
         $tokenArray = $this->routeArray['tokens'] ?? [];
         $routeArray = $this->routeArray['routes'] ?? [];
+        $defaultsArray = $this->routeArray['defaults'] ?? [];
 
         foreach ($routeArray as $name => $route) {
             $patternKey = array_keys($patternArray);
             $tokens = [];
+            $defaults = [];
             $subpatterns = [];
             $search = [];
             $m = [];
@@ -87,10 +89,16 @@ class Converter
                     );
                     $subpatterns[$token] = "(?P<{$token}>{$tokens[$token]})";
                     $tokens[$token] = $this->preparePattern($tokens[$token]);
+                    $defaultValue = $route['defaults'][$token] ??
+                        $defaultsArray[$token] ?? [];
+                    if (! empty($defaultValue)) {
+                        $defaults[$token] = $defaultValue;
+                    }
                 }
             }
 
             $route['tokens'] = $tokens;
+            $route['defaults'] = $defaults;
             $route['route'] = $route['path'];
             $route['path'] = str_replace(
                 $search,

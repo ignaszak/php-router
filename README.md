@@ -57,6 +57,7 @@ $route->add('name', '/test/{test}/{id}/{globlToken}', 'GET|POST')
 $route->get('get', '/get/test')->controller('AnyController');
 $route->post('post', '/post/{name}')
     ->tokens(['name' => '([a-z]+)'])
+    ->defaults(['name' => 'demo'])
     ->attach(function ($name) {
         echo $name;
     });
@@ -94,6 +95,15 @@ $route->add(null, '/test/{test}/{name}/{id}')->tokens([
     'test' => '(\w+)',
     'name' => '(\w+)',
     'id' => '(\d+)'
+]);
+```
+
+#### Define default values
+```php
+$route->add(null, '/test/{test}/{name}/{id}')->tokens([
+    'name' => '(\w+)'
+])->defaults(
+    'name' => 'test'
 ]);
 ```
 
@@ -161,6 +171,12 @@ $route->addTokens([
     'slug' => '(\w+)',
     'user' => '(\w+)',
     'page' => '(\d+)'
+]);
+// Define default values for global tokens
+$route->addDefaults([
+    'slug' => 'test',
+    'user' => 'demo',
+    'page' => 1
 ]);
 
 // Create new patterns

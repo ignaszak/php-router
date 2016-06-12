@@ -28,21 +28,28 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      *
      * @var array
      */
-    private $routeArray = [];
+    private $routesArray = [];
 
     /**
      * Global tokens
      *
      * @var string[]
      */
-    private $tokenArray = [];
+    private $tokensArray = [];
+
+    /**
+     * Global tokens default values
+     *
+     * @var unknown
+     */
+    private $defaultsArray = [];
 
     /**
      * Custom regex pattern
      *
      * @var string[]
      */
-    private $patternArray = [];
+    private $patternsArray = [];
 
     /**
      *
@@ -78,9 +85,10 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     public function getRouteArray(): array
     {
         return $this->converter->convert([
-            'routes' => $this->routeArray,
-            'tokens' => $this->tokenArray,
-            'patterns' => $this->patternArray,
+            'routes' => $this->routesArray,
+            'tokens' => $this->tokensArray,
+            'defaults' => $this->defaultsArray,
+            'patterns' => $this->patternsArray,
             'checksum' => $this->getChecksum()
         ]);
     }
@@ -96,19 +104,19 @@ class Route implements IRouteStart, IRouteAdd, IRoute
         string $method = ''
     ): IRouteAdd {
         if (is_null($name)) {
-            $this->routeArray[] = ['path' => $pattern];
+            $this->routesArray[] = ['path' => $pattern];
             // Last array key
-            $name = key(array_slice($this->routeArray, -1, 1, true));
+            $name = key(array_slice($this->routesArray, -1, 1, true));
         } else {
-            if (array_key_exists($name, $this->routeArray)) {
+            if (array_key_exists($name, $this->routesArray)) {
                 throw new RouterException(
                     "Route name '{$name}' alredy exists"
                 );
             }
-            $this->routeArray[$name] = ['path' => $pattern];
+            $this->routesArray[$name] = ['path' => $pattern];
         }
-        $this->routeArray[$name]['group'] = $this->group;
-        $this->routeArray[$name]['method'] = $method;
+        $this->routesArray[$name]['group'] = $this->group;
+        $this->routesArray[$name]['method'] = $method;
         $this->lastName = $name;
 
         return $this;
@@ -145,7 +153,7 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      */
     public function controller(string $controller): IRouteAdd
     {
-        $this->routeArray[$this->lastName]['controller'] = $controller;
+        $this->routesArray[$this->lastName]['controller'] = $controller;
 
         return $this;
     }
@@ -157,10 +165,21 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      */
     public function tokens(array $tokens): IRouteAdd
     {
-        $this->routeArray[$this->lastName]['tokens'] = array_merge(
-            $this->routeArray[$this->lastName]['tokens'] ?? [],
-            $tokens
-        );
+        $this->routesArray[$this->lastName]['tokens'] =
+            $this->routesArray[$this->lastName]['tokens'] ?? [] + $tokens;
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Collection\IRouteAdd::defaults($defaults)
+     */
+    public function defaults(array $defaults): IRouteAdd
+    {
+        $this->routesArray[$this->lastName]['defaults'] =
+            $this->routesArray[$this->lastName]['defaults'] ?? [] + $defaults;
 
         return $this;
     }
@@ -172,8 +191,8 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      */
     public function attach(\Closure $closure, bool $call = true): IRouteAdd
     {
-        $this->routeArray[$this->lastName]['callAttachment'] = $call;
-        $this->routeArray[$this->lastName]['attachment'] = $closure;
+        $this->routesArray[$this->lastName]['callAttachment'] = $call;
+        $this->routesArray[$this->lastName]['attachment'] = $closure;
 
         return $this;
     }
@@ -197,10 +216,19 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      */
     public function addTokens(array $tokens): IRouteStart
     {
-        $this->tokenArray = array_merge(
-            $this->tokenArray,
-            $tokens
-        );
+        $this->tokensArray += $tokens;
+
+        return $this;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \Ignaszak\Router\Collection\IRouteStart::addDefaults($defaults)
+     */
+    public function addDefaults(array $defaults): IRouteStart
+    {
+        $this->defaultsArray += $defaults;
 
         return $this;
     }
@@ -212,10 +240,7 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      */
     public function addPatterns(array $patterns): IRouteStart
     {
-        $this->patternArray = array_merge(
-            $this->patternArray,
-            $patterns
-        );
+        $this->patternsArray += $patterns;
 
         return $this;
     }
@@ -228,9 +253,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     public function getChecksum(): string
     {
         return md5(json_encode([
-            'routes' => $this->routeArray,
-            'tokens' => $this->tokenArray,
-            'patterns' => $this->patternArray
+            'routes' => $this->routesArray,
+            'tokens' => $this->tokensArray,
+            'patterns' => $this->patternsArray
         ]));
     }
 }

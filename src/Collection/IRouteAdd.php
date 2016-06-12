@@ -30,6 +30,13 @@ interface IRouteAdd
 
     /**
      *
+     * @param string[] $defaults
+     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     */
+    public function defaults(array $defaults): IRouteAdd;
+
+    /**
+     *
      * @param \Closure $closure
      * @param bool $call
      * @return \Ignaszak\Router\Interfaces\IRouteAdd

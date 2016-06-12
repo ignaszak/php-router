@@ -84,6 +84,58 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testUrlWithDefaultTokenValue()
+    {
+        $convertedRouteArray = [
+            'name' => [
+                'route' => '/test/{alias}.{format}',
+                'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
+                'tokens' => [
+                    'alias' => '(\w+)',
+                    'format' => '(html|xml|json)'
+                ],
+                'defaults' => [
+                    'alias' => 'anyAlias'
+                ]
+            ]
+        ];
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute($convertedRouteArray)
+        );
+        $this->assertEquals(
+            '/test/anyAlias.html',
+            $this->urlGenerator->url('name', [
+                'format' => 'html'
+            ])
+        );
+    }
+
+    /**
+     * @expectedException \Ignaszak\Router\RouterException
+     */
+    public function testUrlWithIncorrectDefaultTokenValue()
+    {
+        $convertedRouteArray = [
+            'name' => [
+                'route' => '/test/{alias}.{format}',
+                'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
+                'tokens' => [
+                    'alias' => '(\d+)',
+                    'format' => '(html|xml|json)'
+                ],
+                'defaults' => [
+                    'alias' => 'anyAlias'
+                ]
+            ]
+        ];
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute($convertedRouteArray)
+        );
+        $this->urlGenerator->url('name', [
+                'format' => 'html'
+        ]);
+    }
+
     /**
      * @expectedException \Ignaszak\Router\RouterException
      */
@@ -105,6 +157,29 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->urlGenerator->url('name', [
                 'alias' => 'ANYALIAS',
                 'format' => 'doc'
+        ]);
+    }
+
+    /**
+     * @expectedException \Ignaszak\Router\RouterException
+     */
+    public function testUrlWithEmptyReplacement()
+    {
+        $convertedRouteArray = [
+            'name' => [
+                'route' => '/test/{alias}.{format}',
+                'path' => '/^\/test\/(?P<alias>(\w+))\.(?P<format>(html|xml|json))$/',
+                'tokens' => [
+                    'alias' => '(\w+)',
+                    'format' => '(html|xml|json)'
+                ]
+            ]
+        ];
+        $this->urlGenerator = new UrlGenerator(
+            $this->mockRoute($convertedRouteArray)
+        );
+        $this->urlGenerator->url('name', [
+            'alias' => 'anyalias'
         ]);
     }
 

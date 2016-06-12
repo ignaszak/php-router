@@ -59,6 +59,13 @@ interface IRouteStart
 
     /**
      *
+     * @param string[] $defaults
+     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     */
+    public function addDefaults(array $defaults): IRouteStart;
+
+    /**
+     *
      * @param string[] $patterns
      * @return \Ignaszak\Router\Interfaces\IRouteStart
      */

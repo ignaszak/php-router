@@ -82,12 +82,19 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
                     'path' => '/test/{token1}/@digit/{globaltoken}',
                     'tokens' => [
                         'token1' => '(\w+)'
+                    ],
+                    'defaults' => [
+                        'token1' => 'local'
                     ]
                 ]
             ],
             'tokens' => [
                 'token1' => '([a-z]+)',
                 'globaltoken' => '@alnum'
+            ],
+            'defaults' => [
+                'token1' => 'global',
+                'globaltoken' => 1
             ]
         ];
         MockTest::inject(
@@ -106,6 +113,10 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
                     'tokens' => [
                         'token1' => '/^(\w+)$/',
                         'globaltoken' => '/^([\w-]+)$/'
+                    ],
+                    'defaults' => [
+                        'token1' => 'local',
+                        'globaltoken' => 1
                     ],
                     'route' => '/test/{token1}/@digit/{globaltoken}'
                 ]
@@ -183,6 +194,7 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
                         'token' => '/^test1$/',
                         'globalToken' => '/^test2$/'
                     ],
+                    'defaults' => [],
                     'route' => '/{token}/{globalToken}/@pattern'
                 ]
             ],

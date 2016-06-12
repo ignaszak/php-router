@@ -46,7 +46,7 @@ class UrlGenerator
      * @throws RouterException
      * @return string
      */
-    public function url(string $name, array $replacement): string
+    public function url(string $name, array $replacement = []): string
     {
         if (! array_key_exists($name, $this->convertedRouteArray)) {
             throw new RouterException("Route '{$name}' does not exist");
@@ -55,16 +55,19 @@ class UrlGenerator
         $search = [];
         $replace = [];
         foreach ($route['tokens'] as $token => $pattern) {
-            if (array_key_exists($token, $replacement)) {
-                $value = (string) $replacement[$token];
-                if (! preg_match($pattern, $value)) {
+                $value = $replacement[$token] ??
+                    $route['defaults'][$token] ?? null;
+                if (is_null($value)) {
+                    throw new RouterException(
+                        "Missed token {{$token}} `{$pattern}` in route '{$name}'"
+                    );
+                } elseif (! preg_match($pattern, (string) $value)) {
                     throw new RouterException(
                         "Value '{$value}' don't match token {{$token}} `{$pattern}` in route '{$name}'"
                     );
                 }
                 $search[] = "{{$token}}";
                 $replace[] = $value;
-            }
         }
         $link = str_replace(
             ['\\', '?', '(', ')'],
