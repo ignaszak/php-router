@@ -9,3 +9,4 @@ sonar-project.properties
 .project
 .settings
 .buildpath
+.idea

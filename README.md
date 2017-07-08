@@ -6,7 +6,7 @@ Simple object oriented PHP Router
 
 ## Installing
 
-The package is avilable via [Composer/Packagist](https://packagist.org/packages/ignaszak/router), so just add following lines to your composer.json file:
+The package is available via [Composer/Packagist](https://packagist.org/packages/ignaszak/router), so just add following lines to your composer.json file:
 
 ```json
 "require" : {
@@ -102,7 +102,7 @@ $route->add(null, '/test/{test}/{name}/{id}')->tokens([
 ```php
 $route->add(null, '/test/{test}/{name}/{id}')->tokens([
     'name' => '(\w+)'
-])->defaults(
+])->defaults([
     'name' => 'test'
 ]);
 ```
