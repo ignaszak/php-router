@@ -41,5 +41,5 @@ interface IRouteAdd
      * @param bool $call
      * @return \Ignaszak\Router\Interfaces\IRouteAdd
      */
-    public function attach(\Closure $closure, bool $call = false): IRouteAdd;
+    public function attach(\Closure $closure): IRouteAdd;
 }

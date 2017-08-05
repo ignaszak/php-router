@@ -1,7 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 namespace Ignaszak\Router;
 
-class Response
+/**
+ * Class Response
+ * @package Ignaszak\Router
+ */
+class Response implements IResponse
 {
 
     /**
@@ -35,17 +42,6 @@ class Response
     public function controller(): string
     {
         return $this->response['controller'] ?? '';
-    }
-
-    /**
-     *
-     * @return \Closure
-     */
-    public function attachment(): \Closure
-    {
-        return @$this->response['attachment'] instanceof \Closure ?
-            $this->response['attachment'] : function () {
-            };
     }
 
     /**

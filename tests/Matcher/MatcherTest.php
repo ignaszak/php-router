@@ -48,7 +48,6 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             [
                 'name' => 'name',
                 'controller' => '',
-                'callAttachment' => '',
                 'attachment' => '',
                 'params' => [
                     'token' => 'anyPattern'
@@ -82,7 +81,6 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $request = [
             'name' => 'anyRouteName',
             'controller' => '',
-            'callAttachment' => true,
             'attachment' => function ($name) {
                 define('NAME', $name);
             },

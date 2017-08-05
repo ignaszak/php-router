@@ -122,18 +122,17 @@ $route->add(null, '/test/{controller}/{action}')
 
 #### Add attachment
 ```php
+
+use Ignaszak\Router\IResponse;
+
 $route->add('attach', '/attach/{name}/(\w+)/{id}/')
     ->tokens([
         'name' => '(\w+)',
         'id' => '(\d+)'
-    ])->attach(function ($name, $string, $id) {
-        echo "{$name}, {$string}, {$id}";
+    ])->attach(function (IResponse $response) {
+        // IResponse interface - described in 'Get response' section
+        print_r($response->all());
     });
-
-// Disable auto calling
-$route->add(null, '/attach/test/')->attach(function () {
-    /* Do something */
-}, false);
 ```
 
 #### Group routes
@@ -235,9 +234,6 @@ $response = new Response($matcher->match(new Host()));
 $response->name();
 // Get route controller
 $response->controller();
-// Get attachment
-$attachment = $response->attachment();
-$attachment();
 // Get route group
 $response->group();
 // Get matched params in array

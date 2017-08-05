@@ -13,7 +13,6 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $response = [
             'name' => 'name',
             'controller' => 'AnyController',
-            'callAttachment' => '',
             'attachment' => '',
             'params' => [
                 'token1' => 'value1',

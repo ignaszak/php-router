@@ -166,14 +166,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAttach()
     {
-        $anyAttachment = function () {
-        };
+        $anyAttachment = function () {};
         $this->route->add('anyName', '/anyPattern')->attach($anyAttachment);
         $this->assertEquals(
             [
                 'anyName' => [
                     'path' => '/anyPattern',
-                    'callAttachment' => true,
                     'attachment' => $anyAttachment,
                     'group' => '',
                     'method' => ''
@@ -185,15 +183,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testCallableAttach()
     {
-        $anyAttachment = function () {
-        };
+        $anyAttachment = function () {};
         $this->route->add('anyName', '/anyPattern')
-            ->attach($anyAttachment, false);
+            ->attach($anyAttachment);
         $this->assertEquals(
             [
                 'anyName' => [
                     'path' => '/anyPattern',
-                    'callAttachment' => false,
                     'attachment' => $anyAttachment,
                     'group' => '',
                     'method' => ''

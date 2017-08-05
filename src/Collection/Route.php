@@ -189,9 +189,8 @@ class Route implements IRouteStart, IRouteAdd, IRoute
      * {@inheritDoc}
      * @see \Ignaszak\Router\Interfaces\IRouteAdd::attach($closure)
      */
-    public function attach(\Closure $closure, bool $call = true): IRouteAdd
+    public function attach(\Closure $closure): IRouteAdd
     {
-        $this->routesArray[$this->lastName]['callAttachment'] = $call;
         $this->routesArray[$this->lastName]['attachment'] = $closure;
 
         return $this;

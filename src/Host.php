@@ -17,7 +17,7 @@ namespace Ignaszak\Router;
  * @author Tomasz Ignaszak <tomek.ignaszak@gmail.com>
  *
  */
-class Host
+class Host implements IHost
 {
 
     /**

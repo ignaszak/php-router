@@ -11,8 +11,9 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Matcher;
 
-use Ignaszak\Router\Host;
 use Ignaszak\Router\Collection\IRoute;
+use Ignaszak\Router\IHost;
+use Ignaszak\Router\Response;
 
 class Matcher
 {
@@ -33,13 +34,14 @@ class Matcher
     }
 
     /**
-     *
-     * @param Host $host
+     * @param IHost|null $host
      * @param string $query
      * @param string $httpMethod
+     *
+     * @return array
      */
     public function match(
-        Host $host = null,
+        IHost $host = null,
         string $query = '',
         string $httpMethod = ''
     ): array {
@@ -50,7 +52,6 @@ class Matcher
         }
 
         foreach ($this->route->getRouteArray() as $name => $route) {
-            //echo $route['path'];exit;
             if (preg_match(
                 $route['path'],
                 $query,
@@ -66,7 +67,6 @@ class Matcher
                         $controller,
                         $params
                     ),
-                    'callAttachment' => $route['callAttachment'] ?? false,
                     'attachment' => $route['attachment'] ?? '',
                     'params' => $params,
                     'group' => $route['group'] ?? ''
@@ -132,8 +132,7 @@ class Matcher
      */
     private function callAttachment(array $request)
     {
-        if ($request['callAttachment']) {
-            call_user_func_array($request['attachment'], $request['params']);
-        }
+        if ($request['attachment'] instanceof \Closure)
+            $request['attachment'](new Response($request));
     }
 }
