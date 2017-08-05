@@ -88,7 +88,7 @@ class YamlTest extends \PHPUnit_Framework_TestCase
     {
         $this->yaml->add(MockTest::mockFile('route.yml'));
         $this->assertEquals(
-            md5(time()),
+            md5((string) time()),
             $this->yaml->getChecksum()
         );
     }
