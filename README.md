@@ -9,8 +9,10 @@ Simple object oriented PHP Router
 The package is available via [Composer/Packagist](https://packagist.org/packages/ignaszak/router), so just add following lines to your composer.json file:
 
 ```json
-"require" : {
-    "ignaszak/router" : "*"
+{
+    "require" : {
+        "ignaszak/router" : "*"
+    }
 }
 ```
 

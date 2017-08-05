@@ -15,16 +15,20 @@ use Ignaszak\Router\Collection\IRoute;
 use Ignaszak\Router\IHost;
 use Ignaszak\Router\Response;
 
+/**
+ * Class Matcher
+ * @package Ignaszak\Router\Matcher
+ */
 class Matcher
 {
 
     /**
-     *
      * @var IRoute
      */
     private $route = null;
 
     /**
+     * Matcher constructor.
      *
      * @param IRoute $route
      */
@@ -44,19 +48,20 @@ class Matcher
         IHost $host = null,
         string $query = '',
         string $httpMethod = ''
-    ): array {
+    ): array
+    {
         $m = [];
-        if (! is_null($host)) {
+        if (!is_null($host)) {
             $query = $host->getQuery();
             $httpMethod = $host->getHttpMethod();
         }
 
         foreach ($this->route->getRouteArray() as $name => $route) {
             if (preg_match(
-                $route['path'],
-                $query,
-                $m
-            ) &&
+                    $route['path'],
+                    $query,
+                    $m
+                ) &&
                 $this->httpMethod($route['method'] ?? '', $httpMethod)
             ) {
                 $controller = $route['controller'] ?? '';
@@ -72,35 +77,39 @@ class Matcher
                     'group' => $route['group'] ?? ''
                 ];
                 $this->callAttachment($request);
+
                 return $request;
             }
         }
+
         return [];
     }
 
     /**
-     *
      * @param string $routeMethod
      * @param string $currentMethod
-     * @return boolean
+     *
+     * @return bool
      */
     private function httpMethod(
         string $routeMethod,
         string $currentMethod
-    ): bool {
+    ): bool
+    {
         if (empty($routeMethod) ||
             strpos($routeMethod, $currentMethod) !== false
         ) {
             return true;
         }
+
         return false;
     }
 
     /**
+     * @param array $matches
+     * @param array $tokens
      *
-     * @param string[] $matches
-     * @param string[] $tokens
-     * @return string[]
+     * @return array
      */
     private function createParamsArray(array $matches, array $tokens): array
     {
@@ -108,31 +117,36 @@ class Matcher
         foreach ($tokens as $token => $value) {
             $return[$token] = $matches[$token] ?? '';
         }
+
         return $return;
     }
 
     /**
-     *
      * @param string $controller
-     * @param string[] $routes
+     * @param array $routes
+     *
      * @return string
      */
-    private function matchController(string $controller, array $routes): string
+    private function matchController(
+        string $controller,
+        array $routes
+    ): string
     {
         $pattern = [];
         foreach ($routes as $key => $value) {
             $pattern[] = "{{$key}}";
         }
+
         return str_replace($pattern, $routes, $controller);
     }
 
     /**
-     *
      * @param array $request
      */
     private function callAttachment(array $request)
     {
-        if ($request['attachment'] instanceof \Closure)
+        if ($request['attachment'] instanceof \Closure) {
             $request['attachment'](new Response($request));
+        }
     }
 }

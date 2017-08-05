@@ -1,5 +1,12 @@
 <?php
-
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
 declare(strict_types=1);
 
 namespace Ignaszak\Router;
@@ -12,12 +19,12 @@ class Response implements IResponse
 {
 
     /**
-     *
      * @var array
      */
     private $response = [];
 
     /**
+     * Response constructor.
      *
      * @param array $response
      */
@@ -27,7 +34,6 @@ class Response implements IResponse
     }
 
     /**
-     *
      * @return string
      */
     public function name(): string
@@ -36,7 +42,6 @@ class Response implements IResponse
     }
 
     /**
-     *
      * @return string
      */
     public function controller(): string
@@ -45,8 +50,7 @@ class Response implements IResponse
     }
 
     /**
-     *
-     * @return string[]
+     * @return array
      */
     public function all(): array
     {
@@ -54,10 +58,10 @@ class Response implements IResponse
     }
 
     /**
-     *
      * @param string $token
-     * @param mixed $default
-     * @return mixed
+     * @param null $default
+     *
+     * @return null
      */
     public function get(string $token, $default = null)
     {
@@ -65,7 +69,6 @@ class Response implements IResponse
     }
 
     /**
-     *
      * @return string
      */
     public function group(): string
@@ -74,9 +77,9 @@ class Response implements IResponse
     }
 
     /**
-     *
      * @param string $token
-     * @return boolean
+     *
+     * @return bool
      */
     public function has(string $token): bool
     {
@@ -84,8 +87,7 @@ class Response implements IResponse
     }
 
     /**
-     *
-     * @return string[]
+     * @return array
      */
     public function tokens(): array
     {

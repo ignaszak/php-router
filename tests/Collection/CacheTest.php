@@ -1,9 +1,23 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
+declare(strict_types=1);
+
 namespace Test\Collection;
 
 use Ignaszak\Router\Collection\Cache;
 use Test\Mock\MockTest;
 
+/**
+ * Class CacheTest
+ * @package Test\Collection
+ */
 class CacheTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -174,6 +188,7 @@ EOT;
             ->getMock();
         $stub->method('getChecksum')->willReturn($checksum);
         $stub->method('getRouteArray')->willReturn($route);
+
         return $stub;
     }
 }

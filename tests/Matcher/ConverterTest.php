@@ -1,10 +1,23 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
+declare(strict_types=1);
+
 namespace Test\Matcher;
 
 use Ignaszak\Router\Matcher\Converter;
-use Ignaszak\Router\Matcher\Matcher;
 use Test\Mock\MockTest;
 
+/**
+ * Class ConverterTest
+ * @package Test\Matcher
+ */
 class ConverterTest extends \PHPUnit_Framework_TestCase
 {
 

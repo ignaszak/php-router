@@ -13,22 +13,25 @@ namespace Ignaszak\Router\Collection;
 
 use Ignaszak\Router\RouterException;
 
+/**
+ * Class Cache
+ * @package Ignaszak\Router\Collection
+ */
 class Cache implements IRoute
 {
 
     /**
-     *
      * @var IRoute
      */
     private $route = null;
 
     /**
-     *
      * @var string
      */
     private $tmpDir = __DIR__;
 
     /**
+     * Cache constructor.
      *
      * @param IRoute $route
      */
@@ -38,9 +41,9 @@ class Cache implements IRoute
     }
 
     /**
-     *
      * @param string $name
      * @param string $tmpDir
+     *
      * @throws RouterException
      */
     public function __set(string $name, string $tmpDir)
@@ -53,9 +56,7 @@ class Cache implements IRoute
     }
 
     /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Collection\IRoute::getChecksum()
+     * @return string
      */
     public function getChecksum(): string
     {
@@ -63,9 +64,7 @@ class Cache implements IRoute
     }
 
     /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Collection\IRoute::getRouteArray()
+     * @return array
      */
     public function getRouteArray(): array
     {
@@ -74,6 +73,7 @@ class Cache implements IRoute
         if (empty($tmpRoute)) {
             $routeArray = $this->route->getRouteArray();
             $this->saveTmpRoute($file, $routeArray);
+
             return $routeArray;
         } else {
             return $tmpRoute;
@@ -81,13 +81,13 @@ class Cache implements IRoute
     }
 
     /**
-     *
      * @param string $file
+     *
      * @return array
      */
     private function loadTmpRoute(string $file): array
     {
-        if (! is_file($file) || ! is_readable($file)) {
+        if (!is_file($file) || !is_readable($file)) {
             return [];
         } else {
             $tmpRoute = require_once $file;
@@ -100,8 +100,9 @@ class Cache implements IRoute
     }
 
     /**
-     *
      * @param string $file
+     * @param array $routes
+     *
      * @throws RouterException
      */
     private function saveTmpRoute(string $file, array $routes)
@@ -109,7 +110,7 @@ class Cache implements IRoute
         $data = "<?php\n\nreturn [\n'checksum' => '" .
             $this->route->getChecksum() .
             "',\n'routes' => " . var_export($routes, true) . "\n];\n\n";
-        if (! @file_put_contents($file, $data)) {
+        if (!@file_put_contents($file, $data)) {
             throw new RouterException("Unable to save {$file}");
         }
     }

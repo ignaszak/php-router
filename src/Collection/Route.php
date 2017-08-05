@@ -14,11 +14,14 @@ namespace Ignaszak\Router\Collection;
 use Ignaszak\Router\RouterException;
 use Ignaszak\Router\Matcher\Converter;
 
+/**
+ * Class Route
+ * @package Ignaszak\Router\Collection
+ */
 class Route implements IRouteStart, IRouteAdd, IRoute
 {
 
     /**
-     *
      * @var Converter
      */
     private $converter = null;
@@ -40,7 +43,7 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     /**
      * Global tokens default values
      *
-     * @var unknown
+     * @var array
      */
     private $defaultsArray = [];
 
@@ -52,24 +55,24 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     private $patternsArray = [];
 
     /**
-     *
      * @var string
      */
     private $lastName = '';
 
     /**
-     *
      * @var string
      */
     private $group = '';
 
+    /**
+     * Route constructor.
+     */
     private function __construct()
     {
         $this->converter = new Converter();
     }
 
     /**
-     *
      * @return IRouteStart
      */
     public static function start(): IRouteStart
@@ -78,9 +81,7 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRoute::getRouteArray()
+     * @return array
      */
     public function getRouteArray(): array
     {
@@ -94,15 +95,19 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param string|null $name
+     * @param string $pattern
+     * @param string $method
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::add($name, $pattern)
+     * @return IRouteAdd
+     * @throws RouterException
      */
     public function add(
         string $name = null,
         string $pattern,
         string $method = ''
-    ): IRouteAdd {
+    ): IRouteAdd
+    {
         if (is_null($name)) {
             $this->routesArray[] = ['path' => $pattern];
             // Last array key
@@ -123,9 +128,10 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param string|null $name
+     * @param string $pattern
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::get($name, $pattern)
+     * @return IRouteAdd
      */
     public function get(string $name = null, string $pattern): IRouteAdd
     {
@@ -135,9 +141,10 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param string|null $name
+     * @param string $pattern
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::post($name, $pattern)
+     * @return IRouteAdd
      */
     public function post(string $name = null, string $pattern): IRouteAdd
     {
@@ -147,9 +154,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param string $controller
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteAdd::controller($controller)
+     * @return IRouteAdd
      */
     public function controller(string $controller): IRouteAdd
     {
@@ -159,9 +166,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param array $tokens
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteAdd::tokens($tokens)
+     * @return IRouteAdd
      */
     public function tokens(array $tokens): IRouteAdd
     {
@@ -172,9 +179,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param array $defaults
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Collection\IRouteAdd::defaults($defaults)
+     * @return IRouteAdd
      */
     public function defaults(array $defaults): IRouteAdd
     {
@@ -185,9 +192,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param \Closure $closure
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteAdd::attach($closure)
+     * @return IRouteAdd
      */
     public function attach(\Closure $closure): IRouteAdd
     {
@@ -197,9 +204,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param string $name
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::group($name)
+     * @return IRouteStart
      */
     public function group(string $name = ''): IRouteStart
     {
@@ -209,9 +216,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param array $tokens
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::addTokens($tokens)
+     * @return IRouteStart
      */
     public function addTokens(array $tokens): IRouteStart
     {
@@ -221,9 +228,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param array $defaults
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Collection\IRouteStart::addDefaults($defaults)
+     * @return IRouteStart
      */
     public function addDefaults(array $defaults): IRouteStart
     {
@@ -233,9 +240,9 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
+     * @param array $patterns
      *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRouteStart::addPatterns($patterns)
+     * @return IRouteStart
      */
     public function addPatterns(array $patterns): IRouteStart
     {
@@ -245,9 +252,7 @@ class Route implements IRouteStart, IRouteAdd, IRoute
     }
 
     /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRoute::getChecksum()
+     * @return string
      */
     public function getChecksum(): string
     {

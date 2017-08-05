@@ -13,37 +13,38 @@ namespace Ignaszak\Router\Matcher;
 
 use Ignaszak\Router\RouterException;
 
+/**
+ * Class Converter
+ * @package Ignaszak\Router\Matcher
+ */
 class Converter
 {
 
     /**
-     *
      * @var array
      */
     private $routeArray = [];
 
     /**
-     *
      * @var string[]
      */
     private $patternArray = [
-        '@base'     => '',
+        '@base' => '',
         '@notfound' => '.+',
-        '@dot'      => '\.',
-        '@digit'    => '(\d+)',
-        '@alpha'    => '([A-Za-z_-]+)',
-        '@alnum'    => '([\w-]+)'
+        '@dot' => '\.',
+        '@digit' => '(\d+)',
+        '@alpha' => '([A-Za-z_-]+)',
+        '@alnum' => '([\w-]+)'
     ];
 
     /**
-     *
      * @var array
      */
     private $convertedRouteArray = [];
 
     /**
-     *
      * @param array $routeArray
+     *
      * @return array
      */
     public function convert(array $routeArray): array
@@ -51,6 +52,7 @@ class Converter
         $this->routeArray = $routeArray;
         $this->transformToRegex();
         $this->sort();
+
         return $this->convertedRouteArray;
     }
 
@@ -91,7 +93,7 @@ class Converter
                     $tokens[$token] = $this->preparePattern($tokens[$token]);
                     $defaultValue = $route['defaults'][$token] ??
                         $defaultsArray[$token] ?? [];
-                    if (! empty($defaultValue)) {
+                    if (!empty($defaultValue)) {
                         $defaults[$token] = $defaultValue;
                     }
                 }
@@ -116,10 +118,11 @@ class Converter
     }
 
     /**
-     *
      * @param string $route
+     * @param string $name
+     *
+     * @return bool
      * @throws RouterException
-     * @return boolean
      */
     private function validPattern(string $route, string $name = ''): bool
     {
@@ -140,8 +143,8 @@ class Converter
     }
 
     /**
-     *
      * @param string $pattern
+     *
      * @return string
      */
     private function preparePattern(string $pattern): string
@@ -150,8 +153,7 @@ class Converter
     }
 
     /**
-     *
-     * @return string[]
+     * @return array
      */
     private function getPatterns(): array
     {
@@ -160,6 +162,7 @@ class Converter
         foreach ($patternArray as $key => $value) {
             $result["@{$key}"] = $value;
         }
+
         return array_merge($this->patternArray, $result);
     }
 }

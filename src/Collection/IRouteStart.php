@@ -11,15 +11,19 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Collection;
 
+/**
+ * Interface IRouteStart
+ * @package Ignaszak\Router\Collection
+ */
 interface IRouteStart
 {
 
     /**
-     *
-     * @param string $name
+     * @param string|null $name
      * @param string $pattern
-     * @throws Ignaszak\Router\RouterException
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     * @param string $method
+     *
+     * @return IRouteAdd
      */
     public function add(
         string $name = null,
@@ -28,46 +32,46 @@ interface IRouteStart
     ): IRouteAdd;
 
     /**
-     *
-     * @param string $name
+     * @param string|null $name
      * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     *
+     * @return IRouteAdd
      */
     public function get(string $name = null, string $pattern): IRouteAdd;
 
     /**
-     *
-     * @param string $name
+     * @param string|null $name
      * @param string $pattern
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     *
+     * @return IRouteAdd
      */
     public function post(string $name = null, string $pattern): IRouteAdd;
 
     /**
-     *
      * @param string $name
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     *
+     * @return IRouteStart
      */
     public function group(string $name): IRouteStart;
 
     /**
+     * @param array $tokens
      *
-     * @param string[] $tokens
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     * @return IRouteStart
      */
     public function addTokens(array $tokens): IRouteStart;
 
     /**
+     * @param array $defaults
      *
-     * @param string[] $defaults
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     * @return IRouteStart
      */
     public function addDefaults(array $defaults): IRouteStart;
 
     /**
+     * @param array $patterns
      *
-     * @param string[] $patterns
-     * @return \Ignaszak\Router\Interfaces\IRouteStart
+     * @return IRouteStart
      */
     public function addPatterns(array $patterns): IRouteStart;
 }

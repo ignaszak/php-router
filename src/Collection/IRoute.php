@@ -11,17 +11,19 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Collection;
 
+/**
+ * Interface IRoute
+ * @package Ignaszak\Router\Collection
+ */
 interface IRoute
 {
 
     /**
-     *
      * @return array
      */
     public function getRouteArray(): array;
 
     /**
-     *
      * @return string
      */
     public function getChecksum(): string;

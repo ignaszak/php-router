@@ -15,33 +15,36 @@ use Symfony\Component\Yaml\Parser;
 use Ignaszak\Router\RouterException;
 use Ignaszak\Router\Matcher\Converter;
 
+/**
+ * Class Yaml
+ * @package Ignaszak\Router\Collection
+ */
 class Yaml implements IRoute
 {
 
     /**
-     *
      * @var Converter
      */
     private $converter = null;
 
     /**
-     *
      * @var Parser
      */
     private $parser = null;
 
     /**
-     *
      * @var string[]
      */
     private $fileArray = [];
 
     /**
-     *
      * @var string
      */
     private $fileMTime = '';
 
+    /**
+     * Yaml constructor.
+     */
     public function __construct()
     {
         $this->converter = new Converter();
@@ -49,12 +52,13 @@ class Yaml implements IRoute
     }
 
     /**
-     *
      * @param string $file
+     *
+     * @throws RouterException
      */
     public function add(string $file)
     {
-        if (! is_file($file) && ! is_readable($file)) {
+        if (!is_file($file) && !is_readable($file)) {
             throw new RouterException(
                 "The file '{$file}' does not exists or is not readable"
             );
@@ -65,9 +69,7 @@ class Yaml implements IRoute
     }
 
     /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRoute::getRouteArray()
+     * @return array
      */
     public function getRouteArray(): array
     {
@@ -84,13 +86,12 @@ class Yaml implements IRoute
             $result['defaults'] += ($array['defaults'] ?? []);
             $result['patterns'] += ($array['patterns'] ?? []);
         }
+
         return $this->converter->convert($result);
     }
 
     /**
-     *
-     * {@inheritDoc}
-     * @see \Ignaszak\Router\Interfaces\IRoute::getChecksum()
+     * @return string
      */
     public function getChecksum(): string
     {

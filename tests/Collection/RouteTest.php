@@ -1,9 +1,23 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
+declare(strict_types=1);
+
 namespace Test\Collection;
 
 use Ignaszak\Router\Collection\Route;
 use Test\Mock\MockTest;
 
+/**
+ * Class RouteTest
+ * @package Test\Collection
+ */
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -101,7 +115,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAddController()
     {
-        $this->route->add('anyName', '/anyPattern')->controller('anyController');
+        $this->route->add('anyName',
+            '/anyPattern')->controller('anyController');
         $this->assertEquals(
             [
                 'anyName' => [
@@ -166,7 +181,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testAttach()
     {
-        $anyAttachment = function () {};
+        $anyAttachment = function () {
+        };
         $this->route->add('anyName', '/anyPattern')->attach($anyAttachment);
         $this->assertEquals(
             [
@@ -183,7 +199,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testCallableAttach()
     {
-        $anyAttachment = function () {};
+        $anyAttachment = function () {
+        };
         $this->route->add('anyName', '/anyPattern')
             ->attach($anyAttachment);
         $this->assertEquals(
@@ -298,7 +315,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testGetChecksum()
     {
-        $this->route->add(null, 'anypattern')->tokens(['token' => 'pattern']);
+        $this->route->add(null,
+            'anypattern')->tokens(['token' => 'pattern']);
         $this->route->addTokens(['token' => 'pattern']);
         $this->route->addPatterns(['pattern' => 'regex']);
         $this->assertEquals(

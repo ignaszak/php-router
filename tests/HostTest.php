@@ -1,13 +1,26 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
+declare(strict_types=1);
+
 namespace Test;
 
 use Ignaszak\Router\Host;
 
+/**
+ * Class HostTest
+ * @package Test
+ */
 class HostTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     *
      * @var Host
      */
     private $host;
@@ -42,7 +55,8 @@ class HostTest extends \PHPUnit_Framework_TestCase
     public function testGetQueryFromRequestURI()
     {
         @$_SERVER['REQUEST_URI'] = '/baseQuery/quey1/query2';
-        $this->assertEquals('/baseQuery/quey1/query2', $this->host->getQuery());
+        $this->assertEquals('/baseQuery/quey1/query2',
+            $this->host->getQuery());
     }
 
     public function testGetQueryWithDefinedBaseURI()

@@ -1,9 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: tomek
- * Date: 02.08.17
- * Time: 23:40
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
  */
 
 declare(strict_types=1);
@@ -14,7 +16,8 @@ namespace Ignaszak\Router;
  * Interface IResponse
  * @package Ignaszak\Router
  */
-interface IResponse {
+interface IResponse
+{
 
     /**
      * @return string

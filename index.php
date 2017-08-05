@@ -4,6 +4,7 @@ use Ignaszak\Router\Collection\Route;
 use Ignaszak\Router\Host;
 use Ignaszak\Router\UrlGenerator;
 use Ignaszak\Router\Matcher\Matcher;
+use Ignaszak\Router\IResponse;
 use Ignaszak\Router\Response;
 
 include __DIR__ . '/vendor/autoload.php';
@@ -42,7 +43,8 @@ $route->addDefaults([
 ]);
 
 // Add controller
-$route->add('user', '/user/{user}/')->controller('UserController');
+$route->add('user', '/user/{user}/')
+    ->controller('UserController');
 
 // Define controller from route
 $route->add(null, '/test/{controller}/{action}')
@@ -58,13 +60,9 @@ $route->add('attach', '/attach/{name}/(\w+)/{id}/')
         'name' => '(\w+)',
         'id' => '(\d+)'
     ])
-    ->attach(function ($name, $string, $id) {
-        echo "{$name}, {$string}, {$id}";
+    ->attach(function (IResponse $response) {
+        print_r($response->all());
     });
-// Disable auto calling
-$route->add(null, '/attach/test/')->attach(function () {
-    /* Do something */
-}, false);
 
 // Group routes
 // Every added route after this method will be in the same group
@@ -79,10 +77,12 @@ $route->group();
 //   @digit    - digits [0-9]
 //   @alpha    - alphabetic characters [A-Za-z_-]
 //   @alnum    - alphanumeric characters [A-Za-z0-9_-]
-$route->add('defined', '/regex/@alpha/{id}')->tokens(['id' => '@digit']);
+$route->add('defined', '/regex/@alpha/{id}')
+    ->tokens(['id' => '@digit']);
 
 // Add default route
-$route->add('default', '/@base')->controller('DefaultController');
+$route->add('default', '/@base')
+    ->controller('DefaultController');
 
 // Not found
 $route->add('error', '/@notfound')->attach(function () {
@@ -102,7 +102,7 @@ $matcher = new Matcher($route);
 
 // Start parsing
 // Matcher::match([Host $host [, string $baseQuery [, string HttpMethod]])
-$host = new Host();
+$host = new Host('/php-router');
 $response = new Response($matcher->match($host));
 // Class Ignaszak\Router\Host([string $baseQuery])
 // provides current request and http method
@@ -135,13 +135,9 @@ echo 'Controller: ';
 echo $response->controller();
 echo '<br />';
 
-// Get attachment
-$attachment = $response->attachment();
-$attachment();
-
 // Reverse Routing
 $url = new UrlGenerator($route, $host);
 echo 'Link: ';
 echo $url->url('user', [
-   'user' => 'UserName'
+    'user' => 'UserName'
 ]);

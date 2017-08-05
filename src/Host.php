@@ -21,12 +21,12 @@ class Host implements IHost
 {
 
     /**
-     *
      * @var string
      */
     private $baseQuery = '';
 
     /**
+     * Host constructor.
      *
      * @param string $baseQuery
      */
@@ -36,7 +36,6 @@ class Host implements IHost
     }
 
     /**
-     *
      * @return string
      */
     public function getBaseURL(): string
@@ -44,11 +43,11 @@ class Host implements IHost
         $serverName = $_SERVER['SERVER_NAME'] ?? '';
         $url = 'http' . (isset($_SERVER['HTTPS']) ? 's' : '') .
             "://{$serverName}";
+
         return !empty($this->baseQuery) ? $url . $this->baseQuery : $url;
     }
 
     /**
-     *
      * @return string
      */
     public function getQuery(): string
@@ -66,7 +65,6 @@ class Host implements IHost
     }
 
     /**
-     *
      * @return string
      */
     public function getHttpMethod(): string

@@ -11,35 +11,38 @@ declare(strict_types=1);
 
 namespace Ignaszak\Router\Collection;
 
+/**
+ * Interface IRouteAdd
+ * @package Ignaszak\Router\Collection
+ */
 interface IRouteAdd
 {
 
     /**
-     *
      * @param string $controller
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     *
+     * @return IRouteAdd
      */
     public function controller(string $controller): IRouteAdd;
 
     /**
+     * @param array $tokens
      *
-     * @param string[] $tokens
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     * @return IRouteAdd
      */
     public function tokens(array $tokens): IRouteAdd;
 
     /**
+     * @param array $defaults
      *
-     * @param string[] $defaults
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     * @return IRouteAdd
      */
     public function defaults(array $defaults): IRouteAdd;
 
     /**
-     *
      * @param \Closure $closure
-     * @param bool $call
-     * @return \Ignaszak\Router\Interfaces\IRouteAdd
+     *
+     * @return IRouteAdd
      */
     public function attach(\Closure $closure): IRouteAdd;
 }

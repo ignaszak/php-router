@@ -1,15 +1,28 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
+declare(strict_types=1);
+
 namespace Test;
 
 use Ignaszak\Router\UrlGenerator;
 use Test\Mock\MockTest;
 
+/**
+ * Class UrlGeneratorTest
+ * @package Test
+ */
 class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
 {
 
     /**
-     *
-     * @var Link
+     * @var UrlGenerator
      */
     private $urlGenerator;
 
@@ -132,7 +145,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
             $this->mockRoute($convertedRouteArray)
         );
         $this->urlGenerator->url('name', [
-                'format' => 'html'
+            'format' => 'html'
         ]);
     }
 
@@ -155,8 +168,8 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
             $this->mockRoute($convertedRouteArray)
         );
         $this->urlGenerator->url('name', [
-                'alias' => 'ANYALIAS',
-                'format' => 'doc'
+            'alias' => 'ANYALIAS',
+            'format' => 'doc'
         ]);
     }
 
@@ -198,7 +211,8 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testInvalidLink()
     {
         MockTest::callMockMethod($this->urlGenerator, 'validLink', [
-            '/anyLink/with/unreplaced/(?P<token>([a-z]+))/', 'routName'
+            '/anyLink/with/unreplaced/(?P<token>([a-z]+))/',
+            'routName'
         ]);
     }
 
@@ -206,7 +220,8 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertTrue(
             MockTest::callMockMethod($this->urlGenerator, 'validLink', [
-                '/anyLink/with/replaced/token/', 'routName'
+                '/anyLink/with/replaced/token/',
+                'routName'
             ])
         );
     }
@@ -216,6 +231,7 @@ class UrlGeneratorTest extends \PHPUnit_Framework_TestCase
         $stub = $this->getMockBuilder('Ignaszak\Router\Collection\IRoute')
             ->disableOriginalConstructor()->getMock();
         $stub->method('getRouteArray')->willReturn($route);
+
         return $stub;
     }
 }

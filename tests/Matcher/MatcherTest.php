@@ -1,9 +1,23 @@
 <?php
+/**
+ *
+ * PHP Version 7.0
+ *
+ * @copyright 2016 Tomasz Ignaszak
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ *
+ */
+declare(strict_types=1);
+
 namespace Test\Matcher;
 
 use Ignaszak\Router\Matcher\Matcher;
 use Test\Mock\MockTest;
 
+/**
+ * Class MatcherTest
+ * @package Test\Matcher
+ */
 class MatcherTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -85,7 +99,8 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
                 define('TEST', true);
             }
         ];
-        MockTest::callMockMethod($this->matcher, 'callAttachment', [$request]);
+        MockTest::callMockMethod($this->matcher, 'callAttachment',
+            [$request]);
         $this->assertTrue(TEST);
     }
 
@@ -126,10 +141,11 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             'controller' => 'AnyController',
             'action' => 'anyAction'
         ];
-        $result = MockTest::callMockMethod($this->matcher, 'matchController', [
-            $controller,
-            $routes
-        ]);
+        $result = MockTest::callMockMethod($this->matcher,
+            'matchController', [
+                $controller,
+                $routes
+            ]);
         $this->assertEquals(
             '\\Namespace\\AnyController::anyAction',
             $result
@@ -158,6 +174,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             'httpMethod',
             [$route, $current]
         );
+
         return $result;
     }
 
@@ -165,6 +182,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
     {
         $stub = $this->getMockBuilder('Ignaszak\Router\Host')->getMock();
         $stub->method('getQuery')->willReturn($query);
+
         return $stub;
     }
 
@@ -174,6 +192,7 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $stub->method('getRouteArray')->willReturn($route);
+
         return $stub;
     }
 }
