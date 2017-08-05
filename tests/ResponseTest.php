@@ -40,27 +40,14 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testIntName()
     {
-        $response = ['name' => 0];
+        $response = ['name' => 'testName'];
         $this->response = new Response($response);
-        $this->assertEquals('0', $this->response->name());
+        $this->assertEquals('testName', $this->response->name());
     }
 
     public function testController()
     {
         $this->assertEquals('AnyController', $this->response->controller());
-    }
-
-    public function testAttachment()
-    {
-        $response = ['attachment' => function () {
-        }];
-        $this->response = new Response($response);
-        $this->assertInstanceOf('Closure', $this->response->attachment());
-    }
-
-    public function testEmptyAttachment()
-    {
-        $this->assertInstanceOf('Closure', $this->response->attachment());
     }
 
     public function testAll()

@@ -81,18 +81,12 @@ class MatcherTest extends \PHPUnit_Framework_TestCase
         $request = [
             'name' => 'anyRouteName',
             'controller' => '',
-            'attachment' => function ($name) {
-                define('NAME', $name);
-            },
-            'params' => [
-                'name' => 'Tomek'
-            ]
+            'attachment' => function () {
+                define('TEST', true);
+            }
         ];
         MockTest::callMockMethod($this->matcher, 'callAttachment', [$request]);
-        $this->assertEquals(
-            'Tomek',
-            @NAME
-        );
+        $this->assertTrue(TEST);
     }
 
     public function testMatchWithNoMatchedRouts()
